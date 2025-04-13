@@ -1,0 +1,196 @@
+version: '3.8'
+services:
+
+  # Service cho MongoDB
+  mongo:
+    image: mongo:latest
+    container_name: mongo-container
+    ports:
+      - "27017:27017"  # Expose MongoDB cổng 27017
+    env_file:
+      - .env
+    volumes:
+      - "./mongo_db/fixtures:/docker-entrypoint-initdb.d"
+      - "./mongo_db/data:/data/db"
+    networks:
+      - chatbot-network
+    restart: "unless-stopped"
+  
+  # Service cho Milvus
+  etcd:
+    container_name: milvus-etcd
+    image: quay.io/coreos/etcd:v3.5.18
+    environment:
+      - ETCD_AUTO_COMPACTION_MODE=revision
+      - ETCD_AUTO_COMPACTION_RETENTION=1000
+      - ETCD_QUOTA_BACKEND_BYTES=4294967296
+      - ETCD_SNAPSHOT_COUNT=50000
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/milvus/volumes/etcd:/etcd
+    networks:
+      - chatbot-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
+    healthcheck:
+      test: ["CMD", "etcdctl", "endpoint", "health"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio:
+    container_name: milvus-minio
+    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    ports:
+      - "9001:9001"
+      - "9000:9000"
+    networks:
+      - chatbot-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/milvus/volumes/minio:/minio_data
+    command: minio server /minio_data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  standalone:
+    container_name: milvus-standalone
+    image: milvusdb/milvus:v2.5.5
+    command: ["milvus", "run", "standalone"]
+    security_opt:
+    - seccomp:unconfined
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+      MINIO_ADDRESS: minio:9000
+    networks:
+      - chatbot-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/milvus/volumes/milvus:/var/lib/milvus
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      interval: 30s
+      start_period: 90s
+      timeout: 20s
+      retries: 3
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+    depends_on:
+      - "etcd"
+      - "minio"
+
+  milvus-ingestor:
+    build:
+      context: ./milvus/scripts
+    container_name: milvus-ingestor
+    depends_on:
+      standalone:
+        condition: service_healthy
+    networks:
+      - chatbot-network
+    volumes:
+      - ./milvus/scripts:/app
+    working_dir: /app
+    restart: "no"  # Chạy 1 lần, không cần restart
+
+  service:
+    build:
+      dockerfile: Dockerfile
+      context: ./service # đường dẫn đến folder server
+    container_name: chatbot-AI_Service
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ./service/.env
+    depends_on:
+      milvus-ingestor:
+        condition: service_completed_successfully
+      standalone:
+        condition: service_started
+      minio:
+        condition: service_started
+      etcd:
+        condition: service_started
+    networks:
+      - chatbot-network
+    stdin_open: true  # Để tương thích với '-it', cho phép tương tác
+    tty: true         # Để tương thích với '-it', giữ terminal mở
+    restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
+
+  server:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./server # đường dẫn đến folder server
+    container_name: chatbot-server
+    networks:
+      - chatbot-network
+    env_file:
+      - ./server/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./server/public/storage:/app/public/storage
+    depends_on:
+      - mongo  # Đảm bảo MongoDB đã sẵn sàng trước khi chạy Express
+    stdin_open: true  # Để tương thích với '-it', cho phép tương tác
+    tty: true         # Để tương thích với '-it', giữ terminal mở
+    restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
+
+  client:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./client # đường dẫn đến folder client
+    container_name: chatbot-client
+    env_file:
+      - ./client/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - server  # Đảm bảo server đã sẵn sàng trước khi chạy client
+    stdin_open: true  # Tương thích với '-it', cho phép tương tác với container
+    tty: true         # Tương thích với '-it', giữ terminal mở
+    restart: always  # Tự động khởi động lại container nếu nó dừng bất ngờ
+    networks:
+      - chatbot-network
+
+  nginx:
+    image: nginx:1.18.0
+    ports:
+      - "80:8000"  # Chạy https nginx trên cổng 80
+      - "443:8080"  # Chạy http nginx trên cổng 80
+    restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
+    volumes:
+      - ./client:/usr/share/nginx/html  # Mount mã nguồn client
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Cấu hình Nginx
+      - ./nginx/ssl/:/etc/nginx/ssl/
+    depends_on:
+      - client
+      - server
+    networks:
+      - chatbot-network
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+
+networks:
+  chatbot-network:
+    driver: bridge
+  airflow-network:
+    name: airflow_default
+    external: true
+  # airflowv2_default:
+  #   external: true
+
+volumes:
+  mongo_db:
+    driver: local
+  milvus-data:

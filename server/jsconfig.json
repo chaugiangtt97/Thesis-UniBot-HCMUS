@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"],
+    },
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  },
+  "ts-node": {
+    "experimentalSpecifierResolution": "node",
+    "transpileOnly": true,
+    "esm": true,
+  }
+}

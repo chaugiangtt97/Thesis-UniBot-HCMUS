@@ -1,0 +1,14 @@
+# Database Information
+
+This file contains details about the data stored in the MongoDB database used for the Retrieval-Augmented-Generation application. It provides an overview of the collections, their structure, and the type of data they hold.
+
+## Collections
+
+1. **Collection Name 1**: Description of the data stored in this collection.
+2. **Collection Name 2**: Description of the data stored in this collection.
+3. **Collection Name 3**: Description of the data stored in this collection.
+
+## Notes
+
+- Ensure the database is properly configured before running the application.
+- Update this file whenever there are changes to the database schema or structure.

@@ -1,0 +1,11 @@
+# Milvus  
+
+Milvus is an open-source vector database designed for similarity search and AI applications. It efficiently manages and queries large-scale vector data, making it ideal for use cases like recommendation systems, image retrieval, natural language processing, and more.  
+
+## Key Features  
+- **High Performance**: Optimized for fast similarity search and retrieval.  
+- **Scalability**: Handles billions of vectors with ease.  
+- **Ease of Use**: Simple APIs for integration with various applications.  
+- **Rich Ecosystem**: Supports multiple machine learning and deep learning frameworks.  
+
+For more information, visit the [official Milvus documentation](https://milvus.io/docs).  

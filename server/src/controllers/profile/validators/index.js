@@ -1,0 +1,1 @@
+export { validateUpdateProfile } from './validateUpdateProfile'

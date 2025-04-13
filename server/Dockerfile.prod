@@ -1,0 +1,27 @@
+FROM node:19
+
+WORKDIR /app
+
+RUN mkdir -p /opt/node_modules
+
+COPY ./package.json /app
+
+COPY ./package-lock.json /app
+
+RUN npm cache clean --force
+
+RUN npm cache verify
+
+RUN npm install
+
+RUN npm i esm --save
+
+RUN npm i ts-node -D
+
+COPY ./ /app
+
+EXPOSE 8017
+
+COPY . .
+
+CMD ["npm", "run", "deploy"]

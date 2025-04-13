@@ -1,0 +1,5 @@
+export { getChunkInDocument } from './getChunkInDocument'
+export { updateDocument } from './updateDocument'
+export { uploadFile } from './uploadFile'
+export { processDocument } from './process'
+export { deleteFile } from './deleteFile'

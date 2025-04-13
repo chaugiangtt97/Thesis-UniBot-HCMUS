@@ -1,0 +1,20 @@
+{
+  "name": "my-project",
+  "version": "1.0.0",
+  "scripts": {
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run preview",
+    "build:server": "cd server && npm run production",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "production": "concurrently \"npm run build:client\" \"npm run build:server\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "node-fetch": "^3.3.2",
+    "request": "^2.88.2"
+  }
+}

@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    padding: 0;
+    margin : 0;
+}
+
+code {
+    text-wrap: nowrap;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    width: fit-content;
+    background: #9fabff;
+    padding: 0 7px
+}
+
+.MuiBox-root > ul {
+    margin-left: 16px;
+    list-style-type: none;
+
+}
+
+
+.MuiBreadcrumbs-li{
+    list-style: none;
+}
+
+li::marker {
+    width: 8px !important;
+}
+
+li > p, li > div {
+    display: contents;
+}
+
+.MuiBox-root > ul {
+    margin-left: 6px;
+    list-style-type: none;
+    li  {
+        position: relative;
+        padding-left: 16px;
+    }
+    
+    li::before {
+        content: "-";
+        position: absolute;
+        left: 0;
+        color: #333;
+        font-weight: bold;
+    }
+}
+
+
+ul {
+    li {
+        ul  {
+            list-style-type: none;
+            li {
+                list-style-type: none;
+            }
+            li::before {
+                content: "👉 " !important;
+                position: absolute;
+                left: -5px !important;
+                color: #333;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+li strong {
+    font-weight: 600;
+}
+
+a {
+    text-decoration: underline;
+    color: #2323a9;
+    display: inline-block;
+    line-height: 96%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: nowrap;
+}
+
+h1{
+    font-size: 1.2rem;
+    font-weight: 900;
+    line-height: 105%;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+h2{
+    font-weight: 800;
+    font-size: 1.1rem;
+    line-height: 115%;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+h3{
+    font-weight: 700;
+    font-size: 0.925rem;
+    line-height: 105%;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+h4{
+    font-weight: 600;
+    font-size: 0.825rem;
+    line-height: 105%;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+
+/* YourPage.css */
+.box {
+    border          : 1px solid #ccc;
+    padding         : 20px;
+    border-radius   : 8px;
+    box-shadow      : 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin          : 0;
+    background-color: #f9f9f9;
+    /* Kích thước tối đa cho box */
+    overflow        : hidden;
+    /* Ẩn nội dung thừa */
+    position        : relative;
+    /* Để sử dụng với scale */
+}
+
+.html-content {
+    // transform       : scale(0.8);
+    /* Scale nội dung */
+    transform-origin   : top left;
+    /* Điểm gốc để scale */
+    // width           : 125%;
+    /* Để scale không bị cắt */
+    height             : auto;
+    /* Đảm bảo chiều cao tự động */
+}
+
+/* Điều chỉnh kích thước cho box và nội dung */
+.box,
+.html-content {
+    width: 100%;
+    /* Chiều rộng 100% */
+}
+
+.html-content h1,
+.html-content h2,
+.html-content h3 {
+    font-family: Arial, sans-serif;
+    /* Sử dụng font chữ */
+    color      : #333;
+    /* Màu chữ */
+}
+
+.html-content p {
+    margin: 10px 0;
+    /* Khoảng cách giữa các đoạn văn */
+}
+
+.html-content ul,
+.html-content ol {
+    margin: 10px 20px;
+    /* Khoảng cách cho danh sách */
+}
