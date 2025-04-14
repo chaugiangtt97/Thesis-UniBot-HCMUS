@@ -25,10 +25,7 @@ server/__pycache__
 **/myenv
 /nohup.out
 
-**package-lock.json
-**/package-lock.json
-client/package-lock.json
-server/package-lock.json
+
 #server/.env
 #service/.env
 
