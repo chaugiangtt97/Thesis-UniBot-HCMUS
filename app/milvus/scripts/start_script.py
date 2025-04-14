@@ -79,6 +79,7 @@ def ingest_pipeline(student_path, news_path):
                         port=port
     )
     # connections.connect(alias='default', uri=uri, token=token)
+    handler = connections._fetch_handler('default')
     # News Collections ingestion
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
@@ -123,14 +124,16 @@ Note that values may not be explicitly mentioned, but derived or written in acro
             schema.add_field("subjects_code", datatype=DataType.ARRAY, element_type=DataType.VARCHAR, max_length=100, max_capacity=8,
                              description=""
                              )
-
-        collection = Collection(col, schema)
-        index_params = {
-            'metric_type':'L2',
-            'index_type':"IVF_FLAT",
-            'params':{"nlist":2048}
-        }
-        collection.create_index(field_name='embedding', index_params=index_params)
+        if handler.has_collection(col):
+            collection = Collection(col)
+        else:
+            collection = Collection(col, schema)
+            index_params = {
+                'metric_type':'L2',
+                'index_type':"IVF_FLAT",
+                'params':{"nlist":2048}
+            }
+            collection.create_index(field_name='embedding', index_params=index_params)
     # Student handbook collection
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
@@ -147,13 +150,16 @@ Note that values may not be explicitly mentioned, but derived or written in acro
         FieldSchema(name="url", dtype=DataType.VARCHAR, max_length=300),
     ]
     schema = CollectionSchema(fields, "student handbook schema")
-    collection = Collection('student_handbook', schema)
-    index_params = {
-        'metric_type':'L2',
-        'index_type':"IVF_FLAT",
-        'params':{"nlist":2048}
-    }
-    collection.create_index(field_name='embedding', index_params=index_params)
+    if handler.has_collection('student_handbook'):
+        collection = Collection('student_handbook')
+    else:
+        collection = Collection('student_handbook', schema)
+        index_params = {
+            'metric_type':'L2',
+            'index_type':"IVF_FLAT",
+            'params':{"nlist":2048}
+        }
+        collection.create_index(field_name='embedding', index_params=index_params)
     #Inserting
     collection = Collection('student_handbook')
     path = './data/student_handbook_embedded.json'
