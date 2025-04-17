@@ -14,25 +14,7 @@ dist-ssr
 
 temp
 
-**/certboot
-
-nohup.out
-
-server/__pycache__
-**/myenv
-**/.env
-/nohup.out
-
-
-server/.env
-service/.env
-client/.env
-
-.venv
-
-mongo_db/data/
-milvus/volumes/
-milvus/scripts/data/
+.env
 
 # Editor directories and files
 .vscode/*
