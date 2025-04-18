@@ -23,18 +23,18 @@ export default function NotifycationModal({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" sx = {{ width: 'fit-content' }}>
-          <Typography variant='p'
+          <Typography variant='p' sx = {{ fontSize: { xl: '1.425rem', fontWeight: '600' } }}
             >{title || 'Nguồn Trích Dẫn'}</Typography>
         </DialogTitle>
         <DialogContent sx = {{ color: '#000' }}>
           <DialogContentText id="alert-dialog-description">
-            <Typography variant='p' sx = {{ color: '#000' }}
-            >{ content || <ContentWithProps onClose={modalHandler?.close} parent= {propsContent.props}/> || <p>'Xin lỗi bạn, tính năng này chưa được hỗ trợ ☹️'</p>}</Typography>
+            <Typography variant='p' sx = {{ color: '#000', fontSize: {xl: '1.225rem'} }}
+            >{ content || <ContentWithProps onClose={modalHandler?.close} parent= {propsContent.props}/> || <span>'Xin lỗi bạn, tính năng này chưa được hỗ trợ ☹️'</span>}</Typography>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          { modalHandler?.actionName && <Button onClick={async (e) => { await modalHandler?.action(e), modalHandler?.close()}} sx = {{ color: '#115819' }}>{modalHandler?.actionName}</Button> }
-          <Button onClick={modalHandler?.close} sx = {{ color: 'red' }}> Đóng</Button>
+          { modalHandler?.actionName && <Button onClick={async (e) => { await modalHandler?.action(e), modalHandler?.close()}} sx = {{ color: '#115819', fontSize: {xl: '1.225rem'}, marginRight: {xl: 3} }}>{modalHandler?.actionName}</Button> }
+          <Button onClick={modalHandler?.close} sx = {{ color: 'red', fontSize: {xl: '1.225rem'} }}> Đóng</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

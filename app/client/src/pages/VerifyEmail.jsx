@@ -7,6 +7,11 @@ import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 const SignInCard = styled(Card)(({ theme }) => ({
+  minWidth: '500px',
+  [theme.breakpoints.up('xl')]: {
+    minWidth: '550px',
+    minHeight: '500px',
+  },
   display: 'flex', flexDirection: 'column',
   alignSelf: 'center', width: '90vw',
   padding: theme.spacing(4), gap: theme.spacing(2),

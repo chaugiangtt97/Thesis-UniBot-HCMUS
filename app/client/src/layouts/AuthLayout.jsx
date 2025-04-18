@@ -5,9 +5,10 @@ import { Outlet, useOutletContext } from 'react-router-dom';
 
 const AuthContainer = styled(Stack)(({ theme }) => ({
     padding: 20,
-    height: '100vh',
+    minHeight: '100vh',
     justifyContent: "center",
     alignItems: "center",
+    overflow: 'auto',
     background: theme.palette.mode == 'dark' ? '#25294a' : '#DDF3FC',
 }));
 

@@ -4,11 +4,14 @@ import { Box, Button, TextField, CircularProgress, Tooltip, useColorScheme } fro
 import NearMeIcon from '@mui/icons-material/NearMe';
 
 const InputGroup = styled(Box)(({theme}) => ({
+  border: 'none',
   display: 'flex',
-  justifyContent: 'space-between',
   alignItems: 'center',
   padding: theme.spacing(1),
-  border: 'none'
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('xl')]: {
+    padding: theme.spacing(2.5)
+  }
 }))
 
 const TextField_Custom = styled(TextField)(({theme}) => ({
@@ -19,13 +22,20 @@ const TextField_Custom = styled(TextField)(({theme}) => ({
       border: 'none'
     },
     '.MuiOutlinedInput-input': {
-        color: '#000',
-        fontSize: '0.825rem'
+      color: '#000',
+      fontSize: '0.825rem',
+      [theme.breakpoints.up('xl')]: {
+        fontSize: '1.525rem',
+      }
     },
   }
 }))
 
 const Button_Custom = styled(Button)(({theme}) => ({
+  [theme.breakpoints.up('xl')]: {
+    height: '42px',
+    width: '82px'
+  },
   background: theme.palette.primary.main, 
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
   color: '#fff',
@@ -68,7 +78,7 @@ export function ChatInput({ id, text = null ,handleSubmit = null, messageHandler
       <Button_Custom type="submit" disabled = {messageHandler.isProcess || disabled}>
         {messageHandler.isProcess || disabled ? 
           <CircularProgress color="inherit" size={15} /> 
-          : <NearMeIcon fontSize='1.25rem'/> }
+          : <NearMeIcon sx = {{ '& svg': { width: '5em', height: '5em' }}}/> }
       </Button_Custom>
     </InputGroup>
   )

@@ -217,17 +217,15 @@ const theme = extendTheme(
           root: {
             userSelect: 'none',
             transition: 'none',
-            "&.MuiTypography-body1": {
-              fontSize: "0.875rem",
-            },
-          },
-        },
+            fontSize: 'inherit',
+            fontWeight: 'inherit'
+          }
+        }
       },
 
       MuiInputLabel: {
         styleOverrides: {
           root: {
-            fontSize: "0.875rem",
             color: theme => theme.palette.text.secondary
           },
         },
@@ -268,7 +266,7 @@ const theme = extendTheme(
             // background: theme.palette.primary.background,
             '--mui-palette-background-paper': '#d3e5ef',
             color: '#000',
-            borderRadius: '15px'
+            borderRadius: '12px'
           })
         },
       },

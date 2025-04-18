@@ -35,30 +35,30 @@ function FeedBack() {
   }
   const [value, setValue] = useState(null)
   return (
-    <Box sx = {{ width: '100%', height: '100%', paddingY: { xs : 6, md: 3 }, paddingX: 3 }}>
+    <Box sx = {{ width: '100%', height: '100%', paddingY: { xs : 6, md: 3, xl: 8 }, paddingX: 3 }}>
       <Grid container  spacing={2} sx = {{ height: '100%' }}>
 
 
         <Grid  offset={{ xs: 0, md: 3 }} size={{ xs: 12, md: 6 }}>
           <Typography variant = 'h1' sx = {{ 
-            fontSize: '2rem',
+            fontSize: { xs: '1rem !important', xl: '3rem !important' },
             fontWeight: '800',
             fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
             background: theme => theme.palette.mode == 'dark' ? 'linear-gradient(78deg, #7cff60 4%, color-mix(in oklch, #8bffcc, #00f50f) 22%, #f3ff00 45%, color-mix(in oklch, #efff34, #daf24f) 67%, #f4ff12 100.2%)'
               : 'linear-gradient(90deg, #463aa2 4%, color-mix(in oklch, #382e82, #0061cf) 22%, #047aff 45%, color-mix(in oklch, #047aff, #c148ac) 67%, #c148ac 100.2%)',
             color: 'transparent', backgroundSize: '100% 100%', WebkitBackgroundClip : 'text', width: '100%', textAlign: 'center', marginBottom: 2
             }}>
-            Báo lỗi / Góp Ý </Typography>
+            Báo lỗi / Góp ý </Typography>
           <Typography variant = 'h1' sx = {{ 
-            fontSize: '1rem', lineHeight: '25px',
+            fontSize: { xs: '1rem' , xl: '1.425rem' }, lineHeight: { xs: '25px', xl: '40px'},
             fontWeight: '500', color: theme => theme.palette.mode == 'dark' ? '#d2d2ff': '#0b1e8a',
             fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
             }}>
             Sự đóng góp ý kiến từ các bạn sẽ là sự hỗ trợ đắc lực giúp chúng tôi ngày càng tốt hoàn thiện sản phẩm hơn.</Typography>
 
-            <textarea value={value} onChange={(e) => setValue(e.target.value)} placeholder="Nhập phản hồi của bạn tại đây!" className="mt-5 mb-3 h-[30%] textarea textarea-bordered textarea-md w-full " style={{height: '164px', padding: '15px', borderRadius: '10px', background: '#fff', color: '#000'}}></textarea>
+            <textarea value={value} onChange={(e) => setValue(e.target.value)} placeholder="Nhập phản hồi của bạn tại đây!" className="mt-5 mb-3 h-[30%] textarea textarea-bordered textarea-md w-full " style={{ height: '164px', padding: '15px', borderRadius: '10px', background: '#fff', color: '#000'}}></textarea>
 
-          <Button onClick={() => submit(value)} variant='contained' sx = {{ background: theme => theme.palette.primary.main, borderRadius: '10px' }} fullWidth>Gửi Ý Kiến</Button>
+          <Button onClick={() => submit(value)} variant='contained' sx = {{ fontSize: {xl: '1.475rem'}, paddingY: '8px' , background: theme => theme.palette.primary.main, borderRadius: '10px' }} fullWidth>Gửi Ý Kiến</Button>
         </Grid>
 
 

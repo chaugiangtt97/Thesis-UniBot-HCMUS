@@ -32,6 +32,7 @@ import {ChatGenerator as UserChat} from '~/pages/User/ChatGenerator'
 import DatasetDetail from  '~/pages/Dashboard/KnowledgeBase/KnowledeBaseDetail/Dataset'
 import Datasets from  '~/pages/Dashboard/KnowledgeBase/KnowledeBaseDetail'
 import AccountManager from  '~/pages/Dashboard/AccountManager'
+import RegisterAA from '~/pages/RegisterAA';
 
 // Define the routes
 const router = createBrowserRouter([
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
           {
             path: '/register',
             element: <Register />,
+          },
+          {
+            path: '/register/lecturer',
+            element: <RegisterAA />,
           },
           {
             path: '/validateEmail',

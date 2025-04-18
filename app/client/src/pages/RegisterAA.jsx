@@ -28,7 +28,7 @@ const TextInput = styled(TextField) (({ theme }) => ({
   '&:hover fieldset': { borderColor: `${theme.palette.primary.main} !important` }
 }));
 
-function Register() {
+function RegisterAA() {
   const [notificationError, setNotification] = useState(null)
 
   const dispatch = useDispatch();
@@ -103,7 +103,7 @@ function Register() {
       <RegisterCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Tài Khoản Sinh Viên </Typography>
+          Tài Khoản Giảng Viên </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
@@ -114,8 +114,8 @@ function Register() {
           </FormControl>
 
           <FormControl sx={{gap: 1}}>
-            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập (Gmail cá nhân)</FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder="name@gmail.com" inputProps={{ maxLength: 40 }}
+            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập (Gmail giảng viên trường học)</FormLabel>
+            <TextInput id="email" type="username" name="email" placeholder="name@fit.hcmus.edu.edu" inputProps={{ maxLength: 40 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
@@ -130,30 +130,22 @@ function Register() {
 
           <Box sx = {{ display: {xs: 'block', md: 'flex' }, gap: 2 }}>
             <FormControl  sx={{gap: 1, minWidth: {xs: '100%', md: '65%'}}}>
-              <FormLabel htmlFor="department" sx = {{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chương trnh đào tạo</FormLabel>
+              <FormLabel htmlFor="department" sx = {{ color: 'inherit', display: 'block', textAlign: 'start' }}>Phạm vi công tác</FormLabel>
               <Select
                 id="user_department"
                 name= 'department'
-                // value={user?.program}
                 sx = {{ width: '100%',
                   '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary }
                 }}
               >
-                <MenuItem value={'PR-DT'}>Chương trình Đại Trà</MenuItem>
-                <MenuItem value={'PR-CLC'}>Chương trình Chất Lượng Cao</MenuItem>
-                <MenuItem value={'PR-CNTN'}>Chương trình Cử Nhân Tài Năng</MenuItem>
-                <MenuItem value={'PR-VP'}>Chương trình Việt Pháp</MenuItem>
+                <MenuItem value={'VPK'}>Văn phòng khoa - CNTT</MenuItem>
+                <MenuItem value={'CTSV'}>Phòng công tác sinh viên</MenuItem>
+                <MenuItem value={'GV'}>Giảng viên trường FIT-HCMUS</MenuItem>
               </Select>
-              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormLabel htmlFor="" sx = {{ color: 'inherit' }}>Chương trình đào tạo</FormLabel>
-              </Box>
-              <TextInput name="password" placeholder="••••••" type="password" id="password" inputProps={{ maxLength: 25 }}
-                autoComplete="current-password" required fullWidth variant="outlined"
-                sx = {{ color: '#000' }} /> */}
             </FormControl>
 
             <FormControl  sx={{gap: 1, minWidth: {xs: '100%', md: '35%'}}}>
-              <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Khóa đào tạo</FormLabel>
+              <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Chức vụ</FormLabel>
               <Select
                 id="user_position"
                 name= "user_position"
@@ -161,27 +153,18 @@ function Register() {
                   '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary },
                 }}
               >
-                <MenuItem value={'K20'}>Khóa trước 2020</MenuItem>
-                <MenuItem value={'K20'}>Khóa K2020</MenuItem>
-                <MenuItem value={'K20'}>Khóa K2020</MenuItem>
-                <MenuItem value={'K21'}>Khóa K2021</MenuItem>
-                <MenuItem value={'K22'}>Khóa K2022</MenuItem>
-                <MenuItem value={'K23'}>Khóa K2023</MenuItem>
-                <MenuItem value={'K24'}>Khóa K2024</MenuItem>
-                <MenuItem value={'K24'}>Khóa K2025</MenuItem>
+                <MenuItem value={'TBM'}>Trưởng bộ môn</MenuItem>
+                <MenuItem value={'TP'}>Trưởng phòng</MenuItem>
+                <MenuItem value={'CTV'}>Cộng tác viên</MenuItem>
+                <MenuItem value={'GVCH'}>Giảng viên cơ hữu</MenuItem>
+                <MenuItem value={'NVVP'}>Nhân viên văn phòng</MenuItem>
               </Select>
-              {/* <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <FormLabel htmlFor="" sx = {{ color: 'inherit' }}>Niên khóa</FormLabel>
-              </Box>
-              <TextInput name="password" placeholder="••••••" type="password" id="password" inputProps={{ maxLength: 25 }}
-                autoComplete="current-password" required fullWidth variant="outlined"
-                sx = {{ color: '#000' }} /> */}
             </FormControl>
           </Box>
 
         
           <FormControl  sx={{gap: 1}}>
-            <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Chuyên ngành</FormLabel>
+            <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Bộ môn công tác (nếu có)</FormLabel>
               <Select
                 id="user_position"
                 name= "user_position"
@@ -195,7 +178,7 @@ function Register() {
                 <MenuItem key={'TGMT'} value={'TGMT'}>Thị Giác Máy Tính</MenuItem>
                 <MenuItem key={'CNTTHUC'} value={'CNTTHUC'}>Công Nghệ Tri Thức</MenuItem>
                 <MenuItem key={'CNTT'} value={'CNTT'}>Công Nghệ Thông Tin </MenuItem>
-                <MenuItem key={'NONE'} value={'NONE'}>Không có - chưa xét chuyên ngành</MenuItem>
+                <MenuItem key={'NONE'} value={'NONE'}>Không có chuyên ngành</MenuItem>
             </Select>
           </FormControl>
 
@@ -219,11 +202,11 @@ function Register() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/register/lecturer"
+                href="/register"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >
-                Bạn là giảng viên FIT-HCMUS?
+                Bạn là sinh viên FIT-HCMUS?
                 </Link>
               </span>
             </Typography>
@@ -250,4 +233,4 @@ function Register() {
   )
 }
 
-export default Register
+export default RegisterAA

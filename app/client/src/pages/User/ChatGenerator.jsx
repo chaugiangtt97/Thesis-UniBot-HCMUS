@@ -109,14 +109,22 @@ function NewChatModal({ modalHandler = null }) {
 }
 
 
-const ChatWindow = styled(Box)(({theme}) => ({ position: 'absolute', bottom: theme.spacing(0), padding: theme.spacing(2), paddingBottom: theme.spacing(1), paddingTop: theme.spacing(0), right: theme.spacing(0), width: '100%', borderRadius: '15px' }))
+const ChatWindow = styled(Box)(({theme}) => ({ 
+  [theme.breakpoints.up('xl')]: {
+    padding: theme.spacing(4),
+    paddingBottom: theme.spacing(2)
+  },
+  position: 'absolute', 
+  bottom: theme.spacing(0), 
+  padding: theme.spacing(2), 
+  paddingBottom: theme.spacing(1), paddingTop: theme.spacing(0), 
+  right: theme.spacing(0), width: '100%', borderRadius: '12px' 
+}))
 
 const BlockStyle = { bgColor_dark: 'rgb(70 77 99)', bgColor_light: 'linear-gradient(180deg, #ffffff 0%, #b3d3fd 100%)' }
 
 import VoicemailOutlinedIcon from '@mui/icons-material/VoicemailOutlined';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import StarIcon from '@mui/icons-material/Star';
-import AdjustOutlinedIcon from '@mui/icons-material/AdjustOutlined';
 
 export function ChatGenerator() {
 
@@ -495,9 +503,10 @@ export function ChatGenerator() {
       <Grid container  spacing={2} sx = {{ height: '100%', '--Grid-rowSpacing': { md: 'calc(2 * var(--mui-spacing))', xs: 1 } }}>
 
         <Grid  size={{ xs: 0, md: 2.3 }} sx = {{ height: '100%' }}>  
-          <Box sx = {{ display: 'flex', flexDirection: 'column',paddingTop: '55px'}}>
+          <Box sx = {{ display: 'flex', flexDirection: 'column' }}>
             <Block sx = {{ 
               padding: '16px !important',
+              paddingX: { xl: '24px !important' },
               paddingBottom: '32px !important',
               backgroundImage: theme => theme.palette.mode == 'dark'? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
               display: { xs: 'none', md: 'flex' },
@@ -505,8 +514,8 @@ export function ChatGenerator() {
               justifyContent: "start",
             }}>
               <Box sx = {{ display: 'flex', alignItems: 'center', gap: 0.2, paddingBottom: 0.3 }}>
-                <StarIcon sx = {{ fontSize: '28px !important', color:'#e7e74e' }}/>
-                <Typography sx ={{ fontSize: '0.725rem', textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>Chủ Đề Bạn Quan Tâm</Typography>
+                <StarIcon sx = {{ fontSize: { xs: '28px !important', xl: '42px !important' }, color:'#e7e74e' }}/>
+                <Typography sx ={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.425rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>Chủ Đề Bạn Quan Tâm</Typography>
               </Box>
               {[
                 'Thông tin trường học',
@@ -518,22 +527,22 @@ export function ChatGenerator() {
               ].map((data, zIndex) => ( 
               <>
                 <Button 
-                disabled= {zIndex === recommendQuestionPage}
-                onClick = {() => setRecommendQuestionPage(zIndex) } 
-                startIcon = {ICON_LIST[zIndex]} 
-                endIcon = {<ExpandMoreOutlinedIcon/>}
-                sx = {{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: '0.725rem', textAlign: 'start', color: 'inherit' }}>
-                  {data}
+                  disabled= {zIndex === recommendQuestionPage}
+                  onClick = {() => setRecommendQuestionPage(zIndex) } 
+                  startIcon = {ICON_LIST[zIndex]} 
+                  endIcon = {<ExpandMoreOutlinedIcon sx ={{ fontSize: { xs: '20px', xl: '32px'} }} />}
+                  sx = {{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: {xs: '0.725rem',md: '0.775rem', xl: '1.115rem' }, textAlign: 'start', color: 'inherit' }}>
+                    {data}
                 </Button>
 
-                {zIndex === recommendQuestionPage && <Box sx = {{ maxHeight: zIndex === recommendQuestionPage ? 'auto' : '0px', overflow: 'hidden', background: '#f0f8ff17', borderRadius: '10px', padding: '5px' }}>
+                {zIndex === recommendQuestionPage && <Box sx = {{ maxHeight: zIndex === recommendQuestionPage ? 'auto' : '0px', overflow: 'hidden', borderRadius: '10px', padding: '5px' }}>
                 {
                 RECOMMENDATION_QUESTION[zIndex].map((data, zIndex) => (
                     <Button onClick = {() => setRecommendQuestion(data) }
                       sx = {{ 
                         transition: 'none', width: '100%', justifyContent: 'start', textAlign: 'start', color: 'inherit' }}>
                     <Typography component={'span'}
-                      sx = {{ textAlign: 'start', fontSize: '0.725rem !important', whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: '100%', maxWidth: '186px' }}> 
+                      sx = {{ textAlign: 'start', fontWeight: 400, fontSize: {xs: '0.725rem !important', md: '0.725rem !important', xl: '1.125rem !important'}, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: '100%', maxWidth: '100%', textAlign: 'start' }}> 
                       {zIndex + 1}. {data} </Typography>
                     </Button>
                   ))
@@ -547,14 +556,13 @@ export function ChatGenerator() {
 
         <Grid  offset={{ xs: 0, md: 0 }} size={{ xs: 12, md: 7 }} sx = {{ height: '100%'}} >
           <Block sx = {{
-            paddingBottom: {md: '95px !important', xs: '95px !important'},
+            paddingBottom: {xl: '130px !important', md: '95px !important', xs: '95px !important'},
             width: '100%',
-            backgroundImage: theme => theme.palette.mode == 'dark'? BlockStyle.bgColor_dark 
-            : BlockStyle.bgColor_light ,
+            backgroundImage: theme => theme.palette.mode == 'dark'? BlockStyle.bgColor_dark : BlockStyle.bgColor_light
           }}>
 
             <ChatBlock sx = {{ 
-              maxHeight: { xs: 'calc(100vh - 223px)', md: 'calc(100vh - 228px)' },
+              maxHeight: { xs: 'calc(100vh - 223px)', md: 'calc(100vh - 228px)', xl: 'calc(100vh - 335px)' },
              }}>
               <Box sx ={{ width: '100%', height: {xs: '5px', md: '20px'} }}></Box>
 
@@ -591,27 +599,27 @@ export function ChatGenerator() {
 
             <ChatWindow>
               <Box sx = {{ 
-                borderRadius: '15px', 
+                borderRadius: '12px', 
                 background: theme => theme.palette.primary.main,
               }}>
                 <Box sx = {{ 
                   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
                   background: theme => theme.palette.mode == 'dark' ? '#d6d6d685' :
                     theme.palette.primary.third,
-                  borderRadius: '15px'
+                  borderRadius: '12px'
                 }}>
                   <ChatInput text = {recommendQuestion} id = 'FormChat_For_User' disabled = {sessions == null || !isRcmt} handleSubmit = {ChatAction} messageHandler = { messageHandler } />
                 </Box>
               </Box>
 
-              <Typography sx = {{ fontSize: '8px !important', color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', marginTop: '10px' }}>Lưu ý: Mô hình có thể đưa ra câu trả lời không chính xác ở một số trường hợp, vì vậy hãy luôn kiểm chứng thông tin bạn nhé!</Typography>
+              <Typography sx = {{ fontSize: { xs: '10px !important', xl: '16px !important'}, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', marginTop: '10px' }}>Lưu ý: Mô hình có thể đưa ra câu trả lời không chính xác ở một số trường hợp, vì vậy hãy luôn kiểm chứng thông tin bạn nhé!</Typography>
             </ChatWindow>
           </Block>
         </Grid>
 
         <Grid  size={{ xs: 0, md: 2.7 }} sx = {{ height: '100%'}}>  
           <Block sx = {{ 
-              padding: '8px !important',
+              padding: { xs: '8px !important', xl: '24px !important' },
               backgroundImage: theme => theme.palette.mode == 'dark'? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
               display: {
                 xs: 'none',
@@ -619,13 +627,15 @@ export function ChatGenerator() {
               }
           }}>
             <Box sx = {{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
-              <Typography component='p' sx = {{ fontWeight: '800' }}>Cuộc Trò Chuyện</Typography>
+              <Typography component='p' sx = {{ fontWeight: '800', fontSize: { xl: '1.625rem' } }}>Cuộc Trò Chuyện</Typography>
             </Box>
 
-            { !apiHandler.session && sessions && <Box sx = {{ height: '100%', maxHeight: 'calc(100vh - 280px)', overflow: 'auto', padding: 1 }}> {
+            { !apiHandler.session && sessions && <Box sx = {{ height: '100%', maxHeight: { xs: 'calc(100vh - 280px)', xl: 'calc(100vh - 359px)' }, overflow: 'auto', padding: 1 }}> {
               sessions.map((session) => (
                 <Button key = {session._id} 
                   sx ={{ 
+                    paddingX: { xl: '24px !important' },
+                    paddingY: { xl: '16px !important' },
                     width: '100%', 
                     background: theme => {
                       if (theme.palette.mode == 'dark') {
@@ -645,22 +655,22 @@ export function ChatGenerator() {
                       if ( currentChatSession && session?._id == currentChatSession?._id ) return '#fff'
                       return theme.palette.mode == 'dark' ? '#fff' : '#000'
                     },
-                    borderRadius: '10px', marginBottom: 1, padding: 1.5, display: 'flex', justifyContent: 'space-between', cursor: 'pointer', 
+                    borderRadius: '10px', marginBottom: { xs: 1, xl: 2 }, padding: 1.5, display: 'flex', justifyContent: 'space-between', cursor: 'pointer', 
                     boxShadow: theme => theme.palette.mode == 'dark' ? '0px 2px 4px rgb(178 178 178 / 25%), 0px 1px 2px rgb(255 255 255 / 10%)' : '0px 2px 4px 0px rgb(0 0 0 / 30%)', 
                     '&:hover': {
-                      color: theme => '#fff !important' ,
+                      color: '#fff !important' ,
                       background: theme => theme.palette.mode == 'dark' ? 'linear-gradient(164deg, #0e1c2f 0%, #02041a91 100%)' : 'linear-gradient(120deg, #005181 0%, #1596e5fa 100%)', 
                     }
                   }}
                     onClick = {async (e) => await sessionButtonClick(session)}>
                   <Box >
-                    <Typography component='p' sx = {{ width: 'fit-content', maxWidth: '148px', fontWeight: '400 !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_name}</Typography>
-                    <Typography component='p' sx = {{ width: 'fit-content', maxWidth: '148px', fontWeight: '300 !important', fontSize: '0.725rem !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_description}</Typography>
+                    <Typography component='p' sx = {{ fontSize: { xl: '1.225rem' },  width: 'fit-content', maxWidth: { xs: '148px', xl: '245px' }, fontWeight: '400 !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_name}</Typography>
+                    <Typography component='p' sx = {{ fontSize: { xl: '1.075rem !important', xs: '0.725rem !important' }, width: 'fit-content', maxWidth: { xs: '148px', xl: '245px' }, fontWeight: '300 !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_description}</Typography>
                   </Box>
                   <IconButton color = 'error' sx = {{ padding: 0.25 }} disabled= {removeSessionEvent.includes(session?._id)}
                     onClick={async (e) => await removeChatSessionClick(e, session)} >
                     { removeSessionEvent.includes(session?._id) ? <CircularProgress size={20}/> : 
-                        <DeleteOutlineOutlined sx = {{ fontSize: '1.225rem', color: 'red' }}/> }
+                        <DeleteOutlineOutlined sx = {{ fontSize: { xs: '1.225rem', xl: '1.675rem' }, color: 'red' }}/> }
                   </IconButton>
                 </Button> ))
 
@@ -677,7 +687,7 @@ export function ChatGenerator() {
 
             <Box sx = {{ padding: 1, paddingTop: 3 }}>
               <Button 
-                variant='contained' sx = {{ background: theme => theme.palette.primary.main }}
+                variant='contained' sx = {{ fontSize: { xl: '1.225rem' }, background: theme => theme.palette.primary.main }}
                 startIcon= {<OpenInNewIcon/>}
                 onClick={() => setOpenCreateChat(true)}>Tạo Mới Trò Chuyện</Button>
             </Box>
@@ -712,7 +722,13 @@ import Filter7OutlinedIcon from '@mui/icons-material/Filter7Outlined';
 
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 
-const ICON_LIST = [<Filter1OutlinedIcon/>, <Filter2OutlinedIcon/>, <Filter3OutlinedIcon/>, <Filter4OutlinedIcon/>,<Filter5OutlinedIcon/>, <Filter6OutlinedIcon/>, <Filter7OutlinedIcon/>]
+const ICON_LIST = [<Filter1OutlinedIcon sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
+<Filter2OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
+<Filter3OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
+<Filter4OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>,
+<Filter5OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
+<Filter6OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
+<Filter7OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>]
 
 const RECOMMENDATION_QUESTION = [
   ['Tôi có thể tra cứu điểm và bảng điểm ở đâu?', 

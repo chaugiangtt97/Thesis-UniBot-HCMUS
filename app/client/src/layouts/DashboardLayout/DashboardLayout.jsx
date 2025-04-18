@@ -14,6 +14,10 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import SettingsSystemDaydreamIcon from '@mui/icons-material/SettingsSystemDaydream';
 import Hidden from '~/components/Page/Hidden';
 
+const SideBar_Width_XS = '85px'
+const SideBar_Width_LG = '240px'
+const SideBar_Width_XL = '320px'
+
 const DashboardContainer = styled(Box)(({ theme }) => ({ 
   height: '100vh', justifyContent: "center", alignItems: "center", transform: 'scale(1)', transition: '0.5s all ease',
   '&::before': { background: '#ddf3fc', content: '""', display: 'flex', position: 'absolute', zIndex: -1, inset: 0, 
@@ -21,8 +25,10 @@ const DashboardContainer = styled(Box)(({ theme }) => ({
 }));
 
 const SidebarContainer = styled(Box)(({theme}) => ({
+  [theme.breakpoints.up('xl')]: { width: SideBar_Width_XL },
+
     position: 'absolute', right: 0, left: 0, height: `100vh`, maxHeight: '100vh', 
-    overflow: 'auto', width: theme.app.SideBar_Width, padding: theme.spacing(2), 
+    overflow: 'auto', width: SideBar_Width_LG, padding: theme.spacing(2), 
     transform: 'scale(1)', transition: '0.5s all ease',  background:  theme.palette.primary.main,
     [theme.breakpoints.down('lg')]: { left: '-100%' },
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
@@ -38,7 +44,7 @@ const SubSidebarContainer = styled(Box)(({theme}) => ({
 }))
 
 const ContentContainer_Style = { width: '100%', height: '100vh', maxHeight: '100vh', flexGrow: 1, paddingX: 1, paddingY: 2 }
-const LogoContainer_Style = { height: '44px', width: '100%', borderRadius: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }
+const LogoContainer_Style = { height: { xs: '44px', xl: '70px'}, width: '100%', borderRadius: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }
 
 function DashboardLayout() {
   const dispatch = useDispatch()
@@ -71,7 +77,7 @@ function DashboardLayout() {
 
   return (<>
     <DashboardContainer sx = {(theme) => ({
-        paddingLeft: { xs : isOpenSideBar ? 0 : '85px', lg: `calc(${theme.app.SideBar_Width})` }})}>
+        paddingLeft: { xs : isOpenSideBar ? 0 : SideBar_Width_XS, lg: SideBar_Width_LG, xl: SideBar_Width_XL }})}>
 
       <Backdrop onClick={() => setIsOpenSideBar(prev => !prev)}
         sx = {(theme) =>({ [theme.breakpoints.down('lg')]: { display: isOpenSideBar && 'block !important' } })} />
@@ -82,7 +88,7 @@ function DashboardLayout() {
         <Box sx = {LogoContainer_Style}>
           <Typography variant = 'h1' sx = {{ 
               padding: 0,
-              fontSize: '1.6rem',
+              fontSize: { xs: '1.6rem', xl: '2.125rem' },
               fontWeight: '800',
               fontFamily: '"Arial",sans-serif',
               background: theme => theme.palette.mode == 'dark' ? 'linear-gradient(78deg, #7cff60 4%, color-mix(in oklch, #8bffcc, #00f50f) 22%, #f3ff00 45%, color-mix(in oklch, #efff34, #daf24f) 67%, #f4ff12 100.2%)'
@@ -104,7 +110,7 @@ function DashboardLayout() {
             return data?.text ? (
               <MuiListItemButton key = {data.id} selected={(selectedIndex === data.id)}
                 onClick={(event) => handleListItemClick(event, data.id, data.link)} >
-                <ListItemIcon> <Icon/> </ListItemIcon>
+                <ListItemIcon> <Icon sx = {{ fontSize: { xl: '2rem' }}}/> </ListItemIcon>
                 <ListItemText primary= {data.text}/>
               </MuiListItemButton> ) : <></> })}
 
@@ -114,7 +120,7 @@ function DashboardLayout() {
             return data?.text ? (
               <MuiListItemButton key = {data.id} selected={(selectedIndex === data.id)}
                 onClick={(event) => handleListItemClick(event, data.id, data.link)} >
-                <ListItemIcon> <Icon/> </ListItemIcon>
+                <ListItemIcon> <Icon sx = {{ fontSize: { xl: '2rem' }}}/> </ListItemIcon>
                 <ListItemText primary= {data.text}/>
               </MuiListItemButton> ) : <></> })}
         </List>
@@ -125,16 +131,17 @@ function DashboardLayout() {
           <Box onClick= {() => navigate('/admin_profile')}
             sx = {{ display: 'flex', mb: 1, mt: 1, '&:active': { transform: 'scale(0.9)' }}} >
             <Avatar src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"
-              sx={{ width: 32, height: 32, bgcolor: deepOrange[500], color: '#fff' }}></Avatar>
-            <CardContent sx={{ height: '100%', py: 0, '&:last-child' : {py: 0}, position: 'relation', paddingLeft: 1}}>
+              sx={{ width: {xs: 32, xl: 54 }, height: {xs: 32, xl: 54 }, bgcolor: deepOrange[500], color: '#fff' }}></Avatar>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems:'center', height: '100%', py: 0, '&:last-child' : {py: 0}, position: 'relation', paddingLeft: 1}}>
               <Typography component="div" variant="p"
-                sx = {{ width: '108px', overflow: 'hidden', fontSize:'0.725rem', color :theme => theme.palette.mode == 'light' ? '#000' : '#fff',
-                  whiteSpace: 'nowrap', textOverflow: 'ellipsis', cursor:'pointer', fontWeight: '800' }} >
+                sx = {{ width: { xl: '180px', xs: '144px'}, textAlign: 'center', overflow: 'hidden', fontSize:{ xs: '0.725rem', xl: '1.225rem'}, color :theme => theme.palette.mode == 'light' ? '#000' : '#fff',
+                  whiteSpace: 'nowrap', textOverflow: 'ellipsis', cursor:'pointer', fontWeight: '800', marginBottom: {xl: 0.5} }} >
                 {user_profile?.name ? user_profile.name : 'Không tồn tại'}
+                {/* Nguyen Duy Dang Khoa */}
               </Typography>
               <Typography
-                sx={{ fontSize: '0.625rem !important', lineHeight: '120%', fontWeight: '400', color: theme => theme.palette.mode == 'light' ? '#505766' : 'rgb(133, 141, 160)',
-                  width: '128px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor:'pointer' }} >
+                sx={{ width: { xl: '190px', xs: '144px'}, fontSize: {xs: '0.625rem', xl: '0.875rem'}, textAlign: 'center', lineHeight: '120%', fontWeight: '400', color: theme => theme.palette.mode == 'light' ? '#505766' : 'rgb(133, 141, 160)',
+                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor:'pointer' }} >
                 {user_profile?.email ? user_profile.email : 'Không tồn tại'}
               </Typography>
             </CardContent>
@@ -144,14 +151,14 @@ function DashboardLayout() {
             sx = {{ background: '#ffffffe8', borderRadius: '8px', 
               '& > div' : { color: '#000', }, '&:hover' : { background: '#fff', fontWeight: 700,    }, '&:active' : { transform: 'scale(0.9)' } }} >
             <ListItemIcon> <ReplyAllIcon/> </ListItemIcon>
-            <ListItemText primary= "Đăng Xuất" />
+            <ListItemText primary= "Đăng Xuất"  sx = {{ fontSize: {xl: '1.325rem'}, textAlign: 'center' }}/>
           </ListItemButton>
         </InformationCard>
 
         <Box sx = {{ display: 'flex', justifyContent: 'center', paddingTop: '10px' }}>
-          { mode == 'light' ? <Button onClick={() => setMode('dark')} startIcon = {<LightModeIcon/>} sx = {{ color: '#fff' }}>Sáng</Button>
-          : ( mode == 'dark' ? <Button onClick={() => setMode('system')} startIcon = {<DarkModeIcon/>} sx = {{ color: '#fff' }}>Tối</Button>
-           :<Button onClick={() => setMode('light')} startIcon = {<SettingsSystemDaydreamIcon/>} sx = {{ color: '#fff' }}>Hệ thống</Button> ) } </Box>
+          { mode == 'light' ? <Button onClick={() => setMode('dark')} startIcon = {<LightModeIcon sx = {{ fontSize: {xl: '2rem !important'} }} />} sx = {{ fontSize: {xl: '1.25rem'}, color: '#fff' }}>Sáng</Button>
+          : ( mode == 'dark' ? <Button onClick={() => setMode('system')} startIcon = {<DarkModeIcon sx = {{ fontSize: {xl: '2rem !important'} }} />} sx = {{ fontSize: {xl: '1.25rem'}, color: '#fff' }}>Tối</Button>
+           :<Button onClick={() => setMode('light')} startIcon = {<SettingsSystemDaydreamIcon sx = {{ fontSize: {xl: '2rem !important'} }} />} sx = {{ fontSize: {xl: '1.25rem'}, color: '#fff' }}>Hệ thống</Button> ) } </Box>
         
       </SidebarContainer>
 
@@ -226,15 +233,28 @@ const Backdrop = styled(Box) (() => ({
 }))
 
 const MuiListItemButton = styled(ListItemButton) (({theme}) => ({
-  borderRadius: '10px', marginBottom:  theme.spacing(0.5), marginTop:  theme.spacing(0.5), 
-  paddingRight: theme.spacing(1), transition: 'none', 
-  '& > div' : { 
-    '& > span' : { fontWeight: 700, fontSize: '0.725rem !important' },
-    color: '#fff', transition: 'none',  minWidth: '45px' 
-  }, '&.Mui-selected' : { 
+  [theme.breakpoints.up('xl')]: { 
+    fontSize: '1.025rem',
+    marginBottom:  theme.spacing(1),
+    marginTop:  theme.spacing(1),
+    paddingTop:  theme.spacing(1.5),
+    paddingBottom:  theme.spacing(1.5),
+
+    '& .MuiListItemIcon-root': {
+      minWidth: '76px !important',
+    }
+  },
+
+  borderRadius: '10px', marginBottom:  theme.spacing(0.5), marginTop: theme.spacing(0.5), 
+  paddingRight: theme.spacing(1), transition: 'none', fontWeight: 700,
+  fontSize: '0.725rem',
+  color: '#fff', transition: 'none',  minWidth: '45px' ,
+ 
+  '&.Mui-selected' : { 
     boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)', 
-    background: '#ff6559 !important', fontWeight: 700, transition: 'none', 
-    '& > div' : { '& > span' : { fontWeight: 700 } } }
+    background: '#ff6559 !important', fontWeight: 700, transition: 'none', fontWeight: 700
+  },
+
 }))
 
 const InformationCard = styled(Card) (({theme}) => ({

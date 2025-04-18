@@ -1,5 +1,5 @@
-import { Box, Typography, ListItemText, ListItemButton, useColorScheme, Button, Tooltip, IconButton, ListItemIcon, List, CardContent, Avatar, Card } from '@mui/material';
-import React, { useState, useEffect } from 'react'
+import { Box, Typography, ListItemText, ListItemButton, useColorScheme, Button, Tooltip, IconButton, ListItemIcon, List, CardContent, Avatar, Card, ListItem, Divider } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react'
 import { Outlet, useNavigate, useOutletContext } from 'react-router-dom';
 import styled from '@emotion/styled'
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
@@ -15,40 +15,46 @@ import MenuIcon from '@mui/icons-material/Menu';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { deepOrange } from '@mui/material/colors';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
-
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const MuiListItemButton = styled(ListItemButton) (({theme}) => ({
   borderRadius: '12px',
+  [theme.breakpoints.up('xl')]: {
+    borderRadius: '14px',
+    minHeight: '50px',
+  },
   marginBottom:  theme.spacing(0.5),
   marginTop:  theme.spacing(0.5),
   transition: 'none', 
   minHeight: '40px',
   textAlign: 'center',
   background: 'transparent !important',
+
   '& > div' : {
     color: theme.palette.mode == 'dark' ? '#fff': '#394e6a',
     transition: 'none', 
-    minWidth: '45px',
-    '& > span' : {
-      fontWeight: 500,
-      fontSize: '0.825rem !important'
+    minWidth: '65px',
+    fontSize: '0.675rem',
+    fontWeight: '500',
+    [theme.breakpoints.up('md')]: {
+      fontSize: '0.875rem',
+      minWidth: '80px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      fontSize: '1.275rem',
+      minWidth: '120px',
     },
   },
 
   '&:hover' : {
     background: '#cccccc63 !important',
-    '& > span' : {
-      fontSize: '0.825rem !important'
-    },
   },
 
   '&.Mui-selected' : {
     border: '1px solid #047aff',
     transition: 'none', 
     '& > div' : {
-      '& > span' : {
-        color: '#047aff',
-      }
+      color: '#047aff',
     }
   },
 
@@ -56,9 +62,7 @@ const MuiListItemButton = styled(ListItemButton) (({theme}) => ({
     background: '#047aff !important',
     color: '#fff',
     '& > div' : {
-      '& > span' : {
-        color: '#fff !important',
-      }
+      color: '#fff !important',
     }
   }
 
@@ -129,11 +133,26 @@ function MainLayout() {
 
   const [menu, setMenu ] = useState(null)
   const [isOpenMenu, setOpenMenu ] = useState(false)
-  
-  // useEffect(() => {
-  //   setSelectedIndex(selectedIndexInitial)
-  // }, [selectedIndexInitial])
 
+  const marqueeRef = useRef(null);
+  const textRef = useRef(null);
+
+  const [openNavigateList, setOpenNavigateList] = useState(false);
+
+  // Đóng menu khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const isMenuClick =
+        event.target.closest('.menu-container') || event.target.closest('.menu-button');
+
+      if (!isMenuClick) {
+        setOpenNavigateList(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleListItemClick = (_event, index, address, admin_address, require) => {
     setIsOpenSideBar(false)
@@ -160,12 +179,14 @@ function MainLayout() {
     navigate('/')
   }
 
+  const confText = 'Hệ thống đang trong giai đoạn thử nghiệm, mọi thông tin chính thức vui lòng liên hệ info@fit.hcmus.edu.vn'
+
   return (
     <Box sx = {{ 
       width: '100%',
       height: '100dvh',
       background: theme => theme.palette.mode == 'dark' ? '#25294a' : '#DDF3FC',
-      paddingTop: '72px',
+      paddingTop: { xs: '72px', md: '72px', xl: '98px'},
       position: 'absolute',
       overflow: 'hidden'
      }}>
@@ -206,7 +227,7 @@ function MainLayout() {
 
           { !isLogin ? <ListItemButton onClick={() => navigate('/signin')}
             sx = {{ background: '#ffffffe8', borderRadius: '8px', marginTop: 1,
-              '& > div' : { color: '#000', }, '&:hover' : { background: '#fff', fontWeight: 700,    }, '&:active' : { transform: 'scale(0.9)' } }} >
+              '& > div' : { color: '#000',  fontSize: '2rem' }, '&:hover' : { background: '#fff', fontWeight: 700,    }, '&:active' : { transform: 'scale(0.9)' } }} >
             <ListItemIcon> <LoginOutlinedIcon/> </ListItemIcon>
             <ListItemText primary= "Đăng Nhập" />
           </ListItemButton> : <>
@@ -253,13 +274,13 @@ function MainLayout() {
         </Box>
 
         <Box sx = {{ 
-          width: '100%', height: '72px', color: '#000', background:  theme => theme.palette.mode == 'dark' ? '#100a34': '#fff',
+          width: '100%', height: { xs: '72px', md: '72px', xl: '98px'}, color: '#000', background:  theme => theme.palette.mode == 'dark' ? '#100a34': '#fff',
           boxShadow: '0 2px 3px rgba(0, 0, 0, 0.2)', position: 'absolute', top: 0, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          paddingX: { md: 6, xs: 3 }, zIndex : 5
+          paddingX: { xl:12, lg: 8, md: 6, xs: 3 }, zIndex : 5
         }}> 
           <Box>
             <Typography variant = 'h1' sx = {{ 
-              fontSize: { md: '1.4rem', xs: '1.3rem' },
+              fontSize: { xl: '2rem',  md: '1.4rem', xs: '1.3rem' },
               fontWeight: '900',
               background: theme => theme.palette.mode == 'dark' ? 'linear-gradient(78deg, #7cff60 4%, color-mix(in oklch, #8bffcc, #00f50f) 22%, #f3ff00 45%, color-mix(in oklch, #efff34, #daf24f) 67%, #f4ff12 100.2%)'
                 : 'linear-gradient(90deg, #463aa2 4%, color-mix(in oklch, #382e82, #0061cf) 22%, #047aff 45%, color-mix(in oklch, #047aff, #c148ac) 67%, #c148ac 100.2%)',
@@ -277,7 +298,7 @@ function MainLayout() {
               width: 'fit-content',
               justifyContent: 'space-evenly',
               alignItems: 'center',
-              gap: 1.5,
+              gap: {xs: 1.5, xl: 2.5},
               display: { md: 'flex', xs: 'none' }
            }}>
             {navigateList.map((data, _index) => {
@@ -293,60 +314,80 @@ function MainLayout() {
             })}
           </Box>
 
-          <Box sx = {{  display: { md: 'flex', xs: 'none' }, alignItems: 'center', gap: 1 }}>
+          <Box  sx = {{  display: { md: 'flex', xs: 'none' }, alignItems: 'center', gap: 1 }}>
+            {/* <Box sx = {{ fontSize: {xl: '1.275rem'}, display: 'flex', justifyContent: 'center', left: { md: '40px', xs: '24px', xl: '92px' }, top: { xl: '118px', md: '96px', xs: '80px' } }}>
+                { mode == 'light' ? <Button onClick={() => setMode('dark')} startIcon = {<LightModeIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: '#047aff' }}>Chế Độ Sáng</Button>
+                : ( mode == 'dark' ? <Button onClick={() => setMode('system')} startIcon = {<DarkModeIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: '#fff' }}>Chế Độ Tối</Button>
+                :<Button onClick={() => setMode('light')} startIcon = {<SettingsSystemDaydreamIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}>Mặc Định (Auto)</Button> )
+                }
+            </Box> */}
             {
               isLogin ?
               <>
-                <Button sx = {{ 
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  color: '#ff5d5d',
-                  cursor: 'pointer'
-                }} 
-                  onClick={() => setIsOpenModel(true)}>
-                  <LogoutIcon/>
-                  <Typography variant='p'> Đăng Xuất</Typography>
-                </Button>
+                <Button className="menu-button" sx = {{ paddingX: 2, fontSize: {xs: '1rem', xl: '1.575rem'}, fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}
+                  startIcon={
+                  <Box sx ={{ width: '50px', height: '50px',  borderRadius: '50%', marginRight: 1 }}>
+                    <Avatar alt="User" sx = {{ display: { xs: 'none', md: 'block', width: '100%', height: '100%' } }} src=
+                      "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"/>
+                  </Box>}
+                  endIcon={<ExpandMoreIcon sx = {{ fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}/>}
+                  onClick={() => setOpenNavigateList((prev) => !prev)}
+                > {user_profile?.name} </Button>
 
-                <Button sx = {{ 
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff',
-                  cursor: 'pointer'
-                }} 
-                onClick={(event) => handleListItemClick(event, '##login', 'user_profile','admin_profile', true)} >
-                  <AccountCircleOutlinedIcon/>
-                  <Typography variant='p'>{user_profile?.name}</Typography>
-                </Button>
+                { openNavigateList && <Box className="menu-container" sx = {{ 'boxShadow': '0 2px 8px rgba(0, 0, 0, 0.1)', borderRadius: '10px', background: '#fff', zIndex: '1000', width: 'fit-content', maxWidth: 320, position: 'absolute', bottom: '-194px', right: { xl: '68px', xs: '28px'} }}>
+                  <nav aria-label="main folders">
+                    <List>
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={(event) => setOpenNavigateList(false) || handleListItemClick(event, '##login', 'user_profile','admin_profile', true)}>
+                          <ListItemIcon>
+                            <AccountCircleOutlinedIcon sx = {{ color:'#000' }} />
+                          </ListItemIcon>
+                          <ListItemText primary="Xem Thông Tin Cá Nhân" sx = {{ fontSize: { xs: '0.875rem', xl: '1.125rem' } }}/>
+                        </ListItemButton>
+                      </ListItem>
+                    </List>
+                  </nav>
+                  <Divider sx = {{ background: '#000' }} />
+                  <nav aria-label="secondary folders">
+                    <List>
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => setMode(mode == 'dark' ? 'light' : 'dark')}>
+                          <ListItemText primary={ mode == 'dark' ? "Chế Độ Tối" : "Chế Độ Sáng"} sx = {{ fontSize: { xs: '0.875rem', xl: '1.125rem' }, fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#100a34' : '#047aff'}} />
+                        </ListItemButton>
+
+                        <ListItemIcon>
+                          <LightModeIcon sx = {{ color: theme => theme.palette.mode == 'dark' ? '#100a34' : '#047aff' }} />
+                        </ListItemIcon>
+                      </ListItem>
+                      <ListItem disablePadding>
+                        <ListItemButton onClick={() => setIsOpenModel(true)}>
+                          <ListItemText primary="Đăng Xuất" sx = {{ fontSize: { xs: '0.875rem', xl: '1.125rem' }, fontWeight: 500, color:'#ff5d5d'}} />
+                        </ListItemButton>
+                        <ListItemIcon>
+                            <LogoutIcon sx = {{ color:'#ff5d5d'}} />
+                        </ListItemIcon>
+                      </ListItem>
+                    </List>
+                  </nav>
+                </Box> }
               </> : <>
-                <Button sx = {{ 
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 1,
-                  color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff',
-                  cursor: 'pointer'
-                }} onClick={() => navigate('/signin')}>
-                  <LoginIcon/>
-                  <Typography variant='p'>Đăng Nhập</Typography>
-                </Button>
+            <Box sx = {{ fontSize: {xl: '1.275rem'}, display: 'flex', justifyContent: 'center', left: { md: '40px', xs: '24px', xl: '92px' }, top: { xl: '118px', md: '96px', xs: '80px' } }}>
+                { mode == 'light' ? <Button onClick={() => setMode('dark')} startIcon = {<LightModeIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: '#047aff' }}>Chế Độ Sáng</Button>
+                : ( mode == 'dark' ? <Button onClick={() => setMode('system')} startIcon = {<DarkModeIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: '#fff' }}>Chế Độ Tối</Button>
+                :<Button onClick={() => setMode('light')} startIcon = {<SettingsSystemDaydreamIcon sx = {{ fontSize: 'inherit'}}/>} sx = {{ paddingX: {xl: '1rem'}, fontSize: 'inherit', color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}>Mặc Định (Auto)</Button> )
+                }
+            </Box>
               </>
             }
+
           </Box>
+
         </Box>
 
-        <Box sx = {{ overflow: 'auto', height: '100%', paddingY: '2px', paddingBottom: isFooter && '32px' }}>
+        <Box sx = {{ overflow: 'auto', height: '100%', paddingY: '2px', paddingBottom: {xs: isFooter && '32px', xl: isFooter && '40px'} }}>
           <Outlet  context={{...useOutletContext(), setFooter, menu: {
             setMenu: setMenu, handle: setOpenMenu
           }, mainLayout: { navigate: setSelectedIndex } }}/>
-        </Box>
-
-        <Box sx = {{ display: 'flex', justifyContent: 'center', position: 'absolute', left: { md: '40px', xs: '24px' }, top: { md: '96px', xs: '80px' } }}>
-          { mode == 'light' ? <Button onClick={() => setMode('dark')} startIcon = {<LightModeIcon/>} sx = {{ color: '#047aff' }}>Sáng</Button>
-          : ( mode == 'dark' ? <Button onClick={() => setMode('system')} startIcon = {<DarkModeIcon/>} sx = {{ color: '#fff' }}>Tối</Button>
-          :<Button onClick={() => setMode('light')} startIcon = {<SettingsSystemDaydreamIcon/>} sx = {{ color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}>Hệ thống</Button> )
-          }
         </Box>
 
         { isFooter && <Box sx = {{ 
@@ -357,14 +398,20 @@ function MainLayout() {
           position: 'absolute',
           bottom: 0,
           display: 'flex',
-          justifyContent: 'center'
-        }}> 
-        <marquee behavior="scroll" style= {{ width: '100vw' }} direction="left" id="mymarquee" scrollamount="10">
-        {/* <p>This the the sample</p>
-        <p>of my text</p> */}
-        <Typography sx = {{ overflow: '', textOverflow: 'ellipsis', textWrap: 'nowrap', paddingX: '9px', color: theme => theme.palette.mode == 'dark' ? '#ffffff85': '#33333385', width: '100%', textAlign: 'center', lineHeight: '30px' }}>
-          ĐH Khoa Học Tự Nhiên, Luận văn 2024 @ Mạch Vĩ Kiệt, Nguyễn Duy Đăng Khoa - Xây Dựng Hệ Thống Tra Cứu Dữ Liệu Nội Bộ</Typography>
-        </marquee>
+          justifyContent: 'center',
+          paddingY: { xl: 1 }
+        }} ref={marqueeRef} > 
+          { textRef.current?.scrollWidth > marqueeRef.current?.offsetWidth ? 
+            <marquee behavior="scroll" style= {{ width: '100vw' }} direction="left" id="mymarquee" scrollamount="10">
+              <Typography ref={textRef} sx = {{ fontSize: { xs: '0.875rem', xl: '1.225rem'}, overflow: '', textOverflow: 'ellipsis', textWrap: 'nowrap', paddingX: '9px', color: theme => theme.palette.mode == 'dark' ? '#ffffff85': '#33333385', width: '100%', textAlign: 'center', lineHeight: '30px' }}>
+              {confText} 
+              </Typography>
+            </marquee> : 
+            <Typography ref={textRef} sx = {{ fontSize: { xs: '0.875rem', xl: '1.225rem'}, overflow: '', textOverflow: 'ellipsis', textWrap: 'nowrap', paddingX: '9px', color: theme => theme.palette.mode == 'dark' ? '#ffffff85': '#33333385', width: '100%', textAlign: 'center', lineHeight: '30px' }}>
+              {confText} 
+            </Typography> 
+          }
+        
         </Box> }
 
 

@@ -15,7 +15,7 @@ function ChatBlock({children, sx = {}}) {
             position: 'relative',
             width: '100%',
             height: '100%',
-            paddingX: { md: '20px', xs: '10px' }
+            paddingX: { xl: '2rem', md: '1.725rem', xs: '10px' }
          }}>
             {children}
         </Box>

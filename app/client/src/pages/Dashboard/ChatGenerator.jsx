@@ -103,6 +103,9 @@ function NewChatModal({ modalHandler = null }) {
 }
 
 const Header = styled(Box) (({theme}) => ({
+  [theme.breakpoints.up('xl')]: {
+    height: theme.spacing(10),
+  },
   background: theme.palette.primary.main,
   boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
   height: theme.spacing(7),
@@ -123,7 +126,11 @@ const ChatExtension = styled(Box)(({theme}) => ({
   display: 'flex',
   padding: theme.spacing(1),
   paddingRight: theme.spacing(0),
-  minHeight: '32px'
+  minHeight: '32px',
+
+  [theme.breakpoints.up('xl')]: {
+    minHeight: '62px'
+  }
 }))
 
 const ChatWindow = styled(Box)(({theme}) => ({
@@ -452,7 +459,10 @@ export function ChatGenerator() {
   return (<Grid className = 'kietGrid' container spacing={2} sx = {{ height: '100%', width: '100%' }}>
       
       <Grid  size={{ xs: 12, md: 8.5 }}>
-        <Block sx = {{ paddingBottom: '120px !important', paddingTop: '69px !important' }}>
+        <Block sx = {{ 
+          paddingBottom: {xs: '120px !important', xl: '140px !important' }, 
+          paddingTop: { xs: '69px !important' , xl: '90px !important' }
+        }}>
 
           <Header> </Header>
 
@@ -504,14 +514,13 @@ export function ChatGenerator() {
       </Grid>
 
       <Grid  size={{ xs: 3.5, md: 3.5 }} >
-        <Block sx = {{ padding: 1, paddingTop: 9, display: { md: 'block', xs: 'none' } }}>
+        <Block sx = {{ padding: 1, paddingTop: { xs: '69px !important' , xl: '90px !important' }, display: { md: 'block', xs: 'none' } }}>
           <Header/> 
-          <Box sx = {{ display: 'flex', justifyContent: 'space-between', padding: 1,  paddingTop: 8 }}>
-            <Typography component='p' sx = {{ fontWeight: '800' }}> Cuộc Trò Chuyện </Typography>
-            {/* <Button component='p' sx = {{ paddingY: 0, color: theme => theme.palette.mode == 'dark' ? '#ff9b9b' : '#fc0000' }}> Xóa hết </Button> */}
+          <Box sx = {{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
+            <Typography component='p' sx = {{ fontWeight: '800', fontSize: {xl: '1.625rem'} }}> Cuộc Trò Chuyện </Typography>
           </Box>
 
-          { !apiHandler.session && sessions && <Box sx = {{ height: '100%', maxHeight: 'calc(100vh - 230px)', overflow: 'auto', padding: 1 }}> {
+          { !apiHandler.session && sessions && <Box sx = {{ height: '100%', maxHeight: { xs: 'calc(100vh - 230px)', xl: 'calc(100vh - 289px)' }, overflow: 'auto', padding: 1 }}> {
             sessions.map((session, index) => (
               <Box key = {session?._id || index * 7561295} 
                 sx ={{ width: '100%',
@@ -524,8 +533,8 @@ export function ChatGenerator() {
                   '&:hover': { background: theme => theme.palette.mode == 'dark' ? '#00000045' : '#818fb033', color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000' }}}
                   onClick = {async (e) => await sessionButtonClick(session)}>
                 <Box >
-                  <Typography component='p' sx = {{ width: 'fit-content', maxWidth: '148px', fontWeight: '400 !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_name}</Typography>
-                  <Typography component='p' sx = {{ width: 'fit-content', maxWidth: '148px', fontWeight: '300 !important', fontSize: '0.725rem !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_description}</Typography>
+                  <Typography component='p' sx = {{ fontSize: { xl: '1.225rem' }, width: 'fit-content', maxWidth: { xs: '148px', xl: '305px' }, fontWeight: '400 !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_name}</Typography>
+                  <Typography component='p' sx = {{ fontSize: { xl: '1.075rem !important', xs: '0.725rem !important' }, width: 'fit-content', maxWidth: '148px', fontWeight: '300 !important', fontSize: '0.725rem !important', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session?.session_description}</Typography>
                 </Box>
                 <IconButton sx = {{ padding: 0.25,  color: theme => theme.palette.mode == 'dark' ? '#ff9b9b' : '#fc0000' }} onClick={async (e) => await removeChatSessionClick(e, session)} >
                   { removeSessionEvent.includes(session?._id) ? <CircularProgress size={20}/> : 
@@ -539,7 +548,7 @@ export function ChatGenerator() {
           </Box> }
 
 
-          { (apiHandler.session || !sessions) && <Box sx = {{ height: '100%', maxHeight: 'calc(100vh - 230px)', overflow: 'auto', padding: 1 }}> {
+          { (apiHandler.session || !sessions) && <Box sx = {{ height: '100%', maxHeight: { xs: 'calc(100vh - 230px)', xl: 'calc(100vh - 289px)' }, overflow: 'auto', padding: 1 }}> {
             ['','',''].map((_session, index) => (
               <Skeleton key={ index * 82715 } variant="rounded" height={62} sx = {{ marginBottom: 2, width: '100%', borderRadius: '10px' }} />
             ))
@@ -549,7 +558,7 @@ export function ChatGenerator() {
 
           <Box sx = {{ padding: 1, paddingTop: 3 }}>
             <Button 
-              variant='contained' sx = {{ background: theme => theme.palette.primary.main }}
+              variant='contained' sx = {{ fontSize: { xl: '1.225rem' }, background: theme => theme.palette.primary.main }}
               startIcon= {<OpenInNewIcon/>}
               disabled={messageHandler.isProcess}
               onClick={() => setOpenCreateChat(true)}>Tạo Mới Trò Chuyện</Button>

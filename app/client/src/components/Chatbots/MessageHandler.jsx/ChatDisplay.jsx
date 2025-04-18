@@ -40,6 +40,13 @@ export const ChatMessage = styled(Box) (({theme}) => ({
   minWidth: '200px',
   transform: 'scale(1)',
   transition: '0.5s all ease',
+
+  [theme.breakpoints.up('xl')]: {
+    fontSize: '1.225rem',
+    padding: theme.spacing(1.225),
+    paddingRight:  theme.spacing(2),
+    paddingLeft:  theme.spacing(2),
+  }
 }))
 
 const ModelButton_Style = {
@@ -114,10 +121,10 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
                   <IconButton 
                     onClick={() => action?.re_prompt && action.re_prompt(conservation?.question)}
                     sx = {{ padding: '1px' }}>
-                    <RotateRightOutlinedIcon sx = {{ fontSize: '16px' }}/>
+                    <RotateRightOutlinedIcon sx = {{ fontSize: { xl: '24px', xs: '16px'} }}/>
                   </IconButton> 
                 </Tooltip> : <CircularProgress size="14px" sx = {{ color: '#fff' }} /> }
-                <Typography component='p' sx = {{ fontSize: '0.725rem !important', textAlign: 'end', width: '100%' }}>{getTime((conservation?.create_at ? conservation.create_at : conservation?.createdAt))}</Typography>
+                <Typography component='p' sx = {{ fontSize: { xs: '0.725rem !important', xl: '0.925rem !important' }, textAlign: 'end', width: '100%' }}>{getTime((conservation?.create_at ? conservation.create_at : conservation?.createdAt))}</Typography>
             </Box>
           </ChatMessage>
         </Box>
@@ -144,7 +151,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
                 })}
               </Box>
               <Box sx = {{ width: '100%', display: 'flex' , justifyContent: 'end', alignItems: 'center'}}>
-                <Button startIcon={<CloseIcon/>} color='error' sx = {{ fontSize: '0.725rem !important' }}>Thoát Cuộc Trò Chuyện</Button>
+                <Button startIcon={<CloseIcon/>} color='error' sx = {{ fontSize: { xs: '0.725rem !important', md: '1.225rem !important' } }}>Thoát Cuộc Trò Chuyện</Button>
               </Box>
             </Box>
 
@@ -168,7 +175,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
 
             <Box sx = {{  width: '100%', borderTop: '1px solid #000', marginTop: 1, paddingTop: 1 }}>
               <Box sx = {{  display: 'flex', flexWrap: 'wrap', gap: 1, rowGap: '4px', alignItems: 'center' }}>
-                <Typography sx = {{ fontSize: '18px', fontWeight: '500' }}>Nguồn Trích Dẫn: </Typography>
+                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>Nguồn Trích Dẫn: </Typography>
                 {conservation?.source && conservation?.source.map((data, zIndex) => {
                   return <Box key = {zIndex*12650} sx = {ModelButton_Style}
                     onClick = {() => { setOpenDetail(true); setContent(<a href={data?.url} target="_blank" rel="noopener noreferrer" style={{color: '#000', textWrap: 'auto'}}>{data?.url}</a>)  } } > { zIndex + 1 } </Box>
@@ -178,7 +185,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
 
             <Box sx = {{  width: '100%', borderTop: '1px solid #000', marginTop: 1, paddingTop: 1 }}>
               <Box sx = {{  display: 'flex', flexWrap: 'wrap', gap: 1, rowGap: '4px', alignItems: 'center' }}>
-                <Typography sx = {{ fontSize: '18px', fontWeight: '500' }}>Phản Hồi / Đánh Giá:  </Typography>
+                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>Phản Hồi / Đánh Giá:  </Typography>
                 <HoverRating
                   value = {{ value: value, action: feedback }}
                   hover = {{ value: hover, action: setHover }}
@@ -187,7 +194,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
             </Box>
 
             <Box sx = {{  width: '100%', borderTop: '1px solid #000', marginTop: 1, paddingTop: 1 }}>
-              <Typography component='p' sx = {{ fontSize: '0.725rem !important', textAlign: 'end' }}>{getTime(conservation?.create_at ? conservation.create_at : conservation?.createdAt)}</Typography>
+              <Typography component='p' sx = {{ fontSize: { xs: '0.725rem !important', xl: '0.925rem !important' }, textAlign: 'end' }}>{getTime(conservation?.create_at ? conservation.create_at : conservation?.createdAt)}</Typography>
             </Box>
           </ChatMessage>
           <Avatar alt="ChatBot" sx = {{ display: { xs: 'none', md: 'block' } }} src={botAvatar} />
@@ -214,7 +221,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
                     onClick = {() => { setOpenDetail(true); setContent(<a href={data?.url} target="_blank" rel="noopener noreferrer" style={{color: '#000'}}>{data?.url}</a>)  } } > {useCode(data?.collection_name)} </Box>
                 })}
               </Box>
-              <Typography component='p' sx = {{ fontSize: '0.725rem !important', textAlign: 'end' }}>{getTime(conservation?.create_at ? conservation.create_at : conservation?.createdAt)}</Typography>
+              <Typography component='p' sx = {{ fontSize: { xs: '0.725rem !important', xl: '1.925rem' }, textAlign: 'end' }}>{getTime(conservation?.create_at ? conservation.create_at : conservation?.createdAt)}</Typography>
             </Box>
           </ChatMessage>
           <Avatar alt="ChatBot" sx = {{ display: { xs: 'none', md: 'block' } }} src={botAvatar} />
@@ -317,6 +324,7 @@ function HoverRating({value, hover}) {
           if(!newHover) { return hover.action(0) };
           hover.action(newHover);
         }}
+        sx = {{ fontSize: { xl: '36px' } }}
         emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
       />
       <Box sx={{ ml: 2, width: 'fit-content' }}>{labels[hover.hover !== -1 ? hover.value : value.value]}</Box>
