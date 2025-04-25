@@ -41,12 +41,12 @@ function FeedBack() {
 
         <Grid  offset={{ xs: 0, md: 3 }} size={{ xs: 12, md: 6 }}>
           <Typography variant = 'h1' sx = {{ 
-            fontSize: { xs: '1rem !important', xl: '3rem !important' },
+            fontSize: { xs: '2rem !important', xl: '3rem !important' },
             fontWeight: '800',
             fontFamily: '"Roboto","Helvetica","Arial",sans-serif',
             background: theme => theme.palette.mode == 'dark' ? 'linear-gradient(78deg, #7cff60 4%, color-mix(in oklch, #8bffcc, #00f50f) 22%, #f3ff00 45%, color-mix(in oklch, #efff34, #daf24f) 67%, #f4ff12 100.2%)'
               : 'linear-gradient(90deg, #463aa2 4%, color-mix(in oklch, #382e82, #0061cf) 22%, #047aff 45%, color-mix(in oklch, #047aff, #c148ac) 67%, #c148ac 100.2%)',
-            color: 'transparent', backgroundSize: '100% 100%', WebkitBackgroundClip : 'text', width: '100%', textAlign: 'center', marginBottom: 2
+            color: 'transparent', backgroundSize: '100% 100%', WebkitBackgroundClip : 'text', width: '100%', textAlign: 'center', marginBottom: { xs: 1, xl: 2 }
             }}>
             Báo lỗi / Góp ý </Typography>
           <Typography variant = 'h1' sx = {{ 

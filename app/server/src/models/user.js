@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 import { hash as _hash, genSalt as _genSalt, compare } from 'bcrypt'
-import { isEmail } from 'validator'
 import mongoosePaginate from 'mongoose-paginate-v2'
 
 const UserSchema = new mongoose.Schema(
@@ -11,12 +10,6 @@ const UserSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      validate: {
-        validator: (str, option) => {
-          return isEmail(str, option)
-        },
-        message: 'EMAIL_IS_NOT_VALID'
-      },
       lowercase: true,
       unique: true,
       required: true
@@ -25,100 +18,98 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    sex: {
+    educationRole: {
       type: String,
-      enum: ['male', 'female']
+      enum: ['student', 'lecturer'],
+      required: true
     },
-    personal_email: {
-      type: String,
-      validate: {
-        validator: (str, option) => {
-          return isEmail(str, option)
-        },
-        message: 'EMAIL_IS_NOT_VALID'
-      }
+
+    informationDetails: {
+      type: Object,
+      required: true
     },
-    interest: {
-      type: Array,
-      default: []
-    },
-    department: {
-      type: String
-    },
-    role: {
-      type: String,
-      enum: ['student', 'researcher', 'administrator', 'academic_administration'],
-      default: 'student'
-    },
-    program: {
-      type: String,
-      enum: ['PR-CLC', 'PR-CNTN', 'PR-DT', 'PR-VP']
-    },
-    class: {
-      type: String,
-      enum: ['K20', 'K21', 'K22', 'K23', 'K24']
-    },
+
+    // interest: {
+    //   type: Array,
+    //   default: []
+    // },
+    // department: {
+    //   type: String
+    // },
+    // role: {
+    //   type: String,
+    //   enum: ['student', 'researcher', 'administrator', 'academic_administration'],
+    //   default: 'student'
+    // },
+    // program: {
+    //   type: String,
+    //   enum: ['PR-CLC', 'PR-CNTN', 'PR-DT', 'PR-VP']
+    // },
+    // class: {
+    //   type: String,
+    //   enum: ['K20', 'K21', 'K22', 'K23', 'K24']
+    // },
     verification: {
       type: String
     },
-    position: {
-      type: String,
-      enum: ['ROLE-TP', 'ROLE-PP', 'ROLE-NV', 'ROLE-CTV']
-    },
+    // position: {
+    //   type: String,
+    //   enum: ['ROLE-TP', 'ROLE-PP', 'ROLE-NV', 'ROLE-CTV']
+    // },
     verified: {
       type: Boolean,
       default: false
     },
-    message: {
-      type: String
-    },
-    phone: {
-      type: String
-    },
-    birth: {
-      type: Date
-    },
-    degree: {
-      type: String,
-      enum: ['Cử Nhân', 'Thạc Sĩ', 'Tiến Sĩ', 'Sinh viên chưa tốt nghiệp', 'Không có'],
-      default: 'Không có'
-    },
-    database: {
-      type: Array,
-      default: []
-    },
-    researcher_area: {
-      type: Array,
-      default: []
-    },
-    major: {
-      type: String,
-      default: 'Công nghệ thông tin'
-    },
-    projects: {
-      type: Array,
-      default: []
-    },
-    methods: {
-      type: Array,
-      default: ['Công văn', 'Văn bản', 'Sổ tay sinh viên']
-    },
-    technical: {
-      type: Array,
-      default: []
-    },
-    languages: {
-      type: Array,
-      default: ['Tiếng việt', 'Tiếng anh']
-    },
-    goals: {
-      type: Array,
-      default: ['Tìm hiểu thông tin trường đại học Khoa Học Tự Nhiên']
-    },
-    preferences: {
-      type: String,
-      default: 'Ưu tiên văn bản chính thống, nội quy, công văn của trường học'
-    },
+    // message: {
+    //   type: String
+    // },
+    // phone: {
+    //   type: String
+    // },
+    // birth: {
+    //   type: Date
+    // },
+    // degree: {
+    //   type: String,
+    //   enum: ['Cử Nhân', 'Thạc Sĩ', 'Tiến Sĩ', 'Sinh viên chưa tốt nghiệp', 'Không có'],
+    //   default: 'Không có'
+    // },
+    // database: {
+    //   type: Array,
+    //   default: []
+    // },
+    // researcher_area: {
+    //   type: Array,
+    //   default: []
+    // },
+    // major: {
+    //   type: String,
+    //   default: 'Công nghệ thông tin'
+    // },
+    // projects: {
+    //   type: Array,
+    //   default: []
+    // },
+    // methods: {
+    //   type: Array,
+    //   default: ['Công văn', 'Văn bản', 'Sổ tay sinh viên']
+    // },
+    // technical: {
+    //   type: Array,
+    //   default: []
+    // },
+    // languages: {
+    //   type: Array,
+    //   default: ['Tiếng việt', 'Tiếng anh']
+    // },
+    // goals: {
+    //   type: Array,
+    //   default: ['Tìm hiểu thông tin trường đại học Khoa Học Tự Nhiên']
+    // },
+    // preferences: {
+    //   type: String,
+    //   default: 'Ưu tiên văn bản chính thống, nội quy, công văn của trường học'
+    // },
     loginAttempts: {
       type: Number,
       default: 0,

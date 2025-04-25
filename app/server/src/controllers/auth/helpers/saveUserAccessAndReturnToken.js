@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import UserAccess from '../../../models/userAccess'
 import { getUserInfo } from './getUserInfo'
 import generateToken from './generateToken'
@@ -21,18 +22,16 @@ export const saveUserAccessAndReturnToken = async (req = {}, user = {}) => {
     socketid: null
   })
 
-  console.log('login 6')
+  console.log('login userAccess', user.email)
 
 
   const result = await userAccess.save().then(async () => {
     const userInfo = getUserInfo(user)
-    // Returns data with access token
     return ({
       token: token,
       user: userInfo
     })
   }).catch((err) => {
-    console.log(err)
     return buildErrObject(422, err.message)
   })
 

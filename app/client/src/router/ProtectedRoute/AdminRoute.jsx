@@ -19,7 +19,7 @@ const AdminRoute = ({ children }) => {
         useProfile.verifyToken(token).then((usr_profile) => {
           dispatch(refresh(token, usr_profile))
           processHandler.remove('#verifyToken', eventID)
-          if(usr_profile?.role && !(['administrator', 'academic_administration'].includes(usr_profile?.role))){
+          if(usr_profile?.role && !(['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role))){
             navigate('/')
           }
         }).catch((error) => {     
@@ -29,7 +29,7 @@ const AdminRoute = ({ children }) => {
         })
       } else {
         const usr_profile = auth.user
-        if(usr_profile?.role && !(['administrator', 'academic_administration'].includes(usr_profile?.role))){
+        if(usr_profile?.role && !(['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role))){
           navigate('/')
         }
       }

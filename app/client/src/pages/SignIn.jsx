@@ -86,6 +86,7 @@ function SignIn() {
 
     await useAuth.login(userData)
       .then((userData) => {
+        console.log('hihih', userData)
           processHandler.remove('#login', logInEvent)
           dispatch(login(userData))}) 
       .catch((err) => {

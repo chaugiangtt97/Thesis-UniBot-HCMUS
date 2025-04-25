@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
 import { useProfile } from '~/apis/Profile';
-import UnknowPage from '~/components/Page/UnknowPage';
 import { refresh } from '~/store/actions/authActions';
 
 const UserRoute = ({ children }) => {
@@ -26,9 +25,6 @@ const UserRoute = ({ children }) => {
           processHandler.remove('#verifyToken', eventID)
 
           if(usr_profile?.role && !(['student', 'researcher'].includes(usr_profile?.role))){
-            // if(!['administrator', 'academic_administration'].includes(usr_profile?.role)){
-            //   navigate('/')
-            // } else navigate('/chat_generator')
             navigate('/')
           }
         }).catch((error) => {
@@ -40,9 +36,6 @@ const UserRoute = ({ children }) => {
       } else {
         const usr_profile = auth.user
         if(usr_profile?.role && !(['student', 'researcher'].includes(usr_profile?.role))){
-          // if(!['administrator', 'academic_administration'].includes(usr_profile?.role)){
-          //   navigate('/')
-          // } else navigate('/chat_generator')
           navigate('/')
         }
       }

@@ -20,7 +20,7 @@ const GuessRoute = ({ children }) => {
           dispatch(refresh(token, usr_profile))
           processHandler.remove('#verifyToken', eventID)
 
-          if(usr_profile?.role && ['administrator', 'academic_administration'].includes(usr_profile?.role)){
+          if(usr_profile?.role && ['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role)){
             navigate('/dashboard')
           } else if (usr_profile?.role && ['student', 'researcher'].includes(usr_profile?.role)){
             navigate('/')
@@ -32,7 +32,7 @@ const GuessRoute = ({ children }) => {
         })
       } else {
         const usr_profile = auth.user
-        if(usr_profile?.role && ['administrator', 'academic_administration'].includes(usr_profile?.role)){
+        if(usr_profile?.role && ['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role)){
           navigate('/dashboard')
         } else if (usr_profile?.role && ['student', 'researcher'].includes(usr_profile?.role)){
           navigate('/')

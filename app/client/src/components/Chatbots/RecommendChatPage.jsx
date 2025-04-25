@@ -97,11 +97,11 @@ export function RecommendChatPage({
         {recommendedQuestions && recommendedQuestions.map((question, index) => {
             return (
             <Box key = {index} sx = {{ 
-                flex:  { xs: "0 1 140px", md: "0 1 180px", xl: "0 1 270px" },
+                flex:  { xs: "0 1 140px", md: "0 1 160px", xl: "0 1 260px" },
                 display: { sm: index >= 3 && 'none', xs: 'flex' }
             }}>
                 <Box sx = {{ 
-                height: { xs: "140px", md: "180px", xl: '270px' }, width: '100%', borderRadius: '10px',
+                height: { xs: "120px", md: "160px", xl: '260px' }, width: '100%', borderRadius: '10px',
                 padding: 2, position: 'relative', textAlign: 'start', fontSize: { xl: '1.5rem' },
                 ...BLOCK_STYLE }} onClick = {async () => { ChatAction && await ChatAction(question) }}>
                     {index + 1}{'. '}{question.question}

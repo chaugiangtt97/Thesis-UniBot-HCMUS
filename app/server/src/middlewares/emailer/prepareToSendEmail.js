@@ -90,7 +90,7 @@ const prepareToSendEmail = (user = {}, subject = '') => {
 </body>
 </html>
   `
-  
+
   const data = {
     user,
     subject,

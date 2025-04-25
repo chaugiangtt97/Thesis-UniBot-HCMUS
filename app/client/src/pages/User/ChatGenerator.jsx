@@ -96,7 +96,7 @@ function NewChatModal({ modalHandler = null }) {
 
           {notice && 
             <DialogContentText sx = {{ paddingTop: 2, display: 'block' }}>
-              <Typography component={'span'} variant={'body2'} sx = {{ color: '#fcff28', textAlign: 'end', display: 'block', width: '100%' }}>{notice}</Typography>
+              <Typography component={'span'} variant={'body2'} sx = {{ color: '#ff2828', textAlign: 'end', display: 'block', width: '100%' }}>{notice}</Typography>
             </DialogContentText>}
         </DialogContent>
         <DialogActions>
@@ -503,15 +503,15 @@ export function ChatGenerator() {
       <Grid container  spacing={2} sx = {{ height: '100%', '--Grid-rowSpacing': { md: 'calc(2 * var(--mui-spacing))', xs: 1 } }}>
 
         <Grid  size={{ xs: 0, md: 2.3 }} sx = {{ height: '100%' }}>  
-          <Box sx = {{ display: 'flex', flexDirection: 'column' }}>
+          <Box sx = {{ display: 'flex', flexDirection: 'column', maxHeight: '100vh'}}>
             <Block sx = {{ 
               padding: '16px !important',
-              paddingX: { xl: '24px !important' },
               paddingBottom: '32px !important',
               backgroundImage: theme => theme.palette.mode == 'dark'? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
               display: { xs: 'none', md: 'flex' },
               flexDirection: "column",
               justifyContent: "start",
+              overflow: 'auto',
             }}>
               <Box sx = {{ display: 'flex', alignItems: 'center', gap: 0.2, paddingBottom: 0.3 }}>
                 <StarIcon sx = {{ fontSize: { xs: '28px !important', xl: '42px !important' }, color:'#e7e74e' }}/>

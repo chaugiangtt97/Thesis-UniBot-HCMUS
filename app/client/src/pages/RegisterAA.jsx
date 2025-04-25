@@ -77,19 +77,31 @@ function RegisterAA() {
     const logInEvent = processHandler.add('#register')
 
     const data = new FormData(event.currentTarget)
-    const userData = { email: data.get('email'), password: data.get('password'),  name: data.get('name') };
+    const userData = { 
+      email: data.get('email'), 
+      password: data.get('password'),  
+      name: data.get('name'),
+      educationRole: 'lecturer',
+      informationDetails: {
+        administrativeUnit: data.get('administrativeUnit'),
+        lecturerPosition: data.get('lecturerPosition'),
+        teachingDepartment: data.get('teachingDepartment')
+      },
+      captchaToken: captchaToken
+    };
 
     await useAuth.register(userData)
       .then((userData) => {
+        console.log(userData)
           processHandler.remove('#register', logInEvent)
           noticeHandler.add({
             id: '#542',
             status: 'success',
             message: 'Tạo tài khoản thành công, hãy kiểm tra email để xác thực tài khoản bạn nhé !',
-            // auto: false
           })
           setTimeout(() => {
-            navigate('/validateEmail')
+            import.meta.env.VITE_ENVIRONMENT == 'production' ? 
+              navigate('/validateEmail') : navigate('/signin')
           }, 500);
         }) 
       .catch((err) => {
@@ -115,7 +127,7 @@ function RegisterAA() {
 
           <FormControl sx={{gap: 1}}>
             <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập (Gmail giảng viên trường học)</FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder="name@fit.hcmus.edu.edu" inputProps={{ maxLength: 40 }}
+            <TextInput id="email" type="username" name="email" placeholder="name@fit.hcmus.edu.vn" inputProps={{ maxLength: 50 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
@@ -129,56 +141,56 @@ function RegisterAA() {
           </FormControl>
 
           <Box sx = {{ display: {xs: 'block', md: 'flex' }, gap: 2 }}>
-            <FormControl  sx={{gap: 1, minWidth: {xs: '100%', md: '65%'}}}>
-              <FormLabel htmlFor="department" sx = {{ color: 'inherit', display: 'block', textAlign: 'start' }}>Phạm vi công tác</FormLabel>
+            <FormControl  sx={{gap: 1, width: '100%', flex: { xs: '100%', md: '0 0 65%' }}}>
+              <FormLabel htmlFor="administrativeUnit" sx = {{ color: 'inherit', display: 'block', textAlign: 'start' }}>Đơn vị trực thuộc</FormLabel>
               <Select
-                id="user_department"
-                name= 'department'
+                id="administrativeUnit"
+                name= 'administrativeUnit'
                 sx = {{ width: '100%',
-                  '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary }
+                  '& .MuiSelect-icon': { color: '#000' }
                 }}
               >
-                <MenuItem value={'VPK'}>Văn phòng khoa - CNTT</MenuItem>
-                <MenuItem value={'CTSV'}>Phòng công tác sinh viên</MenuItem>
-                <MenuItem value={'GV'}>Giảng viên trường FIT-HCMUS</MenuItem>
+                <MenuItem key = {'administrativeUnit_Khoa-cong-nghe-thong-tin'} value={'administrativeUnit_Khoa-cong-nghe-thong-tin'}>Khoa công nghệ thông tin</MenuItem>
+                <MenuItem key = {'administrativeUnit_Phong-cong-tac-sinh-vien'} value={'administrativeUnit_Phong-cong-tac-sinh-vien'}>Phòng công tác sinh viên</MenuItem>
+                <MenuItem key = {'administrativeUnit_Phong-dao-tao-khao-thi'} value={'administrativeUnit_Phong-dao-tao-khao-thi'}>Phòng đào tạo, khảo thí</MenuItem>
               </Select>
             </FormControl>
 
-            <FormControl  sx={{gap: 1, minWidth: {xs: '100%', md: '35%'}}}>
-              <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Chức vụ</FormLabel>
+            <FormControl  sx={{gap: 1, width: '100%', flex: { xs: '100%', md: '1 1 100%' }}}>
+              <FormLabel htmlFor="lecturerPosition" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Chức vụ</FormLabel>
               <Select
-                id="user_position"
-                name= "user_position"
+                id="lecturerPosition"
+                name= "lecturerPosition"
                 sx = {{ width: '100%',
-                  '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary },
+                  '& .MuiSelect-icon': { color: '#000' },
                 }}
               >
-                <MenuItem value={'TBM'}>Trưởng bộ môn</MenuItem>
-                <MenuItem value={'TP'}>Trưởng phòng</MenuItem>
-                <MenuItem value={'CTV'}>Cộng tác viên</MenuItem>
-                <MenuItem value={'GVCH'}>Giảng viên cơ hữu</MenuItem>
-                <MenuItem value={'NVVP'}>Nhân viên văn phòng</MenuItem>
+                <MenuItem key = {'lecturerPosition_Truong-bo-mon'} value = {'lecturerPosition_Truong-bo-mon'}>Trưởng bộ môn</MenuItem>
+                <MenuItem key = {'lecturerPosition_Giang-vien'} value = {'lecturerPosition_Giang-vien'}>Giảng viên</MenuItem>
+                <MenuItem key = {'lecturerPosition_Tro-giang'} value = {'lecturerPosition_Tro-giang'}>Trợ giảng</MenuItem>
+                <MenuItem key = {'lecturerPosition_Giao-vu'} value = {'lecturerPosition_Giao-vu'}>Giáo vụ</MenuItem>
               </Select>
             </FormControl>
           </Box>
 
         
           <FormControl  sx={{gap: 1}}>
-            <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Bộ môn công tác (nếu có)</FormLabel>
+            <FormLabel htmlFor="teachingDepartment" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Bộ môn công tác (nếu có)</FormLabel>
               <Select
-                id="user_position"
-                name= "user_position"
+                id="teachingDepartment"
+                name= "teachingDepartment"
+                defaultValue={'teachingDepartment_Khong-co'}
                 sx = {{ width: '100%',
-                  '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary },
+                  '& .MuiSelect-icon': { color: '#000' },
                 }}
               >
-                <MenuItem key={'CNPM'} value={'CNPM'}>Công Nghệ Phần Mềm</MenuItem>
-                <MenuItem key={'HTTT'} value={'HTTT'}>Hệ Thống Thông Tin</MenuItem>
-                <MenuItem key={'KHMT'} value={'KHMT'}>Khoa Học Máy Tính</MenuItem>
-                <MenuItem key={'TGMT'} value={'TGMT'}>Thị Giác Máy Tính</MenuItem>
-                <MenuItem key={'CNTTHUC'} value={'CNTTHUC'}>Công Nghệ Tri Thức</MenuItem>
-                <MenuItem key={'CNTT'} value={'CNTT'}>Công Nghệ Thông Tin </MenuItem>
-                <MenuItem key={'NONE'} value={'NONE'}>Không có chuyên ngành</MenuItem>
+                <MenuItem key={'teachingDepartment_Cong-nghe-phan-mem'} value={'teachingDepartment'}>Công Nghệ Phần Mềm</MenuItem>
+                <MenuItem key={'teachingDepartment_He-thong-thong-tin'} value={'teachingDepartment'}>Hệ Thống Thông Tin</MenuItem>
+                <MenuItem key={'teachingDepartment_Khoa-hoc-may-tinh'} value={'teachingDepartment'}>Khoa Học Máy Tính</MenuItem>
+                <MenuItem key={'teachingDepartment_Thi-giac-may-tinh'} value={'teachingDepartment'}>Thị Giác Máy Tính</MenuItem>
+                <MenuItem key={'teachingDepartment_Cong-nghe-tri-thuc'} value={'teachingDepartment'}>Công Nghệ Tri Thức</MenuItem>
+                <MenuItem key={'teachingDepartment_Cong-nghe-thong-tin'} value={'teachingDepartment'}>Công Nghệ Thông Tin </MenuItem>
+                <MenuItem key={'teachingDepartment_Khong-co'} value={'teachingDepartment_Khong-co'}>Không có</MenuItem>
             </Select>
           </FormControl>
 

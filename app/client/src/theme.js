@@ -266,7 +266,7 @@ const theme = extendTheme(
             // background: theme.palette.primary.background,
             '--mui-palette-background-paper': '#d3e5ef',
             color: '#000',
-            borderRadius: '12px'
+            borderRadius: '6px'
           })
         },
       },

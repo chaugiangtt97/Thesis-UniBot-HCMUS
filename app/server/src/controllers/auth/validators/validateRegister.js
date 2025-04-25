@@ -17,15 +17,13 @@ export const validateRegister = [
     .isEmpty()
     .withMessage('IS_EMPTY')
     .isEmail()
-    .withMessage('EMAIL_IS_NOT_VALID')
-    // eslint-disable-next-line no-unused-vars
-    .custom((value) => {
-      // if (!(value.endsWith('@clc.fitus.edu.vn') || value.endsWith('hcmus.edu.vn'))) {
-      //   throw new Error('Email phải có tên miền @hcmus.edu.vn hoặc @clc.fitus.edu.vn')
-      // }
-      return true
-    })
-  ,
+    .withMessage('EMAIL_IS_NOT_VALID'),
+  // .custom((value) => {
+  // if (!(value.endsWith('@clc.fitus.edu.vn') || value.endsWith('hcmus.edu.vn'))) {
+  //   throw new Error('Email phải có tên miền @hcmus.edu.vn hoặc @clc.fitus.edu.vn')
+  // }
+  //   return true
+  // }),
   check('password')
     .exists()
     .withMessage('MISSING')
@@ -36,6 +34,20 @@ export const validateRegister = [
       min: 5
     })
     .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
+  check('educationRole')
+    .exists()
+    .withMessage('MISSING')
+    .not()
+    .isEmpty()
+    .withMessage('IS_EMPTY')
+    .custom((value) => {
+      if (value !== 'student' && value !== 'lecturer') {
+        throw new Error('INVALID_EDUCATION_ROLE')
+      }
+      return true
+    }),
+  check('informationDetails'),
+  check('captchaToken'),
   (req, res, next) => {
     try {
       validationResult(req).throw()
