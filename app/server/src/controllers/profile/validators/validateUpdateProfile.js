@@ -12,23 +12,8 @@ export const validateUpdateProfile = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
-  check('phone')
-    .exists()
-    .withMessage('MISSING')
-    .not()
-    .isEmpty()
-    .withMessage('IS_EMPTY')
-    .trim(),
-  check('sex'),
-  check('birth'),
-  check('department'),
-  check('position'),
-  check('persional_email'),
-  check('preferences'),
-  check('major'),
-  check('class'),
-  check('program'),
-  check('interest'),
+  check('generalInformation'),
+  check('academicInformation'),
   // TODO
   (req, res, next) => {
     try {

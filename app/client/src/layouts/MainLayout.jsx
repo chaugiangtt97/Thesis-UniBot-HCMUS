@@ -184,6 +184,7 @@ function MainLayout() {
   return (
     <Box sx = {{ 
       width: '100%',
+      maxWidth: '2560px',
       height: '100dvh',
       background: theme => theme.palette.mode == 'dark' ? '#25294a' : '#DDF3FC',
       paddingTop: { xs: '72px', md: '72px', xl: '98px'},
@@ -265,8 +266,8 @@ function MainLayout() {
         <Backdrop onClick={() => setOpenMenu(prev => !prev)}
             sx = {(theme) =>({ [theme.breakpoints.down('lg')]: { display: isOpenMenu && 'block !important' } })} />
         
-        <Box className = 'subNavigate' sx = {(theme) => ({
-          position: 'absolute', top: 0, left: '-100%' , height: '100vh', maxHeight: '100vh', overflow: 'auto', 
+        <Box className = 'MainMenu' sx = {(theme) => ({
+          position: 'absolute', top: 0, left: '-400%' , height: '100vh', maxHeight: '100vh', overflow: 'auto', 
           width: 'fit-content', transform: 'scale(1)', transition: '0.5s all ease', zIndex: 10,
           background:  theme.palette.primary.main,
           [theme.breakpoints.down('lg')]: { left: isOpenMenu ? '0' : '-100% !important' }   })}>
@@ -384,7 +385,7 @@ function MainLayout() {
 
         </Box>
 
-        <Box sx = {{ overflow: 'auto', height: '100%', paddingY: '2px', paddingBottom: {xs: isFooter && '32px', xl: isFooter && '40px'} }}>
+        <Box className="menu" sx = {{ overflow: 'auto', height: '100%', paddingY: '2px', paddingBottom: {xs: isFooter && '32px', xl: isFooter && '40px'} }}>
           <Outlet  context={{...useOutletContext(), setFooter, menu: {
             setMenu: setMenu, handle: setOpenMenu
           }, mainLayout: { navigate: setSelectedIndex } }}/>

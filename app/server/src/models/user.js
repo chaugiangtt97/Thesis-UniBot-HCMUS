@@ -24,7 +24,12 @@ const UserSchema = new mongoose.Schema(
       required: true
     },
 
-    informationDetails: {
+    generalInformation: {
+      type: Object,
+      required: false
+    },
+
+    academicInformation: {
       type: Object,
       required: true
     },
@@ -153,6 +158,28 @@ UserSchema.pre('save', function (next) {
     return next()
   }
   return genSalt(that, SALT_FACTOR, next)
+})
+
+UserSchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate()
+
+  // Chỉ mã hóa nếu có trường password trong bản cập nhật
+  if (update.password) {
+    const user = { password: update.password } // Đối tượng giả để mã hóa
+    const SALT_FACTOR = 5
+
+    genSalt(user, SALT_FACTOR, (error) => {
+      if (error) {
+        return next(error)
+      }
+
+      // Ghi đè mật khẩu đã mã hóa vào bản cập nhật
+      this.setUpdate({ ...update, password: user.password })
+      return next()
+    })
+  } else {
+    return next()
+  }
 })
 
 UserSchema.methods.comparePassword = function (passwordAttempt, cb) {

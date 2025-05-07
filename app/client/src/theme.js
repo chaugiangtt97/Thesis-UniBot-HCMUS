@@ -277,6 +277,22 @@ const theme = extendTheme(
             backgroundColor: theme.palette.mode == 'dark' ? '#b9b9bb2b' : '#131b3b2b',
           })
         },
+      },
+
+      MuiDayCalendar: {
+        styleOverrides: {
+          weekDayLabel: ({theme}) => ({
+            color: '#000'
+          })
+        },
+      },
+
+      MuiPickersDay: {
+        styleOverrides: {
+          root: ({theme}) => ({
+            color: '#000'
+          })
+        },
       }
     },
     // ...other properties

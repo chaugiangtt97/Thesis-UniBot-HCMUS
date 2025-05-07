@@ -189,7 +189,7 @@ function Register() {
               >
                 <MenuItem key={'trainingProgram_Dai-Tra'} value={'trainingProgram_Dai-Tra'}>Chương trình Đại Trà</MenuItem>
                 <MenuItem key={'trainingProgram_Chat-Luong-Cao'} value={'trainingProgram_Chat-Luong-Cao'}>Chương trình Chất Lượng Cao</MenuItem>
-                <MenuItem key={'trainingProgram_Cu_Nhan_Tai_Nang'} value={'trainingProgram_Cu_Nhan_Tai_Nang'}>Chương trình Cử Nhân Tài Năng</MenuItem>
+                <MenuItem key={'trainingProgram_Cu_Nhan_Tai_Nang'} value={'trainingProgram_Cu-Nhan-Tai-Nang'}>Chương trình Cử Nhân Tài Năng</MenuItem>
                 <MenuItem key={'trainingProgram_Viet-Phap'} value={'trainingProgram_Viet-Phap'}>Chương trình Việt Pháp</MenuItem>
                 <MenuItem value=" "></MenuItem>
               </Select>

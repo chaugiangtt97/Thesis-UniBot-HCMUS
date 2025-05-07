@@ -7,13 +7,15 @@ import { prepareToSendEmail } from '../../../middlewares/emailer'
  * @param {string} email - user´s email
  */
 export const validateTokenAndSendRequest = async (email = '') => {
-  const items = await User.findOne({ email }).then(async (item) => {
-    await itemNotFound(false, item, 'USER_DOES_NOT_EXIST')
-    if (item) {
-      if (item?.verified) {
+  await User.findOneAndUpdate({ email }, { $set: { verification: Math.floor(100000 + Math.random() * 900000) } })
+
+  const items = await User.findOne({ email }).then(async (users) => {
+    await itemNotFound(false, users, 'USER_DOES_NOT_EXIST')
+    if (users) {
+      if (users?.verified) {
         throw buildErrObject(404, 'THIS ACCOUNT HAVE BEEN VERIFIED')
       }
-      prepareToSendEmail(item)
+      prepareToSendEmail(users, 'VERIFY_EMAIL')
     } else {
       throw buildErrObject(404, 'USER_DOES_NOT_EXIST')
     }

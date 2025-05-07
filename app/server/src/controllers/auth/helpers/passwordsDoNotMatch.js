@@ -19,7 +19,7 @@ export const passwordsDoNotMatch = async (user = {}) => {
       throw buildErrObject(409, error.message)
     }
   }
-  const res = await run()
+  const res = run()
   return res
 }
 

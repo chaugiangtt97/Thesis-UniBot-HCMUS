@@ -103,11 +103,13 @@ function AppLayout() {
   }
 
   return <>
-  <Box sx = {{ height: '100vh', position: 'relative' }}>
+  <Box sx = {{ height: '100vh', width: '100vw', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', alignItems: 'center' }}>
     {isProcess.length !== 0 && <Box sx = {{ width: '100%', height: '100%', position: 'absolute', background: theme =>theme.palette.mode == 'dark' ? '#414040bf' : '#000000b5', zIndex: '10000', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <CircularProgress color="inherit" />
     </Box>}
-    <Outlet context={{ processHandler, noticeHandler, getModal }} />
+    <Box className = "Main_container" sx = {{ width: '100vw',maxWidth: '2560px', height: '100%' }}>
+      <Outlet context={{ processHandler, noticeHandler, getModal }} />
+    </Box>
     <BasicAlerts noticeHandler = {noticeHandler} notifications = {notifications}/>
 
     <NotifycationModal modalHandler = {{
@@ -116,7 +118,8 @@ function AppLayout() {
         action: modalObject?.action,
         actionName: modalObject?.actionName
       }} title={modalObject?.title} content={modalObject?.content} propsContent = {modalObject?.propsContent}/>
-  </Box> </>
+  </Box> 
+  </>
 
 }
 

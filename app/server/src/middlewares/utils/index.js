@@ -1,3 +1,4 @@
+export { validateResult } from './validateResult'
 export { buildErrObject } from './buildErrObject'
 export { buildSuccObject } from './buildSuccObject'
 export { itemNotFound } from './itemNotFound'

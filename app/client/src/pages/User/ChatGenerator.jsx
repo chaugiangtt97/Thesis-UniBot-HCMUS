@@ -515,7 +515,7 @@ export function ChatGenerator() {
             }}>
               <Box sx = {{ display: 'flex', alignItems: 'center', gap: 0.2, paddingBottom: 0.3 }}>
                 <StarIcon sx = {{ fontSize: { xs: '28px !important', xl: '42px !important' }, color:'#e7e74e' }}/>
-                <Typography sx ={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.425rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>Chủ Đề Bạn Quan Tâm</Typography>
+                <Typography sx ={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>Chủ Đề Bạn Quan Tâm</Typography>
               </Box>
               {[
                 'Thông tin trường học',

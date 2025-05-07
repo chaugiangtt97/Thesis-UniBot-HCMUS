@@ -38,7 +38,9 @@ const Code = {
     'academic_affairs': 'Nội quy trường',
     'timetable': 'Thời khóa biểu',
     'recruitment': 'Thông tin tuyển dụng',
-    'scholarship': 'Thông Tin Học Bổng'
+    'scholarship': 'Thông Tin Học Bổng',
+
+    'trainingBatch_K23': 'Khóa 2023',
 }
 
 export const useErrorMessage = (code) => {

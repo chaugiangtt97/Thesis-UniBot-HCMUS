@@ -19,6 +19,7 @@ const SideBar_Width_LG = '240px'
 const SideBar_Width_XL = '320px'
 
 const DashboardContainer = styled(Box)(({ theme }) => ({ 
+  maxWidth: '2560px',
   height: '100vh', justifyContent: "center", alignItems: "center", transform: 'scale(1)', transition: '0.5s all ease',
   '&::before': { background: '#ddf3fc', content: '""', display: 'flex', position: 'absolute', zIndex: -1, inset: 0, 
     backgroundColor: theme.palette.mode == 'dark' ? '#25294a' : '#ddf3fc', backgroundRepeat: 'no-repeat' }
