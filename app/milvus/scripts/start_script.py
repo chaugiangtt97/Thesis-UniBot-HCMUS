@@ -8,7 +8,6 @@ collection_descriptions = {
 }
 
 from pymilvus import(
-    Milvus,
     IndexType,
     Status,
     connections,
