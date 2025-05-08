@@ -32,7 +32,7 @@ const TextInput = styled(TextField) (({ theme }) => ({
   '&:hover fieldset': { borderColor: `${theme.palette.primary.main} !important` }
 }));
 
-function SignIn() {
+function ForgotPasswords() {
   const [notificationError, setNotification] = useState(null)
   const [notificationSuccess, setNotificationSuccess] = useState(null)
   const [captchaToken, setCaptchaToken] = useState(null);
@@ -55,18 +55,11 @@ function SignIn() {
     }
 
     const email = document.getElementById('email');
-    const password = document.getElementById('password');
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
  
       setNotification('Vui lòng nhập email hợp lệ !')
       setNotificationSuccess(null)
-      return false;
-    }
-
-    if (!password.value || password.value.length < 6) {
-      setNotificationSuccess(null)
-      setNotification('Password phải tối thiểu có 6 kí tự !')
       return false;
     }
 
@@ -79,24 +72,6 @@ function SignIn() {
 
     if (notificationError) return
 
-    const logInEvent = processHandler.add('#login')
-
-    const data = new FormData(event.currentTarget)
-    const userData = { email: data.get('email'), password: data.get('password') };
-
-    await useAuth.login(userData)
-      .then((userData) => {
-        console.log('hihih', userData)
-          processHandler.remove('#login', logInEvent)
-          dispatch(login(userData))}) 
-      .catch((err) => {
-        processHandler.remove('#login', logInEvent)
-        setNotification(useErrorMessage(err))
-      })
-  };
-
-  const handleVerifyEmail = async (event) => {
-    event.preventDefault()
     const email = document.getElementById('email');
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
@@ -105,78 +80,52 @@ function SignIn() {
       setNotificationSuccess(null)
       return false;
     }
-    const logInEvent = processHandler.add('#verifyEmail')
+    const verifyEmailEvent = processHandler.add('#verifyEmail')
 
-    await useAuth.send_verifyEmail(email.value)
-      .then(() => {
-          processHandler.remove('#verifyEmail', logInEvent)
+    await useAuth.send_verifyEmail(email.value, 'FORGOT_PASSWORD', captchaToken)
+      .then((data) => {
+          processHandler.remove('#verifyEmail', verifyEmailEvent)
           setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
           setNotification()
-          navigate('/validateEmail')
+          navigate(`/forgotPassword/${data.temp_id}`)
         }) 
       .catch((err) => {
-        processHandler.remove('#verifyEmail', logInEvent)
+        processHandler.remove('#verifyEmail', verifyEmailEvent)
         setNotification(useErrorMessage(err))
         setNotificationSuccess(null)
       })
-    
+
   };
+
 
   return (
     <>
       <SignInCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Đăng Nhập Tài Khoản </Typography>
+          Quên Mật Khẩu </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
           <FormControl sx={{gap: 1}}>
-            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập</FormLabel>
+            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Email đăng nhập</FormLabel>
             <TextInput id="email" type="username" name="email" placeholder="mssv@email.com" inputProps={{ maxLength: 40 }}
               autoComplete="email" autoFocus required fullWidth variant="outlined" />
           </FormControl>
           
-          <FormControl  sx={{gap: 1}}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx = {{ color: 'inherit' }}>Mật khẩu</FormLabel>
-              <Link variant="body2" href="/forgotPassword/email"
-                sx={{ alignSelf: 'baseline', color: 'inherit' }}>
-                Quên mật khẩu ? </Link>
-            </Box>
-            <TextInput name="password" placeholder="••••••" type="password" id="password"
-              autoComplete="current-password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
-              sx = {{ color: '#000' }} />
-          </FormControl>      
-
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
             sx = {{ background: theme => theme.palette.primary.main, '&:hover' : { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Đăng nhập </Button>
-
-          <Button type="submit" fullWidth variant="outlined" onClick={() => navigate('/register')}
-            sx = {{ '&:hover' : { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Đăng Kí Tài Khoản</Button>
+            Tiếp Tục </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/"
+                href="/signin"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >
-                Trở về trang chủ
-                </Link>
-              </span>
-            </Typography>
-            <Typography sx={{ textAlign: 'center' }}>
-              <span>
-                <Link
-                onClick = {handleVerifyEmail}
-                variant="body2"
-                sx={{ alignSelf: 'center', cursor: 'pointer' }}
-                >
-                Yêu Cầu Xác Minh Tài Khoản !
+                Trở về đăng nhập
                 </Link>
               </span>
             </Typography>
@@ -206,4 +155,4 @@ function SignIn() {
   )
 }
 
-export default SignIn
+export default ForgotPasswords

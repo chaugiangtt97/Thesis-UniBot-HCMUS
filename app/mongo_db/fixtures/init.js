@@ -211,3 +211,36 @@ if (!collectionAlreadyInDB.includes('recommended_questions')) {
     }
   ])
 }
+
+// Assuming recommended_questions is defined elsewhere
+if (!collectionAlreadyInDB.includes('users')) {
+  db.createCollection('users')
+  db.users.insertMany([
+    {
+      "_id": {
+        "$oid": "681c5d1b473503110ab2fa71"
+      },
+      "name": "Mạch Vĩ Kiệt",
+      "email": "admin",
+      "password": "$2b$05$AonjaS0Hlevc2DCgkS/pKOGWJbkZc97Dx3PicgJlM/PJmAtgPvu9y",
+      "educationRole": "adminstrator",
+      "academicInformation": {
+        "administrativeUnit": "administrativeUnit_Khoa-cong-nghe-thong-tin",
+        "lecturerPosition": "lecturerPosition_Giang-vien",
+        "teachingDepartment": "teachingDepartment"
+      },
+      "verification": "490000",
+      "verified": true,
+      "loginAttempts": 0,
+      "blockExpires": {
+        "$date": "2025-05-08T07:28:27.297Z"
+      },
+      "createdAt": {
+        "$date": "2025-05-08T07:28:27.301Z"
+      },
+      "updatedAt": {
+        "$date": "2025-05-08T07:28:27.301Z"
+      }
+    }
+  ])
+}

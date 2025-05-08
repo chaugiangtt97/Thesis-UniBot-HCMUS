@@ -7,7 +7,7 @@ import { buildErrObject } from '../../../middlewares/utils'
  */
 export const getUserByToken = async (id = '') => {
 
-  const result = await User.findById(id, '-_id email name role').then((user) => {
+  const result = await User.findById(id, '-_id email name role academicInformation generalInformation').then((user) => {
     if (!user) {
       return buildErrObject(422, 'NOT_FOUND')
     }

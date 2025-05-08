@@ -59,7 +59,7 @@ function ModelsManager() {
     document.title = 'Chatbot - Trang Chủ'
     dashboard.navigate.active(242)
 
-    token && getParamsAPI()
+    token && role == 'administrator' && getParamsAPI()
       .then((data) => {
         set_max_token_output(data?.max_tokens)
         set_k_document(data?.k)

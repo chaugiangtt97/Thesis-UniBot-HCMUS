@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import UnknowPage from '../../components/Page/UnknowPage';
 import { useOutletContext } from 'react-router-dom';
 import MuiTable from '~/components/MuiTable/MuiTable';
@@ -18,6 +18,7 @@ const data = [
 function AccountManager() {
   const dispatch = useDispatch()
   const {processHandler, dashboard } = useOutletContext();
+  const role = useSelector(state => state.auth.user?.role)
 
   useEffect(() => {
     document.title = 'Chatbot - Quản Lý Tài Khoản'
@@ -26,8 +27,7 @@ function AccountManager() {
     return () => ( dashboard.navigate.active('#') )
   }, [])
 
-  return (
-    // <UnknowPage/>
+  return role != 'administrator' ? <UnknowPage/> : (
     <Box sx ={{ width: '100%', height: '100%', padding: 2 }}>
       <Box sx = {{ display: 'flex', gap: 1, alignItems:'center', paddingBottom: 1.2 }}>
         <Typography variant='h1' 

@@ -31,7 +31,7 @@ function NewChatModal({ modalHandler = null }) {
   const [name , setName] = useState('')
   const [description , setDescription] = useState('')
   const [notice, setNotice] = useState(null)
-  const { processHandler, noticeHandler } = useOutletContext();
+  const { processHandler } = useOutletContext();
 
   useEffect(() => {
     setName('')

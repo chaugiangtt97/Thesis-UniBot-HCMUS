@@ -179,13 +179,13 @@ function KnowledgeBase() {
 
             <Button key={collection._id} disableRipple onClick = {() => !disableRipple && nagative(PARENT_DIRECTION + collection._id)}
               sx = {{ 
-                display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'start', width: '200px', height: '200px', color: '#000', padding: 2, paddingTop: 7, borderRadius: '15px', position: 'relative', cursor: 'pointer',
+                display: 'flex', flexDirection: 'column', alignItems: 'start', justifyContent: 'start', width: '210px', height: '210px', color: '#000', padding: 2, paddingTop: 7, borderRadius: '15px', position: 'relative', cursor: 'pointer',
                 background: '#fefefe', 
                 boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
                 '&:active' : !disableRipple && { transform: 'scale(0.98)' } 
               }}>
 
-              <Typography sx = {{fontSize:'1.125rem',width: 'fit-content', textAlign: 'start', fontWeight: '700'}}>
+              <Typography sx = {{fontSize:'1rem',width: 'fit-content', textAlign: 'start', fontWeight: '700'}}>
                 {collection.collection_name}</Typography>
               
               <Typography variant='p' component='p' 

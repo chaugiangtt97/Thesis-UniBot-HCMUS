@@ -33,6 +33,8 @@ import DatasetDetail from  '~/pages/Dashboard/KnowledgeBase/KnowledeBaseDetail/D
 import Datasets from  '~/pages/Dashboard/KnowledgeBase/KnowledeBaseDetail'
 import AccountManager from  '~/pages/Dashboard/AccountManager'
 import RegisterAA from '~/pages/RegisterAA';
+import ForgotPasswords from '~/pages/ForgotPasswords';
+import GeneratedPassword from '~/pages/GeneratedPassword';
 
 // Define the routes
 const router = createBrowserRouter([
@@ -57,7 +59,15 @@ const router = createBrowserRouter([
           {
             path: '/validateEmail',
             element: <VerifyEmail />,
-          }
+          },
+          {
+            path: '/forgotPassword/email',
+            element: <ForgotPasswords />,
+          },
+          {
+            path: '/forgotPassword/:_id',
+            element: <GeneratedPassword />,
+          },
         ],
       },
       {

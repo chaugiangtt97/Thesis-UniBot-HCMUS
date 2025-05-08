@@ -7,7 +7,9 @@ export const getUserInfo = (req = {}) => {
   let user = {
     name: req.name,
     email: req.email,
-    role: req?.educationRole || req?.role
+    role: req?.educationRole || req?.role,
+    academicInformation: req?.academicInformation,
+    generalInformation: req?.generalInformation
   }
 
   return user

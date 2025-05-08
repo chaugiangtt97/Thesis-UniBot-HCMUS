@@ -107,7 +107,7 @@ function AppLayout() {
     {isProcess.length !== 0 && <Box sx = {{ width: '100%', height: '100%', position: 'absolute', background: theme =>theme.palette.mode == 'dark' ? '#414040bf' : '#000000b5', zIndex: '10000', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
       <CircularProgress color="inherit" />
     </Box>}
-    <Box className = "Main_container" sx = {{ width: '100vw',maxWidth: '2560px', height: '100%' }}>
+    <Box className = "Main_container" sx = {{ overflow: 'auto', width: '100vw', maxWidth: '2560px', height: '100%' }}>
       <Outlet context={{ processHandler, noticeHandler, getModal }} />
     </Box>
     <BasicAlerts noticeHandler = {noticeHandler} notifications = {notifications}/>

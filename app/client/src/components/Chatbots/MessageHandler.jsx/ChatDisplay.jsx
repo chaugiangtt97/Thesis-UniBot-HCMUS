@@ -101,9 +101,9 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
     <Box sx = {ChatBlock_Style}>
       <FadeIn>
         <Box sx = { ChatDisplay_Style }>
-          <Avatar alt="User" sx = {{ display: { xs: 'none', md: 'block' } }} src=
-            {user?.avatar ? user.avatar : 
-            ( userAvatar ? userAvatar : (userAvatar ? userAvatar : "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png" ))} />
+          <Avatar alt="User" sx = {{ display: { xs: 'none', md: 'block' } }} 
+                src={`/studentAvatar_${user.generalInformation?.sex}.png`}
+             />
           <ChatMessage sx = {{   
               background: 'linear-gradient(45deg, rgba(73,124,246,1) 47%, rgba(144,95,247,1) 100%)',
               marginRight: {md: '20px', xs: 0},

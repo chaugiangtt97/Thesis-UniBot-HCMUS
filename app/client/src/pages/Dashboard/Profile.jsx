@@ -61,7 +61,9 @@ export function Profile() {
       dispatch(refresh(token, {
         name: user?.name,
         role: user?.role,
-        email: user?.email
+        email: user?.email,
+        academicInformation: user?.academicInformation,
+        generalInformation: user?.generalInformation
       }))
 
       noticeHandler.add({
@@ -84,8 +86,10 @@ export function Profile() {
         { user && <>
         <Box sx = {{ width: '100%', height: '175px', display: 'flex', gap: 6, paddingX: 5 }}>
           <Box>
-            <Avatar sx={{ background: '#6193a5', height: '140px', width: '140px' }} 
-              src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"/>
+            <Avatar sx={{ background: '#eaeff1', height: '140px', width: '140px' }} 
+            src={`/studentAvatar_${user.generalInformation?.sex}.png`} 
+              // src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"
+              />
             
             <Chip label={user?.role ? user?.role.replace(/\b\w/g, char => char.toUpperCase()) : '#undefine'}  
               sx = {{ background: '#4d6b38', fontWeight: '600', cursor: 'pointer' }}/>
@@ -99,14 +103,21 @@ export function Profile() {
             <Box sx = {{  display: 'flex', alignItems: 'center', gap: 0.75 }}>
               <MaleIcon sx = {{ fontSize: '1rem' }}/>
               <Typography sx = {{  width: 'fit-content' }}>
-                <span style = {{ fontWeight: '600' }}>Giới tính : </span><span>{user?.sex ? useCode(user.sex) : '#undefine'}</span> 
+                <span style = {{ fontWeight: '600' }}>Giới tính : </span><span>{user?.generalInformation?.sex ? useCode(user?.generalInformation?.sex) : '#undefine'}</span> 
               </Typography>
             </Box>
 
             <Box sx = {{  display: 'flex', alignItems: 'center', gap: 0.75 }}>
               <HomeWorkOutlinedIcon sx = {{ fontSize: '1rem' }}/>
               <Typography sx = {{  width: 'fit-content' }}>
-                  <span style = {{ fontWeight: '600' }}>Phòng Ban : </span>{user?.department ? useCode(user.department) : '#undefine'}
+                  <span style = {{ fontWeight: '600' }}>Đơn vị trực thuộc : </span>{user?.department ? useCode(user.department) : '#undefine'}
+              </Typography>
+            </Box>
+
+            <Box sx = {{  display: 'flex', alignItems: 'center', gap: 0.75 }}>
+              <LocalPhoneOutlinedIcon sx = {{ fontSize: '1rem' }}/>
+              <Typography sx = {{  width: 'fit-content' }}>
+                <span style = {{ fontWeight: '600' }}>Bộ môn công tác: </span><span>{user?.phone ? user.phone : '#undefine'}</span>
               </Typography>
             </Box>
 
@@ -114,13 +125,6 @@ export function Profile() {
               <DraftsOutlinedIcon sx = {{ fontSize: '1rem' }}/>
               <Typography sx = {{ width: 'fit-content' }}>
                 <span style = {{ fontWeight: '600' }}>Email Công Việc : </span>{user?.email ? user.email : '#undefine'}<span></span> ( Mặc Định )
-              </Typography>
-            </Box>
-
-            <Box sx = {{  display: 'flex', alignItems: 'center', gap: 0.75 }}>
-              <LocalPhoneOutlinedIcon sx = {{ fontSize: '1rem' }}/>
-              <Typography sx = {{  width: 'fit-content' }}>
-                <span style = {{ fontWeight: '600' }}>Số Điện Thoại: </span><span>{user?.phone ? user.phone : '#undefine'}</span>
               </Typography>
             </Box>
 
@@ -162,11 +166,18 @@ export function Profile() {
               <FormLabel htmlFor="password" sx = {{ color: 'inherit', display: 'block' , marginBottom: 1, textAlign: 'start'}}>Giới Tính</FormLabel>
               <Select
                 id="user_sex"
-                value={user?.sex ? user?.sex : null}
+                value={user?.generalInformation?.sex || ' '}
                 sx = {{ width: '100%',
+                  '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
                   '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary }
                 }}
-                onChange={(e) => setUser((prev) => ({...prev, sex : e.target.value}))}
+                onChange = {(e) => setUser((prevUserRecord) => {
+                  return {...prevUserRecord, 
+                    generalInformation: {
+                    ...prevUserRecord?.generalInformation,
+                    sex: e.target.value
+                  }}
+                })}
               >
                 <MenuItem value={'female'}>Nữ</MenuItem>
                 <MenuItem value={'male'}>Nam</MenuItem>
@@ -182,6 +193,7 @@ export function Profile() {
                   <DemoContainer components={['DatePicker']} sx = {{ paddingTop: 0, width: '100%' ,'& button' : { color: theme => theme.palette.text.secondary } }}>
                     <DatePicker
                       id="user_birth"
+                      disabled
                       value={dayjs(user?.birth)}
                       onChange={(value) => setUser((prev) => ({...prev, birth : value}))} />
                   </DemoContainer>
@@ -189,43 +201,54 @@ export function Profile() {
               </FormControl>
             </Grid>
 
-            <Grid size={3}>
+            <Grid size={6}>
               <Box sx={{ display: 'block', width: '100%' }}>
-                <FormLabel htmlFor="department" sx = {{ color: 'inherit', display: 'block' , marginBottom: 1, textAlign: 'start' }}>Phòng Ban</FormLabel>
+                <FormLabel htmlFor="administrativeUnit" sx = {{ color: 'inherit', display: 'block' , marginBottom: 1, textAlign: 'start' }}>Đơn vị công tác</FormLabel>
                 <Select
-                  id="user_department"
-                  name= 'department'
-                  value={user?.department}
+                  id="administrativeUnit"
+                  name= 'administrativeUnit'
+                  value={user?.academicInformation?.administrativeUnit}
                   sx = {{ width: '100%',
                     '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary }
                   }}
-                  onChange={(e) => setUser((prev) => ({...prev, department : e.target.value}))}
+                  onChange = {(e) => setUser((prevUserRecord) => {
+                    return {...prevUserRecord, 
+                      academicInformation: {
+                      ...prevUserRecord?.academicInformation,
+                      administrativeUnit: e.target.value
+                    }}
+                  })}
                 >
-                  <MenuItem value={'DEPT-GV'}>Ban Giáo Vụ</MenuItem>
-                  <MenuItem value={'DEPT-CTSV'}>Phòng Công Tác Sinh Viên</MenuItem>
-                  <MenuItem value={'DEPT-HTTT'}>Văn Phòng Khoa Hệ Thống Thông Tin</MenuItem>
-                  <MenuItem value={'DEPT-DT'}>Phòng Đào Tạo</MenuItem>
+                <MenuItem key = {'administrativeUnit_Khoa-cong-nghe-thong-tin'} value={'administrativeUnit_Khoa-cong-nghe-thong-tin'}>Khoa công nghệ thông tin</MenuItem>
+                <MenuItem key = {'administrativeUnit_Phong-cong-tac-sinh-vien'} value={'administrativeUnit_Phong-cong-tac-sinh-vien'}>Phòng công tác sinh viên</MenuItem>
+                <MenuItem key = {'administrativeUnit_Phong-dao-tao-khao-thi'} value={'administrativeUnit_Phong-dao-tao-khao-thi'}>Phòng đào tạo, khảo thí</MenuItem>
                 </Select>
               </Box>
             </Grid>
 
             <Grid size={3} offset={0}>
               <Box sx={{ display: 'block', width: '100%' }}>
-                <FormLabel htmlFor="user_position" sx = {{ color: 'inherit', display: 'block' , marginBottom: 1, textAlign: 'start' }}>Chức Vụ</FormLabel>
+                <FormLabel htmlFor="lecturerPosition" sx = {{ color: 'inherit', display: 'block' , marginBottom: 1, textAlign: 'start' }}>Chức Vụ</FormLabel>
                 <Select
-                  id="user_position"
-                  name= "user_position"
-                  value={user?.position}
+                  id="lecturerPosition"
+                  name= "lecturerPosition"
+                  value={user?.academicInformation?.lecturerPosition}
                   sx = {{ width: '100%',
                     '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary },
                     borderRadius: '6px'
                   }}
-                  onChange={(e) => setUser((prev) => ({...prev, position : e.target.value}))}
+                  onChange = {(e) => setUser((prevUserRecord) => {
+                    return {...prevUserRecord, 
+                      academicInformation: {
+                      ...prevUserRecord?.academicInformation,
+                      lecturerPosition: e.target.value
+                    }}
+                  })}
                 >
-                  <MenuItem value={'ROLE-TP'}>Trưởng Phòng</MenuItem>
-                  <MenuItem value={'ROLE-PP'}>Phó Phòng</MenuItem>
-                  <MenuItem value={'ROLE-NV'}>Giáo Viên</MenuItem>
-                  <MenuItem value={'ROLE-CTV'}>Cộng Tác Viên</MenuItem>
+                <MenuItem key = {'lecturerPosition_Truong-bo-mon'} value = {'lecturerPosition_Truong-bo-mon'}>Trưởng bộ môn</MenuItem>
+                <MenuItem key = {'lecturerPosition_Giang-vien'} value = {'lecturerPosition_Giang-vien'}>Giảng viên</MenuItem>
+                <MenuItem key = {'lecturerPosition_Tro-giang'} value = {'lecturerPosition_Tro-giang'}>Trợ giảng</MenuItem>
+                <MenuItem key = {'lecturerPosition_Giao-vu'} value = {'lecturerPosition_Giao-vu'}>Giáo vụ</MenuItem>
                 </Select>
               </Box>
             </Grid>
@@ -233,18 +256,32 @@ export function Profile() {
             <Grid size={7} offset={0}>
               <FormControl  sx={{gap: 1, display: 'flex', width: '100%'}}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Email Công Việc</FormLabel>
+                  <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Bộ môn công tác</FormLabel>
                 </Box>
-                <TextField
-                  inputProps={{ maxLength: 40 }}
-                  required
-                  id="user_email"
-                  name= "user_email"
-                  value={user?.email + ' ( Mặc Định ) '}
-                  disabled
-                  fullWidth
-                  variant="outlined"
-                />
+                <Select
+                    id="teachingDepartment"
+                    name= "teachingDepartment"
+                    value={user?.academicInformation?.teachingDepartment}
+                    defaultValue={'teachingDepartment_Khong-co'}
+                    sx = {{ width: '100%',
+                      '& .MuiSelect-icon': { color: '#000' },
+                    }}
+                    onChange = {(e) => setUser((prevUserRecord) => {
+                      return {...prevUserRecord, 
+                        academicInformation: {
+                        ...prevUserRecord?.academicInformation,
+                        teachingDepartment: e.target.value
+                      }}
+                    })}
+                  >
+                    <MenuItem key={'teachingDepartment_Cong-nghe-phan-mem'} value={'teachingDepartment'}>Công Nghệ Phần Mềm</MenuItem>
+                    <MenuItem key={'teachingDepartment_He-thong-thong-tin'} value={'teachingDepartment'}>Hệ Thống Thông Tin</MenuItem>
+                    <MenuItem key={'teachingDepartment_Khoa-hoc-may-tinh'} value={'teachingDepartment'}>Khoa Học Máy Tính</MenuItem>
+                    <MenuItem key={'teachingDepartment_Thi-giac-may-tinh'} value={'teachingDepartment'}>Thị Giác Máy Tính</MenuItem>
+                    <MenuItem key={'teachingDepartment_Cong-nghe-tri-thuc'} value={'teachingDepartment'}>Công Nghệ Tri Thức</MenuItem>
+                    <MenuItem key={'teachingDepartment_Cong-nghe-thong-tin'} value={'teachingDepartment'}>Công Nghệ Thông Tin </MenuItem>
+                    <MenuItem key={'teachingDepartment_Khong-co'} value={'teachingDepartment_Khong-co'}>Không có</MenuItem>
+                </Select>
               </FormControl>
             </Grid>
 
@@ -261,23 +298,6 @@ export function Profile() {
                   fullWidth
                   variant="outlined"
                   onChange={(e) => setUser((prev) => ({...prev, phone : e.target.value}))}
-                />
-              </FormControl>
-            </Grid>
-
-            <Grid size={7}>
-              <FormControl  sx={{gap: 1, display: 'flex', width: '100%'}}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <FormLabel htmlFor="personal_email" sx = {{ color: 'inherit' }}>Email Cá Nhân</FormLabel>
-                </Box>
-                <TextField
-                  inputProps={{ maxLength: 40 }}
-                  id="personal_email"
-                  name= "personal_email"
-                  value={user?.personal_email}
-                  fullWidth
-                  variant="outlined"
-                  onChange={(e) => setUser((prev) => ({...prev, personal_email : e.target.value}))}
                 />
               </FormControl>
             </Grid>

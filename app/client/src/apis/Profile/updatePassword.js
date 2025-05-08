@@ -25,7 +25,7 @@ export const updatePassword = async (data, token = null) => {
 		})
 		.catch((err) => {
 			if( Array.isArray(err) ) {
-				throw 'Thất Bại: Vui Lòng Nhập Đủ Các Thông Tin !'
+				throw err[0].msg
 			}
 			if(typeof(err) == "object"){
 				throw 'ERR_CONNECTION_REFUSED'

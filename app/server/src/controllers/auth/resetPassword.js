@@ -1,6 +1,5 @@
-import { matchedData } from 'express-validator'
 
-import { findUser, passwordsDoNotMatch, saveUserAccessAndReturnToken } from './helpers'
+import { passwordsDoNotMatch, saveUserAccessAndReturnToken } from './helpers'
 
 import { handleError, buildErrObject } from '../../middlewares/utils'
 import { checkPassword } from '../../middlewares/auth'

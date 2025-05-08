@@ -82,7 +82,7 @@ function RegisterAA() {
       password: data.get('password'),  
       name: data.get('name'),
       educationRole: 'lecturer',
-      informationDetails: {
+      academicInformation: {
         administrativeUnit: data.get('administrativeUnit'),
         lecturerPosition: data.get('lecturerPosition'),
         teachingDepartment: data.get('teachingDepartment')
@@ -106,6 +106,7 @@ function RegisterAA() {
         }) 
       .catch((err) => {
         processHandler.remove('#register', logInEvent)
+        console.log(err)
         setNotification(useErrorMessage(err))
       })
   };

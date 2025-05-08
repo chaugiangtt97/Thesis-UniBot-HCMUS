@@ -23,17 +23,18 @@ import { buildErrObject, handleError } from '../../../middlewares/utils'
  */
 
 export const registerUser = async (req = {}) => {
-  let userRecord = null
+  let userRecord = {
+    name: req.name,
+    email: req.email,
+    password: req.password,
+    academicInformation : req?.academicInformation,
+    generalInformation: req?.generalInformation,
+    verification: Math.floor(100000 + Math.random() * 900000),
+    verified: process.env.NODE_ENV !== 'production'
+  }
+
   if (req.educationRole === 'student') {
-    userRecord = new User({
-      name: req.name,
-      email: req.email,
-      password: req.password,
-      educationRole: 'student',
-      informationDetails : req.informationDetails,
-      verification: Math.floor(100000 + Math.random() * 900000),
-      verified: process.env.NODE_ENV !== 'production'
-    })
+    userRecord = new User({...userRecord, educationRole: 'student' })
   }
 
   if (req.educationRole === 'lecturer') {
@@ -43,19 +44,7 @@ export const registerUser = async (req = {}) => {
       handleError(res, 'Email must be in the format of @clc.fitus.edu.vn for lecturers')
     }
 
-    userRecord = new User({
-      name: req.name,
-      email: req.email,
-      password: req.password,
-      educationRole: 'lecturer',
-      informationDetails: {
-        administrativeUnit: req.administrativeUnit,
-        lecturerPosition: req.lecturerPosition,
-        teachingDepartment: req.teachingDepartment
-      },
-      verification: Math.floor(100000 + Math.random() * 900000),
-      verified: process.env.NODE_ENV !== 'production'
-    })
+    userRecord = new User({...userRecord, educationRole: 'lecturer' })
   }
 
   const res = await userRecord.save()

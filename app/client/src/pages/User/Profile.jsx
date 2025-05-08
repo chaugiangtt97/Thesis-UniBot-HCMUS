@@ -89,7 +89,9 @@ export function Profile() {
       dispatch(refresh(token, {
         name: user?.name,
         role: user?.role,
-        email: user?.email
+        email: user?.email,
+        academicInformation: user?.academicInformation,
+        generalInformation: user?.generalInformation
       }))
 
       noticeHandler.add({
@@ -123,8 +125,6 @@ export function Profile() {
           { user && <>
           <Box sx = {{ width: '100%', height: {md: '175px', xs: 'fit-content'}, display: {md: 'flex', xs: 'block'}, gap: 6, paddingX: {md: 5, xs: 0} }}>
             <Box sx = {{ display: { xs: 'flex', md: 'auto' }, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              {/* <Avatar sx={{ background: '#6193a5', height: '140px', width: '140px' }}  */}
-                {/* src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"/> */}
               
               <Avatar sx={{ background: '#eaeff1', height: '140px', width: '140px' }} 
                 src={`/studentAvatar_${user.generalInformation?.sex}.png`} />
@@ -196,6 +196,9 @@ export function Profile() {
                     variant="outlined"
                     value={user?.name ? user?.name : null}
                     onChange={(e) => setUser((prev) => ({...prev, name : e.target.value}))}
+                    sx = {{ 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                     }}
                   />
                 </FormControl>
               </Grid>
@@ -206,6 +209,7 @@ export function Profile() {
                   id="user_sex"
                   value={user?.generalInformation?.sex || ' '}
                   sx = {{ width: '100%',
+                    '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
                     '& .MuiSelect-icon': { color: theme => theme.palette.text.secondary }
                   }}
                   onChange = {(e) => setUser((prevUserRecord) => {
@@ -238,6 +242,7 @@ export function Profile() {
                       }}>
                       <DatePicker
                         id="user_birth"
+                        disabled
                         value={dayjs(user?.generalInformation?.birth || ' ')}
                         onChange = {(e) => setUser((prevUserRecord) => {
                           return {...prevUserRecord, 
@@ -247,10 +252,11 @@ export function Profile() {
                           }}
                         })}
                         sx = {{ 
-                          '--mui-palette-text-secondary': '#000',
+                          '--mui-palette-text-secondary': theme => theme.palette.mode == 'dark' ? '#fff' : '#000',
                           '& MuiTypography-root MuiTypography-caption MuiDayCalendar-weekDayLabel': {
-                            color: '#000 !important'
-                          } 
+                            color: theme => theme.palette.mode == 'dark' ? '#fff !important' : '#000 !important',
+                          },
+                          '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'}
                         }}
                       />
                     </DemoContainer>
@@ -265,7 +271,9 @@ export function Profile() {
                     id="trainingProgram"
                     name= 'trainingProgram'
                     value={user?.academicInformation.trainingProgram || ' '}
-                    sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
+                    sx = {{ width: '100%', 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                      color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', '& .MuiSelect-icon': { color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000' }}}
                     onChange = {(e) => setUser((prevUserRecord) => {
                       return {...prevUserRecord, 
                         academicInformation: {
@@ -290,7 +298,9 @@ export function Profile() {
                     id="trainingBatch"
                     name= 'trainingBatch'
                     value={user?.academicInformation.trainingBatch || ' '}
-                    sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
+                    sx = {{ width: '100%', 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                      color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', '& .MuiSelect-icon': { color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000' }}}
                     onChange = {(e) => setUser((prevUserRecord) => {
                       return {...prevUserRecord, 
                         academicInformation: {
@@ -325,6 +335,9 @@ export function Profile() {
                     disabled
                     fullWidth
                     variant="outlined"
+                    sx = {{ 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                     }}
                   />
                 </FormControl>
               </Grid>
@@ -341,6 +354,9 @@ export function Profile() {
                     value={user?.generalInformation?.personal_phone}
                     fullWidth
                     variant="outlined"
+                    sx = {{ 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                     }}
                     onChange = {(e) => setUser((prevUserRecord) => {
                       return {...prevUserRecord, 
                         generalInformation: {
@@ -359,7 +375,9 @@ export function Profile() {
                     id="selectedMajor"
                     name= 'selectedMajor'
                     value={user?.academicInformation.selectedMajor || ' '}
-                    sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
+                    sx = {{ width: '100%', 
+                      '& fieldset': { borderColor: theme => theme.palette.mode == 'dark' && '#fff !important'},
+                      color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', '& .MuiSelect-icon': { color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000' }}}
                     onChange = {(e) => setUser((prevUserRecord) => {
                       return {...prevUserRecord, 
                         academicInformation: {
@@ -411,82 +429,10 @@ export function Profile() {
             <Button variant= 'contained' color="success" onClick={updateClick}>Cập Nhật Thông Tin</Button>
 
             <Button 
-            onClick={() => getModal('Đặt Lại Mật Khẩu', 
-              <Box component="form" 
-                sx= {{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }}>
-                <FormControl  sx={{gap: 1}}>
-                  <FormLabel htmlFor="current_password" sx = {{ color: 'inherit' }}>Mật khẩu hiện tại</FormLabel>
-                  <TextInput name="current_password" placeholder="••••••" type="password" id="current_password"
-                    onChange = {(e) => { setUpdateUser((prev) => {
-                      return {...prev, current_password: e.target.value}
-                    }) }}
-                    autoComplete="password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
-                    sx = {{ color: '#000' }} />
-                </FormControl>   
-                <FormControl  sx={{gap: 1}}>
-                  <FormLabel htmlFor="newPassword" sx = {{ color: 'inherit' }}>Mật khẩu mới</FormLabel>
-                  <TextInput name="newPassword" placeholder="••••••" type="password" id="newPassword"
-                    onChange = {(e) => { setUpdateUser((prev) => {
-                      return {...prev, newPassword: e.target.value}
-                    }) }}
-                    required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
-                    sx = {{ color: '#000', minWidth: '30vw', width: '100%' }} />
-                </FormControl>  
-
-                <FormControl  sx={{gap: 1}}>
-                  <FormLabel htmlFor="newPassword_2" sx = {{ color: 'inherit' }}>Mật khẩu mới ( Xác Nhận )</FormLabel>
-                  <TextInput name="newPassword_2" placeholder="••••••" type="password" id="newPassword_2"
-                    onChange = {(e) => { setUpdateUser((prev) => {
-                      return {...prev, newPassword_2: e.target.value}
-                    }) }}
-                    required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
-                    sx = {{ color: '#000' }} />
-                </FormControl>  
-              </Box>,
-              'Đặt Lại Mật Khẩu', 
-              () => {
-                console.log(updateUser)
-                if (!updateUser?.password) {
-                  noticeHandler.add({
-                    status: 'error',
-                    message: 'Vui lòng nhập mật khẩu hiện tại !'
-                  })
-                  return
-                }
-
-                if (!updateUser?.newPassword || !updateUser?.newPassword_2 || updateUser?.newPassword < 6) {
-                  noticeHandler.add({
-                    status: 'error',
-                    message: 'Mật khẩu phải chứa tối đa 6 kí tự !'
-                  })
-                  return
-                }
-
-                if ( updateUser?.newPassword != updateUser?.newPassword_2) {
-                  noticeHandler.add({
-                    status: 'error',
-                    message: 'Mật khẩu không khớp !'
-                  })
-                  return
-                }
-                
-                const ResetPasswordEvent =  processHandler.add('#ResetPassword')
-                useProfile.updatePassword({
-                  email: user?.email,
-                  password: updateUser?.current_password,
-                  newPassword: updateUser?.newPassword,
-                },token).then(() => {
-                  noticeHandler.add({
-                    status: 'success',
-                    message: 'Đặt lại mật khẩu thành công !'
-                  })
-                }).catch((err) => {
-                  noticeHandler.add({
-                    status: 'error',
-                    message: err
-                  })
-                }).finally(() => processHandler.remove('#ResetPassword', ResetPasswordEvent))
-              }, { content : null, props: null })}
+            onClick={() => getModal('Đặt Lại Mật Khẩu', null , null, null , {
+              content : UpdatePasswordModal,
+              props: { token, processHandler, noticeHandler, user }
+            })}
             variant= 'contained' color='error'>Đặt lại mật khẩu</Button>
           </Box>
 
@@ -499,7 +445,107 @@ export function Profile() {
 
 export default Profile
 
+function UpdatePasswordModal({onClose, parent}) {
+  const {noticeHandler,processHandler, user, token} = parent
+  const [updateUser, setUpdateUser] = useState({})
+  const [useError, setError] = useState('')
 
+  const buttonHandle = () => {
+    if (!updateUser?.current_password) {
+      setError('WRITE_CURRENT_PASSWORD')
+      console.error('WRITE_CURRENT_PASSWORD')
+      return
+    }
+
+    if (!updateUser?.newPassword || updateUser?.newPassword.length < 6) {
+      console.error('WRITE_NEW_PASSWORD')
+      setError('WRITE_NEW_PASSWORD')
+      return
+    }
+
+    if (!updateUser?.newPassword_2 || updateUser?.newPassword_2.length < 6) {
+      console.error('WRITE_NEW_PASSWORD_AGAIN')
+      setError('WRITE_NEW_PASSWORD_AGAIN')
+      return
+    }
+
+    if ( updateUser?.newPassword != updateUser?.newPassword_2) {
+      console.error('NEW_PASSWORD_NOT_MATCH')
+      setError('NEW_PASSWORD_NOT_MATCH')
+      return
+    }
+    
+    const ResetPasswordEvent =  processHandler.add('#ResetPassword')
+    useProfile.updatePassword({
+      email: user?.email,
+      password: updateUser?.current_password,
+      newPassword: updateUser?.newPassword,
+    }, token).then(() => {
+      noticeHandler.add({
+        status: 'success',
+        message: 'Đặt lại mật khẩu thành công !'
+      })
+      onClose()
+    }).catch((err) => { 
+      setError(err)
+    }).finally(() => processHandler.remove('#ResetPassword', ResetPasswordEvent))
+
+  }
+  return (
+    <Box component="form" 
+      sx= {{ display: 'flex', flexDirection: 'column', minWidth: { xs: '80vw', md: '50vw', lg: '35vw' }, width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }}>
+      <FormControl  sx={{gap: 1}}>
+        <FormLabel htmlFor="current_password" sx = {{ color: 'inherit' }}>Mật khẩu hiện tại</FormLabel>
+        <TextInput name="current_password" placeholder="••••••" type="password" id="current_password"
+          onChange = {(e) => { setUpdateUser((prev) => {
+            return {...prev, current_password: e.target.value}
+          }) }}
+
+          autoComplete="password" fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
+          sx = {{ color: '#000',
+            '&:hover fieldset': ['WRITE_CURRENT_PASSWORD', 'WRONG_PASSWORD'].includes(useError) && { borderColor: `red !important` },
+            '& fieldset':  ['WRITE_CURRENT_PASSWORD', 'WRONG_PASSWORD'].includes(useError) && { borderColor: `red !important`, borderWidth: '1.5px' }
+           }} />
+        { useError == 'WRITE_CURRENT_PASSWORD' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Dữ liệu không để trống và tối thiểu 6 ký tự</Typography> }
+        { useError == 'WRONG_PASSWORD' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Mật khẩu không hợp lệ!</Typography> }
+      </FormControl>   
+      <FormControl  sx={{gap: 1}}>
+        <FormLabel htmlFor="newPassword" sx = {{ color: 'inherit' }}>Mật khẩu mới</FormLabel>
+        <TextInput name="newPassword" placeholder="••••••" type="password" id="newPassword"
+          onChange = {(e) => { setUpdateUser((prev) => {
+            return {...prev, newPassword: e.target.value}
+          }) }}
+          fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
+          sx = {{ 
+            color: '#000',
+            '&:hover fieldset': { borderColor: ['WRITE_NEW_PASSWORD', 'NEW_PASSWORD_NOT_MATCH'].includes(useError) && `red !important` },
+            '& fieldset': ['WRITE_NEW_PASSWORD', 'NEW_PASSWORD_NOT_MATCH'].includes(useError) && { borderColor:  `red !important`, borderWidth: '1.5px' }
+          }} />
+        { useError == 'WRITE_NEW_PASSWORD' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Dữ liệu không để trống và tối thiểu 6 ký tự</Typography> }
+        { useError == 'NEW_PASSWORD_NOT_MATCH' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Nhập lại mật khẩu không trùng khớp</Typography> }
+      </FormControl>  
+
+      <FormControl  sx={{gap: 1}}>
+        <FormLabel htmlFor="newPassword_2" sx = {{ color: 'inherit' }}>Mật khẩu mới ( Xác Nhận )</FormLabel>
+        <TextInput name="newPassword_2" placeholder="••••••" type="password" id="newPassword_2"
+          onChange = {(e) => { setUpdateUser((prev) => {
+            return {...prev, newPassword_2: e.target.value}
+          }) }}
+          fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
+          sx = {{ color: '#000',
+            '&:hover fieldset': { borderColor: ['WRITE_NEW_PASSWORD_AGAIN', 'NEW_PASSWORD_NOT_MATCH'].includes(useError) && `red !important` },
+            '& fieldset': ['WRITE_NEW_PASSWORD_AGAIN', 'NEW_PASSWORD_NOT_MATCH'].includes(useError) && { borderColor:  `red !important`, borderWidth: '1.5px' }
+           }} />
+
+        { useError == 'WRITE_NEW_PASSWORD_AGAIN' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Dữ liệu không để trống và tối thiểu 6 ký tự</Typography> }
+        { useError == 'NEW_PASSWORD_NOT_MATCH' && <Typography variant='h6' sx = {{ fontSize: '0.775rem', color: 'red', textAlign: 'end' }}>Nhập lại mật khẩu không trùng khớp</Typography> }
+
+      </FormControl>  
+
+      <Button variant='contained' color='info' onClick={buttonHandle}>Cập Nhật</Button>
+    </Box>
+  )
+}
 
 const TextInput = styled(TextField) (({ theme }) => ({
   '& input': { color: '#000' }, WebkitTextFillColor: '#000', 

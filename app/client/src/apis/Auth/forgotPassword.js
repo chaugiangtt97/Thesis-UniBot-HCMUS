@@ -1,13 +1,13 @@
 const domain = import.meta.env.VITE_SERVER
 
-    const password = document.getElementById('password');
-export const send_verifyEmail = async (email, code = null, captchaToken = null) => {
-	const url = `${domain}/request_verifyEmail?email=${email}&code=${code}&captchaToken=${captchaToken}`;
+export const forgotPassword = async (data, api_key = null) => {
+	const url = `${domain}/register`;
 	const structure = {
-		method: 'GET',
+		method: 'POST',
 		headers: {
 		  'Content-Type': 'application/json'
 		},
+		body: JSON.stringify(data)
 	  }
 
 	const res = await fetch(url, structure)
@@ -23,7 +23,6 @@ export const send_verifyEmail = async (email, code = null, captchaToken = null) 
 			return data
 		})
 		.catch((err) => {
-			console.error('Yêu cầu xác thực thất bại !', err)
 			if(typeof(err) == "object"){
 				throw 'ERR_CONNECTION_REFUSED'
 			}

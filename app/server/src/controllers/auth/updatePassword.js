@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const { matchedData } = require('express-validator')
 const { findUser } = require('./helpers')
 const { handleError, buildErrObject } = require('../../middlewares/utils')
@@ -12,7 +13,15 @@ const { checkPassword } = require('../../middlewares/auth')
 const updatePassword = async (req, res) => {
   try {
     const data = matchedData(req)
-    const user = await findUser(data.email)
+    let user = null
+    if (data?.email) {
+      console.log('updatePassword email', data.email)
+      user = await findUser(data.email)
+    } else if (data?._id) {
+      console.log('updatePassword _id', data._id)
+      user = await findUser(null, data._id)
+    }
+    console.log(data)
     if (data?.password) {
       const isPasswordMatch = await checkPassword(data.password, user)
       if (!isPasswordMatch) {
@@ -23,17 +32,19 @@ const updatePassword = async (req, res) => {
         message: 'PASSWORD_UPDATED_SUCCESSFULLY'
       })
     }
+    console.log(user.verification, data.verification)
 
     if (user.verification === data.verification) {
+
       await saveNewPassword(req)
+
       return res.status(200).json({
         message: 'PASSWORD_UPDATED_SUCCESSFULLY'
       })
     } else {
-      return res.status(409).json({
-        message: 'WRONG_VERIFICATION_CODE'
-      })
+      throw buildErrObject(409, 'WRONG_VERIFICATION_CODE')
     }
+
 
   } catch (error) {
     handleError(res, error)

@@ -46,7 +46,8 @@ export const validateRegister = [
       }
       return true
     }),
-  check('informationDetails'),
+  check('academicInformation'),
+  check('generalInformation'),
   check('captchaToken'),
   (req, res, next) => {
     try {

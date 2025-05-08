@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { validateTokenAndSendRequest } from './helpers'
 
 import { handleError } from '../../middlewares/utils'
@@ -9,12 +10,17 @@ import { handleError } from '../../middlewares/utils'
  */
 export const request_validateEmail = async (req, res) => {
   try {
-    const id = req.query?.email
-    if ( id ) {
-      return res.status(200).json( await validateTokenAndSendRequest(id))
+    const email = req.query?.email
+    const code = req.query?.code
+    const captchaToken = req.query?.captchaToken
+
+    console.log('request_validateEmail', email, code)
+
+    if ( email ) {
+      return res.status(200).json( await validateTokenAndSendRequest(email, code, captchaToken) )
     }
     return res.status(200).json({
-      message: 'Xác Thực ID Không tồn tại'
+      message: 'Xác Thực ID hoặc Email Không tồn tại'
     })
   } catch (error) {
     handleError(res, error)
