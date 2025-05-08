@@ -15,6 +15,7 @@ export const validateVerifyEmail = [
     .withMessage('IS_EMPTY')
     .isEmail()
     .withMessage('EMAIL_IS_NOT_VALID'),
+  check('captchaToken'),
   (req, res, next) => {
     try {
       validationResult(req).throw()

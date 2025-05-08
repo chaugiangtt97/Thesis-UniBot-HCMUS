@@ -47,7 +47,7 @@ function ModelsManager() {
 
   const {processHandler, noticeHandler, dashboard, getModal } = useOutletContext()
   const token = useSelector(state => state.auth.token)
-  const role = useSelector(state => state.auth.user?.role)
+  const role = useSelector(state => state.auth.user?.role || state.auth.user?.educationRole)
 
   const [max_token_output, set_max_token_output] = useState(0)
   const [k_document, set_k_document] = useState(2)

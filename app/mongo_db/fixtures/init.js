@@ -217,13 +217,10 @@ if (!collectionAlreadyInDB.includes('users')) {
   db.createCollection('users')
   db.users.insertMany([
     {
-      "_id": {
-        "$oid": "681c5d1b473503110ab2fa71"
-      },
       "name": "Mạch Vĩ Kiệt",
       "email": "admin",
       "password": "$2b$05$AonjaS0Hlevc2DCgkS/pKOGWJbkZc97Dx3PicgJlM/PJmAtgPvu9y",
-      "educationRole": "adminstrator",
+      "educationRole": "administrator",
       "academicInformation": {
         "administrativeUnit": "administrativeUnit_Khoa-cong-nghe-thong-tin",
         "lecturerPosition": "lecturerPosition_Giang-vien",

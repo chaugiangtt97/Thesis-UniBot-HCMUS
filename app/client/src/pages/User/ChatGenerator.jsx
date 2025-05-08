@@ -166,7 +166,6 @@ export function ChatGenerator() {
     document.title = 'Chatbot - Trò Chuyện'
     mainLayout.navigate(121)
 
-
     ChatWithChatbot.userMessage(socket, (data) => { 
       if( currentChatSession && currentChatSession._id == data?.session_id) {
         setMessageHandler(prev => ({ ...prev, isProcess: true, ...data }))

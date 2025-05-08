@@ -82,13 +82,13 @@ function SignIn() {
     const logInEvent = processHandler.add('#login')
 
     const data = new FormData(event.currentTarget)
-    const userData = { email: data.get('email'), password: data.get('password') };
+    const userData = { email: data.get('email'), password: data.get('password'), captchaToken: captchaToken };
 
     await useAuth.login(userData)
       .then((userData) => {
-        console.log('hihih', userData)
-          processHandler.remove('#login', logInEvent)
-          dispatch(login(userData))}) 
+        processHandler.remove('#login', logInEvent)
+        dispatch(login(userData))}) 
+        navigate('/')
       .catch((err) => {
         processHandler.remove('#login', logInEvent)
         setNotification(useErrorMessage(err))

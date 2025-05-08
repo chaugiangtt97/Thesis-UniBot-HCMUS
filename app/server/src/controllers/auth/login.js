@@ -4,6 +4,7 @@ import { findUser, passwordsDoNotMatch, saveUserAccessAndReturnToken } from './h
 
 import { handleError, buildErrObject } from '../../middlewares/utils'
 import { checkPassword } from '../../middlewares/auth'
+import reCAPTCHA from './helpers/reCAPTCHA'
 
 /**
  * Login function called by route
@@ -13,6 +14,21 @@ import { checkPassword } from '../../middlewares/auth'
 export const login = async (req, res) => {
   try {
     const data = matchedData(req)
+    const node_env = process.env.NODE_ENV
+
+    if (node_env == 'production') {
+      if (!data.captchaToken) {
+        handleError(res, buildErrObject(422, 'Captcha token is required.'))
+        return
+      }
+      // eslint-disable-next-line no-console
+      if (!reCAPTCHA(data.captchaToken)) {
+        // eslint-disable-next-line no-console
+        node_env == 'development' && console.log('Captcha verification failed')
+        throw buildErrObject(422, 'Invalid captcha token.')
+      }
+    }
+
     const user = await findUser(data.email)
 
     if (user == null) {

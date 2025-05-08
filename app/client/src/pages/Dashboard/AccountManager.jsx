@@ -16,9 +16,8 @@ const data = [
 ]
 
 function AccountManager() {
-  const dispatch = useDispatch()
-  const {processHandler, dashboard } = useOutletContext();
-  const role = useSelector(state => state.auth.user?.role)
+  const { dashboard } = useOutletContext();
+  const role = useSelector(state => state.auth.user?.role || state.auth.user?.educationRole)
 
   useEffect(() => {
     document.title = 'Chatbot - Quản Lý Tài Khoản'

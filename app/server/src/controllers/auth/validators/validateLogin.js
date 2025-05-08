@@ -15,6 +15,7 @@ export const validateLogin = [
     .withMessage('IS_EMPTY')
     .isEmail()
     .withMessage('EMAIL_IS_NOT_VALID'),
+  check('captchaToken'),
   check('password')
     .exists()
     .withMessage('MISSING')

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { TypeAnimation } from 'react-type-animation';
 import avatar from '~/assets/10665849.png';
@@ -9,12 +9,21 @@ const HomePage = () => {
   const { mainLayout } = useOutletContext();
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state.auth.user ? state.auth.loggedIn : null);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     document.title = 'Chatbot - Trang Chủ';
     mainLayout.navigate(120);
 
-    isLogin && navigate('/chat');
+    // isLogin && navigate('/chat');
+    if (isLogin){
+      console.log(user.role)
+      if (user?.role === 'administrator') {
+        navigate('/chat_generator');
+      } else if (user?.role === 'student') {
+        navigate('/chat');
+      }
+    }
     
     return () => {
       mainLayout.navigate(0);

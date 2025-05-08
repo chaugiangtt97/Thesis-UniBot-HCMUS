@@ -10,6 +10,7 @@ export const validateRegister = [
     .not()
     .isEmpty()
     .withMessage('IS_EMPTY'),
+  check('captchaToken'),
   check('email')
     .exists()
     .withMessage('MISSING')

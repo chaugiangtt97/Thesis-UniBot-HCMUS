@@ -294,10 +294,16 @@ export function Profile() {
                   inputProps={{ maxLength: 40 }}
                   id="personal_phone"
                   name= "personal_phone"
-                  value={user?.phone}
+                  value={user?.generalInformation?.phone}
                   fullWidth
                   variant="outlined"
-                  onChange={(e) => setUser((prev) => ({...prev, phone : e.target.value}))}
+                  onChange = {(e) => setUser((prevUserRecord) => {
+                    return {...prevUserRecord, 
+                      generalInformation: {
+                      ...prevUserRecord?.generalInformation,
+                      phone: e.target.value
+                    }}
+                  })}
                 />
               </FormControl>
             </Grid>
@@ -312,10 +318,16 @@ export function Profile() {
                   multiline
                   id="preferences"
                   name= "preferences"
-                  value={user?.preferences}
+                  value={user?.academicInformation?.positionDescription}
                   spellCheck = {false}
                   rows={4}
-                  onChange={(e) => setUser((prev) => ({...prev, preferences : e.target.value}))}
+                  onChange = {(e) => setUser((prevUserRecord) => {
+                    return {...prevUserRecord, 
+                      academicInformation: {
+                      ...prevUserRecord?.academicInformation,
+                      positionDescription : e.target.value
+                    }}
+                  })}
                 />
               </FormControl>
             </Grid>

@@ -79,7 +79,12 @@ function GeneratedPassword() {
     if (notificationError) return
 
     const data = new FormData(event.currentTarget)
-    const userData = { _id: _id, newPassword: data.get('new-password'), verification: data.get('verify-password') };
+    const userData = { 
+      _id: _id, 
+      newPassword: data.get('new-password'), 
+      verification: data.get('verify-password'),
+      captchaToken: captchaToken
+    };
 
     const updatePasswordEvent = processHandler.add('#updatePassword')
     await useProfile.updatePassword(userData)

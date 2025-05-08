@@ -13,6 +13,7 @@ const validateForgotPassword = [
   check('password'),
   check('newPassword'),
   check('verification'),
+  check('captchaToken'),
   (req, res, next) => {
 
     // Kiểm tra nếu thiếu cả _id và email
