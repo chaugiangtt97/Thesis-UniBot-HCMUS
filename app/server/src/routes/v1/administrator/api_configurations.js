@@ -4,24 +4,17 @@ const trimRequest = require('trim-request')
 const passport = require('passport')
 const requireAuth = passport.authenticate('jwt', { session: false })
 
-import getRequest from '../../../controllers/chatbot/getRequest'
 import roleAuthorization from '../../../controllers/auth/roleAuthorization'
-import postRequest from '../../../controllers/chatbot/postRequest'
+import getAPI_Configurations from '../../../controllers/config/api_configurations '
+import validateAPI_Configurations from '../../../controllers/config/validators/validateUpdateProfile'
 
 router.get(
-  '/:id',
+  '/',
   requireAuth,
   roleAuthorization(['administrator']),
   trimRequest.all,
-  getRequest
-)
-
-router.post(
-  '/:id',
-  requireAuth,
-  roleAuthorization(['administrator']),
-  trimRequest.all,
-  postRequest
+  validateAPI_Configurations,
+  getAPI_Configurations
 )
 
 module.exports = router

@@ -27,6 +27,7 @@ server/__pycache__
 server/.env
 service/.env
 client/.env
+.env
 
 .venv
 

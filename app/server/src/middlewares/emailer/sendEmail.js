@@ -1,3 +1,5 @@
+import getKeyAPI_Service from '../../controllers/config/helper/getKeyAPI_Service'
+
 const nodemailer = require('nodemailer')
 
 /**
@@ -7,15 +9,19 @@ const nodemailer = require('nodemailer')
  */
 export const sendEmail = async (data = {}, callback) => {
 
+  const email_config = await getKeyAPI_Service('SMTP_EMAIL').config
+  if (!email_config) {
+    return callback(false)
+  }
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: email_config.provider,
     auth: {
-      user: process.env.EMAIL_ADDRESS,
-      pass: process.env.EMAIL_PASSWORD
+      user:  email_config.email_address, // process.env.EMAIL_ADDRESS,
+      pass:  email_config.email_password // process.env.EMAIL_PASSWORD
     }
   })
   const mailOptions = {
-    from: `UniBot-KHTN (2024) <${process.env.EMAIL_ADDRESS}>`,
+    from: `UniBot-KHTN (2024) <${email_config.email_address}>`,
     to: `${data.user.name} <${data.user.email}>`,
     subject: data.subject,
     html: data.htmlMessage
