@@ -24,7 +24,8 @@ function UserTypingMessageBlock({messageHandler}) {
           <ChatMessage sx = {{   
               marginLeft: {md: '20px', xs: 0},
               background: 'linear-gradient(319deg, rgb(255 255 255) 0%, rgb(186 173 255) 100%)',
-              color: '#000'
+              color: '#000',
+              maxWidth: { xs: '100%', md: '70%' }
             }}>
                 { messageHandler?.stream_message && <ReactMarkdown>
                   {messageHandler?.stream_message}

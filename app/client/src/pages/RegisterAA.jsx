@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLabel, Button, CircularProgress, MenuItem, Select } from '@mui/material';
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
@@ -110,6 +110,7 @@ function RegisterAA() {
         setNotification(useErrorMessage(err))
       })
   };
+    const reducers_data = useSelector(state => state.reducers)
 
   return (
     <>
@@ -226,15 +227,15 @@ function RegisterAA() {
           </Box>
 
 
-          <Box sx = {{ display: 'flex', justifyContent: 'end'}}>
+           {reducers_data?.captchaToken &&<Box sx = {{ display: 'flex', justifyContent: 'end'}}>
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
+              sitekey={reducers_data?.captchaToken} // {import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
               data-theme="dark"
               render="explicit"
               onChange={handleCaptchaChange}
               ref={recaptchaRef}
             />
-          </Box>
+          </Box>}
 
           <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'red' }}>
             {notificationError}

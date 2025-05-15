@@ -2,7 +2,7 @@ const domain = import.meta.env.VITE_SERVER
 
 export const validateEmail = async (data, api_key = null) => {
 	const url = `${domain}/verifyEmail?_id=${encodeURIComponent(data)}`;
-	console.log(url)
+
 	const structure = {
 		method: 'GET',
 		headers: {

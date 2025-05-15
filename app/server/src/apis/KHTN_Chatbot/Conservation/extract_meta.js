@@ -1,10 +1,12 @@
 import { buildErrObject } from '../../../middlewares/utils'
 
 /* eslint-disable no-unused-vars */
-const domain = `http://${process.env.KHTNCHATBOT_HOST}:${process.env.KHTNCHATBOT_PORT}`
+// const domain = `http://${process.env.KHTNCHATBOT_HOST}:${process.env.KHTNCHATBOT_PORT}`
+const domain = process.env.PYTHON_URI || 'http://localhost:5000'
 
 export const extract_meta = async (userInput, chosen_collections, history, api_key = null) => {
-  const url = `${domain}/generate/extract_meta?query=${encodeURIComponent(userInput)}&chosen_collection=${encodeURIComponent(chosen_collections)}}`
+  // const url = `${domain}/generate/extract_meta?query=${encodeURIComponent(userInput)}&chosen_collection=${encodeURIComponent(chosen_collections)}}`
+  const url = `${domain}/generate/extract_meta`
   const formData = new FormData()
   formData.append('history', JSON.stringify(history) )
   formData.append('query', userInput )

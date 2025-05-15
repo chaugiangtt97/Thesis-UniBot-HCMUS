@@ -36,7 +36,6 @@ export const register = async (req, res) => {
 
     if (!emailExists) {
       // Register the user
-      console.log('Registering user:', requestData)
       const newUser = await registerUser(requestData)
 
       // Prepare user info and response token

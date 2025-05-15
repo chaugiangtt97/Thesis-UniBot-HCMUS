@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLabel, Button, CircularProgress } from '@mui/material';
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { login } from '~/store/actions/authActions';
 import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
-
+import { useDispatch, useSelector } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
 
 const SignInCard = styled(Card)(({ theme }) => ({
@@ -121,6 +120,7 @@ function SignIn() {
       })
     
   };
+    const reducers_data = useSelector(state => state.reducers)
 
   return (
     <>
@@ -182,15 +182,15 @@ function SignIn() {
             </Typography>
           </Box>
 
-          <Box sx = {{ display: 'flex', justifyContent: 'end'}}>
+           {reducers_data?.captchaToken &&<Box sx = {{ display: 'flex', justifyContent: 'end'}}>
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
+              sitekey={reducers_data?.captchaToken} // {import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
               data-theme="dark"
               render="explicit"
               onChange={handleCaptchaChange}
               ref={recaptchaRef}
             />
-          </Box>
+          </Box>}
 
           <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'red' }}>
             {notificationError}

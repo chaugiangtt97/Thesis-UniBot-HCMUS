@@ -26,7 +26,8 @@ WORKDIR /app
  
 COPY requirements.txt .
 
-# RUN pip install --no-cache-dir -r requirements.txt
+# Tải sẵn mô hình SentenceTransformer
+
 RUN pip install --no-cache-dir -r requirements.txt  --extra-index-url https://download.pytorch.org/whl/cpu
 
 COPY . .

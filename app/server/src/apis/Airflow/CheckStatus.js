@@ -1,7 +1,8 @@
 import buildErrObject from '../../middlewares/utils/buildErrObject'
 
 /* eslint-disable no-unused-vars */
-const domain = `http://${process.env.AIRFLOW_HOST}:${process.env.AIRFLOW_PORT}`
+// const domain = `http://${process.env.AIRFLOW_HOST}:${process.env.AIRFLOW_PORT}`
+const domain = process.env.AIRFLOW_URI || 'http://localhost:8080'
 const usr_airflow = process.env?.USER_AIRFLOW
 const pw_airflow = process.env?.PASSWORD_AIRFLOW
 // https://airflow.apache.org/api/v1/dags/{dag_id}/dagRuns/{dag_run_id}

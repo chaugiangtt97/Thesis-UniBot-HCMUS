@@ -14,8 +14,6 @@ export const request_validateEmail = async (req, res) => {
     const code = req.query?.code
     const captchaToken = req.query?.captchaToken
 
-    console.log('request_validateEmail', email, code)
-
     if ( email ) {
       return res.status(200).json( await validateTokenAndSendRequest(email, code, captchaToken) )
     }

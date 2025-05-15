@@ -1,4 +1,5 @@
 import { feedback } from "./feedback"
+import { get_captcha_token } from "./get_captcha_token"
 import { login } from "./login"
 import { register } from "./register"
 import { send_verifyEmail } from "./send_verifyEmail"
@@ -9,5 +10,6 @@ export const useAuth = {
     register,
     feedback,
     validateEmail,
-    send_verifyEmail
+    send_verifyEmail,
+    get_captcha_token
 }

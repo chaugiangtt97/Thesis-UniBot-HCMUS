@@ -1,3 +1,7 @@
+from controllers.generate import Generate
+from controllers.helper.getLLMConfigs import get_llm_configs
+from middlewares.handleError import handleError
+
 from flask import Blueprint, request, jsonify, Response, stream_with_context, current_app
 from flask_cors import cross_origin
 from controllers.exampleController import authController
@@ -58,205 +62,287 @@ def preload():
     print("All assets loaded.")
     return
 
-@main.route("/generate/determine_collection", methods=["POST"])
-@cross_origin()
-def determine_collection():
-    ##PARAMS
-    query = request.form['query']
-    history = json.loads(request.form['history']) # Conversation history
-    # threshold = 0.5
-    #----------------------------------
-    queryrouter = current_app.config['QUERYROUTER']
-    conversation = ""
-    for h in history:
-        conversation += h['question'] + ". "
-    conversation += query
-    if queryrouter.use_history: #Determine using conversation history
-        # segmented_query = query_routing.segment_vietnamese(conversation + query)
-        # if type(segmented_query) is list:
-        #     segmented_conversation = " ".join(segmented_query)
-        # else:
-        #     segmented_conversation = segmented_query
-        # prediction = pho_queryrouter.classify(segmented_conversation)[0]
-        # chosen_collection = prediction['label']
-        # print("Query Routing: " + chosen_collection + " ----- Score: " + str(prediction['score']) + "\n")
-
-        # if prediction['score'] >= pho_queryrouter.threshold: 
-        #     return jsonify({'collection': chosen_collection})
-        prediction = queryrouter.classify(conversation)
-    else:
-        prediction = queryrouter.classify(query)
-    if prediction != -1:
-        return jsonify({'collection': prediction.removeprefix('_')})
-    else:
-        return jsonify({'collection': ""})
-
-@main.route("/generate/extract_meta", methods=['POST'])
-@cross_origin()
-def extract_metadata():
-    ##PARAMS
-    query = request.form['query']
-    chosen_collection = request.form['chosen_collection']
-    if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        chosen_collection = "_" + chosen_collection
-    schema = ['school_year', 'in_effect', 'created_at', 'updated_at']
-    history = json.loads(request.form['history']) # Conversation history
-    n_new_queries = 2
-    model = current_app.config['CHAT_MODEL']
-    database = current_app.config['DATABASE']
-    #----------------------------------
-    conversation = ""
-    for h in history:
-        conversation += h['question'] + ".\n"
-    conversation += query
-    #extracted_metadata = rag_utils.metadata_extraction(query, model, schema)
-    is_old_extract = True
-    if is_old_extract: #OLD METADATA EXTRACTION
-        extracted_metadata = rag_utils.metadata_extraction_v2(query, model, chosen_collection, database=database)
-        print(extracted_metadata)
-        if extracted_metadata != -1: #No metadata found
-            filter_expressions = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
-        else:
-            filter_expressions = {}
-        return jsonify(filter_expressions)
-    
-    rewritten_queries = rag_utils.rewrite_query(conversation=conversation, model=model, k=n_new_queries)
-    if rewritten_queries == -1:
-        extracted_metadata = rag_utils.metadata_extraction_v2(query, model, chosen_collection)
-        if extracted_metadata != -1: #No metadata found
-            filter_expressions = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
-        else:
-            filter_expressions = {}
-        return jsonify(filter_expressions)
-    else:
-        filter_expressions = []
-        for q in rewritten_queries:
-            extracted_metadata = rag_utils.metadata_extraction_v2(q, model, chosen_collection)
-            if extracted_metadata != -1: #No metadata found
-                expr = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
-            else:
-                expr = {}
-            filter_expressions.append({q: expr})
-        return jsonify(filter_expressions)
+# """ Handles the determine collection route """
+# @main.route("/generate/determine_collection", methods=["POST"])
+# @cross_origin()
+# def determine_collection():
+#     try:        
+#         query = request.form.get('query')
+#         if not query:
+#             return handleError(400, "Missing required parameter 'query'")
+#         history_raw = request.form.get('history', '[]')
         
-
-@main.route("/generate/search", methods=["GET"])
-@cross_origin()
-def search():
-    ##PARAMS
-    query = request.args.get('query') # Tin nhắn người dùng
-    chosen_collection = request.args.get('chosen_collection') #Context từ api search
-    if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        chosen_collection = "_" + chosen_collection
-    try:
-        filter_expressions = json.loads(request.args.get('filter_expressions')) #
-    except json.JSONDecodeError:
-        filter_expressions = None
-    # k = 4
-    #encoder = rag_utils.Encoder(provider=os.getenv("EMBED_PROVIDER", "local"))
-    encoder = current_app.config['ENCODER']
-    database = current_app.config['DATABASE']
-    k = database.k
-    #----------------------------------
-    database.load_collection(chosen_collection)
-    # output_fields = {
-    #     'student_handbook': ['title', 'article'],
-    #     chosen_collection: ['title', 'article']
-    # }
-    if type(filter_expressions) == dict:
-        query_embeddings = encoder.embedding_function(query)
-        try:
-            # search_results, source, distances = database.similarity_search(chosen_collection, query_embeddings, filters=filter_expressions, k=k)
-            # search_results_vanilla, source_vanilla, distances_vanilla = database.similarity_search(chosen_collection, query_embeddings, k=k)
-
-            # if search_results == -1:
-            #     search_results = search_results_vanilla
-            #     source = source_vanilla
-            #     distances = distances_vanilla
-            # else:
-            #     filter_bias = database.filter_bias
-            #     distances = [d * filter_bias for d in distances] #Apply bias for filtered search by lowering the distance
-
-            #     search_results = search_results + search_results_vanilla
-            #     source = source + source_vanilla
-            #     distances = distances + distances_vanilla
-            # results = {k: (article, s) for k, article, s in zip(distances, search_results, source)}
-
-            # distances.sort()
-            # distances = distances[:k]
-            # search_results_final = [results[k][0] for k in distances]
-            # source_final = [results[k][1] for k in distances]
-
-            search_results_final, source_final = database.hybrid_search(
-                collection=chosen_collection, 
-                query_embeddings=[query_embeddings], 
-                k=k,
-                limit_per_req=4,
-                filters=[filter_expressions],
-            )
-        except Exception as e:
-            print("Error with filter search")
-            print(e)
-            search_results_final, source_final, _ = database.similarity_search(chosen_collection, query_embeddings, k=k)
-        if search_results_final != -1:
-            context = rag_utils.create_prompt_milvus(query, search_results_final)
-        else:
-            context = ""
-            source_final = []
-    elif type(filter_expressions) == list: #Filter expressions contain rewritten queries - perform hybrid search
-        search_results_final, source_final, _ = database.hybrid_search(
-            collection=chosen_collection, 
-            query_embeddings=[encoder.embedding_function(list(q.keys())[0]) for q in filter_expressions], 
-            k=k,
-            limit_per_req=4,
-            filters=[list(q.values())[0] for q in filter_expressions]
-            )
-        if search_results_final != -1:
-            context = rag_utils.create_prompt_milvus(query, search_results_final)
-        elif search_results_final == -2: #Error in hybrid search, revert to vanilla search
-            search_results_vanilla, source_vanilla, distances_vanilla = database.similarity_search(chosen_collection, query_embeddings, k=k)
-            context = rag_utils.create_prompt_milvus(query, search_results_vanilla)
-        else:
-            context = "No related documents found"
-            source_final = []
-    del encoder
-    return jsonify({
-        'context': context,
-        'source': source_final
-        })
-
-@main.route("/generate", methods=["POST"])
-@cross_origin()
-def generate():
-    ##PARAMS
-    query = request.form['query'] # Tin nhắn người dùng
-    context = request.form['context'] # Context từ api search
-    streaming = request.form['streaming'].lower() == "true"  #True or False 
-    history = json.loads(request.form['history']) # Conversation history
-    theme = request.form['collection_name'] # Collection name
-    if theme not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        theme = "_" + theme
-    user_profile = request.form['user_profile'] # User profile
-    # max_tokens = 1500 
-    model = current_app.config['CHAT_MODEL']
-    database = current_app.config['DATABASE']
-    max_tokens = model.max_new_tokens
-    #-------------------------------------------
-    aliases = database.describe_collection(theme)['aliases']
-    if len(aliases) > 0:
-        theme = aliases[0]
-    answer = model.generate(query, context, streaming, max_tokens, history=history, user_profile=user_profile, theme=theme, themes_descriptions=database.themes_descriptions)
-    
-    # if streaming:
-        # return answer #Generator object, nếu không được thì thử thêm yield trước biến answer thử
+#         try:
+#             history = json.loads(history_raw)
+#             if not isinstance(history, list):
+#                 raise ValueError("History must be a JSON array")
+#         except json.JSONDecodeError:
+#             return handleError(400, "Invalid JSON format for 'history'")
+#         except ValueError as ve:
+#             return handleError(400, str(ve))
+            
+#         generateObject = Generate() 
+#         collection = generateObject.determine_collection(query, history)
         
-    if streaming:
-        def generate_stream():
-            for part in answer:
-                yield part  # Yield từng phần của câu trả lời
-        return Response(generate_stream(), content_type='text/plain;charset=utf-8')
-    else:
-        return jsonify({'answer': answer})
+#         return collection, 200
+    
+#     except Exception as e: 
+#         return handleError(500, str(e))
+    
+#     # # threshold = 0.5
+#     # #----------------------------------
+#     # queryrouter = current_app.config['QUERYROUTER']
+#     # conversation = ""
+#     # for h in history:
+#     #     conversation += h['question'] + ". "
+#     # conversation += query
+#     # if queryrouter.use_history: #Determine using conversation history
+#     #     # segmented_query = query_routing.segment_vietnamese(conversation + query)
+#     #     # if type(segmented_query) is list:
+#     #     #     segmented_conversation = " ".join(segmented_query)
+#     #     # else:
+#     #     #     segmented_conversation = segmented_query
+#     #     # prediction = pho_queryrouter.classify(segmented_conversation)[0]
+#     #     # chosen_collection = prediction['label']
+#     #     # print("Query Routing: " + chosen_collection + " ----- Score: " + str(prediction['score']) + "\n")
+
+#     #     # if prediction['score'] >= pho_queryrouter.threshold: 
+#     #     #     return jsonify({'collection': chosen_collection})
+#     #     prediction = queryrouter.classify(conversation)
+#     # else:
+#     #     prediction = queryrouter.classify(query)
+#     # if prediction != -1:
+#     #     return jsonify({'collection': prediction.removeprefix('_')})
+#     # else:
+#     #     return jsonify({'collection': ""})
+
+
+# """ Handles the metadata extraction route """
+# @main.route("/generate/extract_meta", methods=['POST'])
+# @cross_origin()
+# def extract_metadata_route():
+#     try:
+#         query = request.form.get('query')
+#         if not query:
+#             return handleError(400, "Missing required parameter 'query'")
+
+#         chosen_collection = request.form.get('chosen_collection', '')
+#         if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#             chosen_collection = f"_{chosen_collection}"
+
+#         history_raw = request.form.get('history', '[]')
+#         try:
+#             history = json.loads(history_raw)
+#             if not isinstance(history, list):
+#                 raise ValueError("History must be a JSON array")
+#         except (json.JSONDecodeError, ValueError) as e:
+#             return handleError(400, str(e))
+
+#         generate_object = Generate()
+#         filter_expressions = generate_object.extract_metadata(query, chosen_collection, history)
+
+#         return jsonify({ filter_expressions }), 200
+#     except Exception as e:
+#         return handleError(500, str(e))
+        
+        
+        
+#         # schema = ['school_year', 'in_effect', 'created_at', 'updated_at']
+#         # n_new_queries = 2
+#         # database = current_app.config['DATABASE']
+
+        
+#         # model_configs = get_llm_configs('ACTIVE')
+    
+#         # model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)  
+#         # # model = current_app.config['CHAT_MODEL']
+#         # #----------------------------------
+#         # conversation = ""
+#         # for h in history:
+#         #     conversation += h['question'] + ".\n"
+#         # conversation += query
+#         # #extracted_metadata = rag_utils.metadata_extraction(query, model, schema)
+#         # is_old_extract = True
+#         # if is_old_extract: #OLD METADATA EXTRACTION
+#         #     extracted_metadata = rag_utils.metadata_extraction_v2(query, model, chosen_collection, database=database)
+#         #     print(extracted_metadata)
+#         #     if extracted_metadata != -1: #No metadata found
+#         #         filter_expressions = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
+#         #     else:
+#         #         filter_expressions = {}
+#         #     return jsonify(filter_expressions)
+        
+#         # rewritten_queries = rag_utils.rewrite_query(conversation=conversation, model=model, k=n_new_queries)
+#         # if rewritten_queries == -1:
+#         #     extracted_metadata = rag_utils.metadata_extraction_v2(query, model, chosen_collection)
+#         #     if extracted_metadata != -1: #No metadata found
+#         #         filter_expressions = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
+#         #     else:
+#         #         filter_expressions = {}
+#         #     return jsonify(filter_expressions)
+#         # else:
+#         #     filter_expressions = []
+#         #     for q in rewritten_queries:
+#         #         extracted_metadata = rag_utils.metadata_extraction_v2(q, model, chosen_collection)
+#         #         if extracted_metadata != -1: #No metadata found
+#         #             expr = rag_utils.compile_filter_expression(extracted_metadata, database.persistent_collections + [chosen_collection], database.persistent_collections, latest_timespan_months=database.latest_timespan_months)
+#         #         else:
+#         #             expr = {}
+#         #         filter_expressions.append({q: expr})
+#         #     return jsonify(filter_expressions)    
+
+# @main.route("/generate/search", methods=["GET"])
+# @cross_origin()
+# def search():
+#     try:
+#         query = request.args.get('query')
+#         if not query:
+#             return handleError(400, "Missing required parameter 'query'")
+
+#         chosen_collection = request.args.get('chosen_collection', '')
+#         if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#             chosen_collection = f"_{chosen_collection}"
+
+#         filter_expressions_raw = request.args.get('filter_expressions', None)
+#         filter_expressions = None
+#         if filter_expressions_raw:
+#             try:
+#                 filter_expressions = json.loads(filter_expressions_raw)
+#             except json.JSONDecodeError:
+#                 return handleError(400, "Invalid JSON format for 'filter_expressions'")
+
+#         generate_object = Generate()
+#         context, source = generate_object.search(query, chosen_collection, filter_expressions)
+
+#         return jsonify({context, source}), 200
+
+#     except Exception as e:
+#         return handleError(500, str(e))
+    
+        
+    
+#     # # k = 4
+#     # #encoder = rag_utils.Encoder(provider=os.getenv("EMBED_PROVIDER", "local"))
+#     # encoder = current_app.config['ENCODER']
+#     # database = current_app.config['DATABASE']
+#     # k = database.k
+#     # #----------------------------------
+#     # database.load_collection(chosen_collection)
+#     # # output_fields = {
+#     # #     'student_handbook': ['title', 'article'],
+#     # #     chosen_collection: ['title', 'article']
+#     # # }
+#     # if type(filter_expressions) == dict:
+#     #     query_embeddings = encoder.embedding_function(query)
+#     #     try:
+#     #         # search_results, source, distances = database.similarity_search(chosen_collection, query_embeddings, filters=filter_expressions, k=k)
+#     #         # search_results_vanilla, source_vanilla, distances_vanilla = database.similarity_search(chosen_collection, query_embeddings, k=k)
+
+#     #         # if search_results == -1:
+#     #         #     search_results = search_results_vanilla
+#     #         #     source = source_vanilla
+#     #         #     distances = distances_vanilla
+#     #         # else:
+#     #         #     filter_bias = database.filter_bias
+#     #         #     distances = [d * filter_bias for d in distances] #Apply bias for filtered search by lowering the distance
+
+#     #         #     search_results = search_results + search_results_vanilla
+#     #         #     source = source + source_vanilla
+#     #         #     distances = distances + distances_vanilla
+#     #         # results = {k: (article, s) for k, article, s in zip(distances, search_results, source)}
+
+#     #         # distances.sort()
+#     #         # distances = distances[:k]
+#     #         # search_results_final = [results[k][0] for k in distances]
+#     #         # source_final = [results[k][1] for k in distances]
+
+#     #         search_results_final, source_final = database.hybrid_search(
+#     #             collection=chosen_collection, 
+#     #             query_embeddings=[query_embeddings], 
+#     #             k=k,
+#     #             limit_per_req=4,
+#     #             filters=[filter_expressions],
+#     #         )
+#     #     except Exception as e:
+#     #         print("Error with filter search")
+#     #         print(e)
+#     #         search_results_final, source_final, _ = database.similarity_search(chosen_collection, query_embeddings, k=k)
+#     #     if search_results_final != -1:
+#     #         context = rag_utils.create_prompt_milvus(query, search_results_final)
+#     #     else:
+#     #         context = ""
+#     #         source_final = []
+#     # elif type(filter_expressions) == list: #Filter expressions contain rewritten queries - perform hybrid search
+#     #     search_results_final, source_final, _ = database.hybrid_search(
+#     #         collection=chosen_collection, 
+#     #         query_embeddings=[encoder.embedding_function(list(q.keys())[0]) for q in filter_expressions], 
+#     #         k=k,
+#     #         limit_per_req=4,
+#     #         filters=[list(q.values())[0] for q in filter_expressions]
+#     #         )
+#     #     if search_results_final != -1:
+#     #         context = rag_utils.create_prompt_milvus(query, search_results_final)
+#     #     elif search_results_final == -2: #Error in hybrid search, revert to vanilla search
+#     #         search_results_vanilla, source_vanilla, distances_vanilla = database.similarity_search(chosen_collection, query_embeddings, k=k)
+#     #         context = rag_utils.create_prompt_milvus(query, search_results_vanilla)
+#     #     else:
+#     #         context = "No related documents found"
+#     #         source_final = []
+#     # del encoder
+#     # return jsonify({
+#     #     'context': context,
+#     #     'source': source_final
+#     #     })
+
+# @main.route("/generate", methods=["POST"])
+# @cross_origin()
+# def generate():
+#     try:
+#         query = request.form['query'] # Tin nhắn người dùng
+#         context = request.form['context'] # Context từ api search
+#         streaming = request.form['streaming'].lower() == "true"  #True or False 
+#         history = json.loads(request.form['history']) # Conversation history
+#         theme = request.form['collection_name'] # Collection name
+#         user_profile = request.form['user_profile'] # User profile
+        
+#         answer = Generate().generate(query, context, streaming, theme, user_profile, history)
+        
+#         if answer and streaming:
+#           def generate_stream():
+#             for part in answer:
+#               yield part  # Yield từng phần của câu trả lời
+#           return Response(generate_stream(), content_type='text/plain;charset=utf-8')
+          
+#         return jsonify({ answer }), 200
+    
+#     except Exception as e: 
+#         return handleError(500, e)
+    
+#     # if theme not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#     #     theme = "_" + theme
+#     # # max_tokens = 1500 
+#     # model_configs = get_llm_configs('ACTIVE')
+    
+#     # model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
+#     # # model = current_app.config['CHAT_MODEL']
+#     # database = current_app.config['DATABASE']
+#     # max_tokens = model.max_new_tokens
+#     # #-------------------------------------------
+#     # aliases = database.describe_collection(theme)['aliases']
+#     # if len(aliases) > 0:
+#     #     theme = aliases[0]
+#     # answer = model.generate(query, context, streaming, max_tokens, history=history, user_profile=user_profile, theme=theme, themes_descriptions=database.themes_descriptions)
+    
+#     # # if streaming:
+#     #     # return answer #Generator object, nếu không được thì thử thêm yield trước biến answer thử
+        
+#     # if streaming:
+#     #     def generate_stream():
+#     #         for part in answer:
+#     #             yield part  # Yield từng phần của câu trả lời
+#     #     return Response(generate_stream(), content_type='text/plain;charset=utf-8')
+#     # else:
+#     #     return jsonify({'answer': answer})
 
 @main.route("/get_file", methods=["GET","POST"])
 @cross_origin()
@@ -356,7 +442,10 @@ def enhance_document():
     collection_name = request.form['collection_name']
     if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
         collection_name = "_" + collection_name
-    model = current_app.config['CHAT_MODEL']
+    # model = current_app.config['CHAT_MODEL']
+    model_configs = get_llm_configs('ACTIVE')
+    
+    model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
     database = current_app.config['DATABASE']
     #-------------------------------------------
     #TODO: Enhance document
@@ -452,7 +541,10 @@ def update_params():
     phobert.threshold = float(threshold)
     phobert.use_history = use_history
 
-    model = current_app.config['CHAT_MODEL']
+    # model = current_app.config['CHAT_MODEL']
+    model_configs = get_llm_configs('ACTIVE')
+    
+    model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
     model.max_new_tokens = int(max_tokens)
     
     database = current_app.config['DATABASE']
@@ -465,7 +557,10 @@ def update_params():
 def list_params():
     ##PARAMS
     phobert = current_app.config['QUERYROUTER']
-    model = current_app.config['CHAT_MODEL']
+    # model = current_app.config['CHAT_MODEL']
+    model_configs = get_llm_configs('ACTIVE')
+    model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
+    
     database = current_app.config['DATABASE']
     #-------------------------------------------
     return jsonify({

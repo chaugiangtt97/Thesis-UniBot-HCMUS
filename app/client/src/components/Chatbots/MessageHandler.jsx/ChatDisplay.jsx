@@ -101,9 +101,10 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
     <Box sx = {ChatBlock_Style}>
       <FadeIn>
         <Box sx = { ChatDisplay_Style }>
-          <Avatar alt="User" sx = {{ display: { xs: 'none', md: 'block' } }} 
+          {/* <Avatar alt="User" sx = {{ background: '#eaeff1', display: { xs: 'none', md: 'block' } }} 
                 src={`/studentAvatar_${user.generalInformation?.sex}.png`}
-             />
+             /> */}
+          <AvatarUserDefault user_profile = {user} sx = {{ display: { xs: 'none', md: 'block' } }} />
           <ChatMessage sx = {{   
               background: 'linear-gradient(45deg, rgba(73,124,246,1) 47%, rgba(144,95,247,1) 100%)',
               marginRight: {md: '20px', xs: 0},
@@ -295,6 +296,7 @@ import Rating from '@mui/material/Rating';
 import StarIcon from '@mui/icons-material/Star';
 import { GetURLFromMarkdown } from '~/utils/GetURLFromMarkdown'
 import { useCode } from '~/hooks/useMessage'
+import AvatarUserDefault from '~/components/Avatar/AvatarUserDefault'
 const labels = {
   1: 'Hoàn Toàn Không Hài Lòng',
   2: 'Không Hài Lòng',

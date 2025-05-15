@@ -1,11 +1,6 @@
-import { INITIALSTATE } from "../actions/actions";
-// import { navList_1, navList_2 } from "~/config/navList";
-// import { subNav as knowledge_baseSubNavs } from "~/pages/Dashboard/KnowledgeBase/SubNav";
+import { INITIALSTATE, CAPTCHA_TOKEN } from "../actions/actions";
+
 const initialState = {
-  // dashboard: { ...navList_1, ...navList_2 },
-  // subnav: {
-  //   346: knowledge_baseSubNavs,
-  // },
   payload: null,
 };
 
@@ -15,6 +10,11 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         index: action.payload,
+      };
+    case CAPTCHA_TOKEN:
+      return {
+        ...state,
+        captchaToken: action.payload,
       };
     default:
       return state;

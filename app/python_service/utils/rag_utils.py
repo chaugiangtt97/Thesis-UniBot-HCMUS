@@ -65,8 +65,17 @@ class Encoder:
             )
             self.embedding_function = model.embed_query()
         elif provider == "local":
-            model = SentenceTransformer(model_name)
+            
+            if not os.path.exists(f"./SentenceTransformer/{model_name}"):
+                print("Model not found, downloading...")
+                model = SentenceTransformer(model_name)
+                model.save(f"./SentenceTransformer/{model_name}")
+            else:
+                print("Loading model from cache...")
+                model = SentenceTransformer(f"./SentenceTransformer/{model_name}")
+
             self.embedding_function = model.encode
+            
         elif provider == "vllm":
             from openai import OpenAI
             def embed(text):
@@ -390,6 +399,16 @@ class MilvusDB:
             return True, "Success"
         except MilvusException as e:
             return False, e.message
+    
+    def list_collections(self):
+        """Retrieve all collections in Milvus."""
+        try:
+            collections = self._handler.list_collections()
+            return collections
+        except MilvusException as e:
+            print(f"Error listing collections: {e}")
+            return []
+        
 def create_prompt_milvus(question, context, output_fields=['title','article']):
 #     full_context = """
 # You always answer with markdown formatting using GitHub syntax. Do not use ordered or numbered lists.

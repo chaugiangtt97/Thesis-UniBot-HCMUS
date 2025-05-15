@@ -203,7 +203,7 @@ export const ChatWithChatBot = async (socket) => {
 
       // Step 4
       let finalResponse
-
+      console.log('searchResult: ',searchResult)
       finalResponse = await chatbot.generate(typeof message === 'object' ? message.question : message, searchResult.context, true, conservationBefore, getProfileToString(socket.user), chosen_collections).then((res) => {
         return res // StreamObject
       }).catch((err) => { throw 'Lỗi ở bước generate: ' + JSON.stringify(err) })

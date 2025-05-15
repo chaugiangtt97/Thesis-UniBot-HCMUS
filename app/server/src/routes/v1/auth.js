@@ -16,6 +16,7 @@ import { feedback } from '../../controllers/auth/feedback'
 import validateEmail from '../../controllers/auth/validateEmail'
 import request_validateEmail from '../../controllers/auth/request_validateEmail'
 import { updatePassword } from '../../controllers/auth'
+import getAPI_Configurations from '~/controllers/auth/api_configurations '
 
 router.post('/login', trimRequest.all, validateLogin, login)
 router.post('/register', trimRequest.all, validateRegister, register)
@@ -23,5 +24,6 @@ router.post('/feedback', requireAuth, trimRequest.all, feedback)
 router.get('/verifyEmail', trimRequest.all, validateEmail)
 router.get('/request_verifyEmail', trimRequest.all, validateVerifyEmail, request_validateEmail)
 router.post('/updatePassword', trimRequest.all, validateForgotPassword, updatePassword)
+router.get('/captcha_token', trimRequest.all, getAPI_Configurations)
 
 module.exports = router

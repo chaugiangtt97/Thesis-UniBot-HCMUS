@@ -12,13 +12,18 @@ export const validateTokenAndSendRequest = async ( email = '', code = null, capt
   const items = await User.findOne({ email }).then(async (users) => {
     await itemNotFound(false, users, 'USER_DOES_NOT_EXIST')
     if (users) {
+
       if (users?.verified && code == null) {
         throw buildErrObject(404, 'THIS ACCOUNT HAVE BEEN VERIFIED')
       }
-      prepareToSendEmail(users, 'VERIFY_EMAIL')
+
+      if (!users?.educationRole == 'administrator')
+        prepareToSendEmail(users, 'VERIFY_EMAIL')
+
     } else {
       throw buildErrObject(404, 'USER_DOES_NOT_EXIST')
     }
+
     return {
       temp_id: users._id,
       email: users.email,

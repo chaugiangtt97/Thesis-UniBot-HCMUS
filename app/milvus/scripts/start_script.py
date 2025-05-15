@@ -91,7 +91,7 @@ def ingest_pipeline(student_path, news_path):
         FieldSchema(name="in_effect", dtype=DataType.VARCHAR, max_length=100,),
         FieldSchema(name="file_links", dtype=DataType.VARCHAR, max_length=750),
         FieldSchema(name="created_at", dtype=DataType.VARCHAR, max_length=50,),
-        FieldSchema(name="created_at_unix", dtype=DataType.INT64,),
+        FieldSchema(name="created_at_unix", dtype=DataType.INT64, nullable=True),
         FieldSchema(name="updated_at", dtype=DataType.VARCHAR, max_length=50,),
         FieldSchema(name="url", dtype=DataType.VARCHAR, max_length=300),
         FieldSchema(name="is_active", dtype=DataType.BOOL),

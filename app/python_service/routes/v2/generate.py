@@ -1,0 +1,141 @@
+from flask import Blueprint, request, jsonify, Response, stream_with_context # type: ignore
+from flask_cors import cross_origin # type: ignore
+
+import json
+
+from controllers.generate import Generate
+from middlewares.handleError import handleError
+
+main = Blueprint("generate", __name__)
+
+
+""" Handles the determine collection route """
+@main.route("/determine_collection", methods=["POST"])
+@cross_origin()
+def determine_collection_route():
+    try:        
+        query = request.form.get('query')
+        if not query:
+            return handleError(400, "Missing required parameter 'query'")
+        history_raw = request.form.get('history', '[]')
+        
+        try:
+            history = json.loads(history_raw)
+            if not isinstance(history, list):
+                raise ValueError("History must be a JSON array")
+        except json.JSONDecodeError:
+            return handleError(400, "Invalid JSON format for 'history'")
+        except ValueError as ve:
+            return handleError(400, str(ve))
+            
+        generateObject = Generate() 
+        collection = generateObject.determine_collection(query, history)
+        
+        return collection, 200
+    
+    except Exception as e: 
+        return handleError(500, str(e))
+
+
+""" Handles the metadata extraction route """
+@main.route("/extract_meta", methods=['POST'])
+@cross_origin()
+def extract_metadata_route():
+    try:
+        query = request.form.get('query')
+        if not query:
+            return handleError(400, "Missing required parameter 'query'")
+
+        chosen_collection = request.form.get('chosen_collection')
+        if not chosen_collection:
+            return handleError(400, "Missing required parameter 'chosen_collection'")
+        if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+            chosen_collection = f"_{chosen_collection}"
+
+        history_raw = request.form.get('history', '[]')
+        try:
+            history = json.loads(history_raw)
+            if not isinstance(history, list):
+                raise ValueError("History must be a JSON array")
+        except (json.JSONDecodeError, ValueError) as e:
+            return handleError(400, str(e))
+
+        generate_object = Generate()
+        filter_expressions = generate_object.extract_metadata(query, chosen_collection, history)
+        print('filter_expressions', filter_expressions)
+        return jsonify({ "filter_expressions": filter_expressions }), 200
+    except Exception as e:
+        return handleError(500, str(e))  
+
+
+""" Handles the search route """
+@main.route("/search", methods=["POST"])
+@cross_origin()
+def search_route():
+    try:
+        query = request.form.get('query')
+        if not query:
+            return handleError(400, "Missing required parameter 'query'")
+
+        chosen_collection = request.form.get('chosen_collection')
+        if not chosen_collection:
+            return handleError(400, "Missing required parameter 'chosen_collection'")
+        if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+            chosen_collection = f"_{chosen_collection}"
+
+        filter_expressions_raw = request.form.get('filter_expressions', None)
+        filter_expressions = None
+        if filter_expressions_raw:
+            try:
+                filter_expressions = json.loads(filter_expressions_raw)
+            except json.JSONDecodeError:
+                return handleError(400, "Invalid JSON format for 'filter_expressions'")
+
+        generate_object = Generate()
+        context, source = generate_object.search(query, chosen_collection, filter_expressions)
+
+        return jsonify({ "context": context, "source": source}), 200
+
+    except Exception as e:
+        return handleError(500, str(e))
+
+
+""" Handles the generate route """
+@main.route("/", methods=["POST"])
+@cross_origin()
+def generate_route():
+    try:
+        query = request.form.get('query')
+        if not query:
+            return handleError(400, "Missing required parameter 'query'")
+
+        context = request.form.get('context', '') 
+
+        streaming = request.form.get('streaming', False)
+        if streaming and streaming != False: 
+            streaming = streaming.lower() == 'true'
+        
+        history_raw = request.form.get('history', '[]')
+        try:
+            history = json.loads(history_raw)
+            if not isinstance(history, list):
+                raise ValueError("History must be a JSON array")
+        except (json.JSONDecodeError, ValueError) as e:
+            return handleError(400, str(e))
+        
+        theme = request.form.get('collection_name', '') # Collection name
+        user_profile = request.form.get('user_profile', '') # User profile
+        
+        print(query, context, streaming, theme )
+        answer = Generate().generate(query, context, streaming, theme, user_profile, history)
+        
+        if answer and streaming:
+          def generate_stream():
+            for part in answer:
+              yield part  # Yield từng phần của câu trả lời
+          return Response(stream_with_context(generate_stream()), content_type='text/plain;charset=utf-8')
+          
+        return jsonify({ answer }), 200
+    
+    except Exception as e: 
+        return handleError(500, e)

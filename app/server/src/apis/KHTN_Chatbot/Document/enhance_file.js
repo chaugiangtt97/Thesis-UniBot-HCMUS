@@ -2,7 +2,8 @@
 
 import { buildErrObject } from '../../../middlewares/utils'
 
-const domain = `http://${process.env.KHTNCHATBOT_HOST}:${process.env.KHTNCHATBOT_PORT}`
+// const domain = `http://${process.env.KHTNCHATBOT_HOST}:${process.env.KHTNCHATBOT_PORT}`
+const domain = process.env.PYTHON_URI || 'http://localhost:5000'
 
 export const enhance_file = async (formData = null) => {
   const url = `${domain}/insert_file/enhance`

@@ -2,13 +2,12 @@ import styled from '@emotion/styled';
 import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLabel, Button, CircularProgress } from '@mui/material';
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
-import { useDispatch } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { login } from '~/store/actions/authActions';
 import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useSelector } from 'react-redux';
 
 const SignInCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column', 
@@ -43,7 +42,6 @@ function ForgotPasswords() {
     setCaptchaToken(token);
   };
 
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const { processHandler } = useOutletContext();   
 
@@ -97,7 +95,8 @@ function ForgotPasswords() {
 
   };
 
-
+  const reducers_data = useSelector(state => state.reducers)
+  
   return (
     <>
       <SignInCard variant="outlined">
@@ -131,15 +130,15 @@ function ForgotPasswords() {
             </Typography>
           </Box>
 
-          <Box sx = {{ display: 'flex', justifyContent: 'end'}}>
+          {reducers_data?.captchaToken && <Box sx = {{ display: 'flex', justifyContent: 'end'}}>
             <ReCAPTCHA
-              sitekey={import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
+              sitekey={reducers_data?.captchaToken} // {import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
               data-theme="dark"
               render="explicit"
               onChange={handleCaptchaChange}
               ref={recaptchaRef}
             />
-          </Box>
+          </Box>}
 
           <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'red' }}>
             {notificationError}

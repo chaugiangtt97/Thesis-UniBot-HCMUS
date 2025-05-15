@@ -34,7 +34,7 @@ export const registerUser = async (req = {}) => {
   }
 
   if (req.educationRole === 'student') {
-    userRecord = new User({...userRecord, educationRole: 'student' })
+    userRecord = new User({ ...userRecord, educationRole: 'student' })
   }
 
   if (req.educationRole === 'lecturer') {
@@ -44,7 +44,7 @@ export const registerUser = async (req = {}) => {
       handleError(res, 'Email must be in the format of @clc.fitus.edu.vn for lecturers')
     }
 
-    userRecord = new User({...userRecord, educationRole: 'lecturer' })
+    userRecord = new User({ ...userRecord, educationRole: 'lecturer' })
   }
 
   const res = await userRecord.save()

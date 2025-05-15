@@ -1,16 +1,12 @@
 import { Avatar, Box } from '@mui/material'
 import React from 'react'
-import botAvatar from '~/assets/botAvatar.png'
-function AvatarUserDefault() {
+
+function AvatarUserDefault({sx , s_width, s_height, user_profile  }) {
   return (
-    <Box sx = {{ 
-      padding: '2px',
-      background: '#ffffff1a',
-      borderRadius: '50%',
-      marginRight: 2,
-      boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.25), 0px 1px 2px rgba(0, 0, 0, 0.1)',
-     }}>
-      <Avatar alt="Remy Sharp" src={botAvatar} />
+    <Box sx ={{ ...sx ,width: s_width ? s_width : '50px', height: s_height ? s_height : '50px',  borderRadius: '50%', marginRight: 1 }}>
+      <Avatar sx = {{ background: '#eaeff1', width: '100%', height: '100%', display: { xs: 'none', md: 'flex', width: '100%', height: '100%' } }} 
+        src={`/studentAvatar_${user_profile?.generalInformation?.sex}.png`}
+      />
     </Box>
   )
 }

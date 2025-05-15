@@ -9,7 +9,7 @@ const nodemailer = require('nodemailer')
  */
 export const sendEmail = async (data = {}, callback) => {
 
-  const email_config = await getKeyAPI_Service('SMTP_EMAIL').config
+  const email_config = await getKeyAPI_Service('SMTP_EMAIL')?.configs
   if (!email_config) {
     return callback(false)
   }

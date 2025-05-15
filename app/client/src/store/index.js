@@ -24,7 +24,7 @@ const store = configureStore({
   reducer: {
     reducers: reducers,
     auth: authReducer,
-    navigate: navigate,
+    navigate: navigate
   },
   middleware: () => new Tuple(serializableMiddleware),
 });

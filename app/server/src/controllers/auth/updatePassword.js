@@ -14,14 +14,13 @@ const updatePassword = async (req, res) => {
   try {
     const data = matchedData(req)
     let user = null
+
     if (data?.email) {
-      console.log('updatePassword email', data.email)
       user = await findUser(data.email)
     } else if (data?._id) {
-      console.log('updatePassword _id', data._id)
       user = await findUser(null, data._id)
     }
-    console.log(data)
+
     if (data?.password) {
       const isPasswordMatch = await checkPassword(data.password, user)
       if (!isPasswordMatch) {
@@ -32,7 +31,6 @@ const updatePassword = async (req, res) => {
         message: 'PASSWORD_UPDATED_SUCCESSFULLY'
       })
     }
-    console.log(user.verification, data.verification)
 
     if (user.verification === data.verification) {
 

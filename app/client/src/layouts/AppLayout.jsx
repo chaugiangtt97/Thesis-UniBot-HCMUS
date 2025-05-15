@@ -33,6 +33,7 @@ function AppLayout() {
   const [isProcess, setIsProcess] = useState([])
   const [isFirstRendering, setFirstRendering] = useState(true);
   const auth = useSelector(state => state.auth)
+  const reducers_data = useSelector(state => state.reducers)
   const [notifications, setNotification] = useState([])
 
   const noticeHandler = {
@@ -84,6 +85,14 @@ function AppLayout() {
           status: 'error',
           message: 'Tự động đăng nhập thất bại !'
         }))
+      }
+
+      if( !reducers_data?.captcha_token) {
+        const eventID = processHandler.add('#verifyToken')
+        useAuth.get_captcha_token().then((token) => {
+          dispatch(captcha_token(token.key))
+        })
+        .finally(() => processHandler.remove('#verifyToken', eventID))
       }
     }
     setFirstRendering(false)
@@ -138,6 +147,8 @@ const BasicAlerts = ({noticeHandler, notifications}) => {
   </Box>
 }
 import FadeIn from 'react-fade-in';
+import { useAuth } from '~/apis/Auth'
+import { captcha_token } from '~/store/actions/actions'
 const AlertComponent = ({ id , zIndex, onClose, severity, message, duration, autoHidden }) => {
   useEffect(() => {
     if(autoHidden != false){
