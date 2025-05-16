@@ -12,7 +12,7 @@ from utils import rag_utils
 
 from middlewares.buildErrorObject import buildErrorObject
 
-class Generate:
+class Generate_Controller:
   def __init__(self):
     pass
   
@@ -60,7 +60,7 @@ class Generate:
           return filter_expressions
         
     except Exception as e: 
-      raise Exception(buildErrorObject('Lỗi ở Generate/extract_metadata', e))
+      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/extract_metadata', e))
         
   
   def determine_collection(self, query, history, threshold = 0.5): 
@@ -88,7 +88,7 @@ class Generate:
           return {'collection': ""}
         
     except Exception as e:
-      raise Exception(buildErrorObject('Lỗi ở Generate/determine_collection', e))
+      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/determine_collection', e))
   
   def search(self, query, chosen_collection, filter_expressions, context = "", source_final = []): 
     try:
@@ -145,7 +145,7 @@ class Generate:
       return context, source_final
     
     except Exception as e:
-      raise Exception(buildErrorObject('Lỗi ở Generate/determine_collection', e))
+      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/determine_collection', e))
   
 
   def generate(self, query, context, streaming, theme, user_profile, history = []):
@@ -167,6 +167,6 @@ class Generate:
       return model.generate(query, context, streaming, max_tokens, history=history, user_profile=user_profile, theme=theme, themes_descriptions=database.themes_descriptions)
       
     except Exception as e:
-      raise Exception(buildErrorObject('Lỗi ở Generate/determine_collection', e))
+      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/determine_collection', e))
   
       

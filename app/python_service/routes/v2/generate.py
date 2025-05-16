@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify, Response, stream_with_context # type: ignore
 from flask_cors import cross_origin # type: ignore
+from flask import (               # type: ignore
+  Blueprint, request, jsonify, 
+  Response, stream_with_context )
 
 import json
 
-from controllers.generate import Generate
+from app.python_service.controllers.generate_controller import Generate_Controller as Generate
 from middlewares.handleError import handleError
 
 main = Blueprint("generate", __name__)

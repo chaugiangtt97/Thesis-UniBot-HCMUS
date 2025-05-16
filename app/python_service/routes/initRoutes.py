@@ -1,4 +1,5 @@
-from controllers.generate import Generate
+# type: ignore
+from app.python_service.controllers.generate_controller import Generate
 from controllers.helper.getLLMConfigs import get_llm_configs
 from middlewares.handleError import handleError
 
@@ -36,31 +37,31 @@ def auth():
 
 # @main.route("/load", methods=["GET"])
 # @cross_origin()
-def preload():
-    # chat_model_id = request.args.get('model_id', default="meta-llama/llama-3-1-70b-instruct")
-    print("---LOADING ASSETS---")
-    chat_model_id = "meta-llama/llama-3-1-70b-instruct"
-    global model
-    #model = ChatModel(model_id=chat_model_id)
-    model = ChatModel(provider=os.getenv("PROVIDER"), model_id=os.getenv("CHAT_MODEL_ID"))
-    print("Chat model loaded.")
-    # global encoder
-    # encoder = rag_utils.Encoder(provider=os.getenv("EMBED_PROVIDER", "local"))
-    # print("Encoder loaded.")
-    # global pho_queryrouter
-    # pho_queryrouter = PhoQueryRouter()
-    # print("Query Router loaded.")
-    global database
-    database = rag_utils.MilvusDB(
-        host=os.getenv('MILVUS_HOST', ""), port=os.getenv('MILVUS_PORT', ""),
-        user=os.getenv('MILVUS_USERNAME', ""), password=os.getenv('MILVUS_PASSWORD', ""),
-        uri=os.getenv('MILVUS_URI', ""), token=os.getenv('MILVUS_TOKEN', "")
-    )
-    database.load_collection('student_handbook', persist=True)
-    print("Database loaded.")
-    # return jsonify({})
-    print("All assets loaded.")
-    return
+# def preload():
+#     # chat_model_id = request.args.get('model_id', default="meta-llama/llama-3-1-70b-instruct")
+#     print("---LOADING ASSETS---")
+#     chat_model_id = "meta-llama/llama-3-1-70b-instruct"
+#     global model
+#     #model = ChatModel(model_id=chat_model_id)
+#     model = ChatModel(provider=os.getenv("PROVIDER"), model_id=os.getenv("CHAT_MODEL_ID"))
+#     print("Chat model loaded.")
+#     # global encoder
+#     # encoder = rag_utils.Encoder(provider=os.getenv("EMBED_PROVIDER", "local"))
+#     # print("Encoder loaded.")
+#     # global pho_queryrouter
+#     # pho_queryrouter = PhoQueryRouter()
+#     # print("Query Router loaded.")
+#     global database
+#     database = rag_utils.MilvusDB(
+#         host=os.getenv('MILVUS_HOST', ""), port=os.getenv('MILVUS_PORT', ""),
+#         user=os.getenv('MILVUS_USERNAME', ""), password=os.getenv('MILVUS_PASSWORD', ""),
+#         uri=os.getenv('MILVUS_URI', ""), token=os.getenv('MILVUS_TOKEN', "")
+#     )
+#     database.load_collection('student_handbook', persist=True)
+#     print("Database loaded.")
+#     # return jsonify({})
+#     print("All assets loaded.")
+#     return
 
 # """ Handles the determine collection route """
 # @main.route("/generate/determine_collection", methods=["POST"])
@@ -344,19 +345,19 @@ def preload():
 #     # else:
 #     #     return jsonify({'answer': answer})
 
-@main.route("/get_file", methods=["GET","POST"])
-@cross_origin()
-def get_file():
-    ##PARAMS
-    if request.method == 'POST':
-        filename = request.form['document_id']
-        collection_name = request.form['collection_name']
-    elif request.method == 'GET':
-        filename = request.args.get['document_id'] 
-        collection_name = request.args.get['collection_name']
-    #-------------------------------------------
-    chunks = rag_utils.get_document(filename, collection_name)
-    return jsonify(chunks)
+# @main.route("/get_file", methods=["GET","POST"])
+# @cross_origin()
+# def get_file():
+#     ##PARAMS
+#     if request.method == 'POST':
+#         filename = request.form['document_id']
+#         collection_name = request.form['collection_name']
+#     elif request.method == 'GET':
+#         filename = request.args.get['document_id'] 
+#         collection_name = request.args.get['collection_name']
+#     #-------------------------------------------
+#     chunks = rag_utils.get_document(filename, collection_name)
+#     return jsonify(chunks)
 
 @main.route("/get_collection_schema", methods=["GET"])
 @cross_origin()
@@ -370,159 +371,160 @@ def get_collection_schema():
     schema = database.get_collection_schema(collection_name, readable=True)
     return jsonify(schema)
 
-@main.route("/insert_file", methods=["POST"])
-@cross_origin()
-def insert_file():
-    ##PARAMS
-    chunks = json.loads(request.form['chunks'])
-    collection_name = request.form['collection_name']
-    if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        collection_name = "_" + collection_name
-    filename = request.form['filename']    
-    metadata = json.loads(request.form['metadata'])
+# @main.route("/insert_file", methods=["POST"])
+# @cross_origin()
+# def insert_file():
+#     ##PARAMS
+#     chunks = json.loads(request.form['chunks'])
+#     collection_name = request.form['collection_name']
+#     if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#         collection_name = "_" + collection_name
+#     filename = request.form['filename']    
+#     metadata = json.loads(request.form['metadata'])
     
-    print('Du lieu: ',collection_name, filename, metadata)
-    #-------------------------------------------
-    #Save chunks to local storage
-    if secure_filename(filename):
-        title = metadata['title']
-        chunks = ["Title: " + title + "\nArticle: " + c for c in chunks]
-        with open(os.getenv('AIRFLOW_TEMP_FOLDER') + '/' + filename, 'w+', encoding='utf-8') as f:
-            json.dump(chunks, f)
-            r = requests.post(f"http://{os.getenv('AIRFLOW_HOST')}:{os.getenv('AIRFLOW_PORT')}/api/v1/dags/{os.getenv('AIRFLOW_DAGID_INSERT')}/dagRuns", json={
-                "conf": {
-                    "filename": filename,
-                    "collection_name": collection_name,
-                    "metadata": metadata
-                }},
-                auth=HTTPBasicAuth(os.getenv('AIRFLOW_USERNAME'), os.getenv('AIRFLOW_PASSWORD')))
-            response = r.json()
-            print(r.status_code,r.json())
-            return jsonify({
-                'dag_run_id': response['dag_run_id'],
-                'dag_id': response['dag_id'],
-                'state': response['state']
-            })
-    else:
-        return jsonify({'status': 'failed'})
+#     print('Du lieu: ',collection_name, filename, metadata)
+#     #-------------------------------------------
+#     #Save chunks to local storage
+#     if secure_filename(filename):
+#         title = metadata['title']
+#         chunks = ["Title: " + title + "\nArticle: " + c for c in chunks]
+#         with open(os.getenv('AIRFLOW_TEMP_FOLDER') + '/' + filename, 'w+', encoding='utf-8') as f:
+#             json.dump(chunks, f)
+#             r = requests.post(f"http://{os.getenv('AIRFLOW_HOST')}:{os.getenv('AIRFLOW_PORT')}/api/v1/dags/{os.getenv('AIRFLOW_DAGID_INSERT')}/dagRuns", json={
+#                 "conf": {
+#                     "filename": filename,
+#                     "collection_name": collection_name,
+#                     "metadata": metadata
+#                 }},
+#                 auth=HTTPBasicAuth(os.getenv('AIRFLOW_USERNAME'), os.getenv('AIRFLOW_PASSWORD')))
+#             response = r.json()
+#             print(r.status_code,r.json())
+#             return jsonify({
+#                 'dag_run_id': response['dag_run_id'],
+#                 'dag_id': response['dag_id'],
+#                 'state': response['state']
+#             })
+#     else:
+#         return jsonify({'status': 'failed'})
     
-    return jsonify({'status': 'success'})
+#     return jsonify({'status': 'success'})
 
-@main.route("/delete_file", methods=["POST"])
-@cross_origin()
-def delete_file():
-    ##PARAMS
-    document_id = request.form['document_id']
-    collection_name = request.form['collection_name']
-    if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        collection_name = "_" + collection_name
-    database = current_app.config['DATABASE']
-    #-------------------------------------------
-    status, msg = database.delete_document(document_id=document_id, collection_name=collection_name)
-    if status:
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failed', 'message': msg}), 500
+# @main.route("/delete_file", methods=["POST"])
+# @cross_origin()
+# def delete_file():
+#     ##PARAMS
+#     document_id = request.form['document_id']
+#     collection_name = request.form['collection_name']
+#     if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#         collection_name = "_" + collection_name
+#     database = current_app.config['DATABASE']
+#     #-------------------------------------------
+#     status, msg = database.delete_document(document_id=document_id, collection_name=collection_name)
+#     if status:
+#         return jsonify({'status': 'success'})
+#     else:
+#         return jsonify({'status': 'failed', 'message': msg}), 500
 
-@main.route("/chunk_file", methods=["POST"])
-@cross_origin()
-def chunk_file():
-    ##PARAMS
-    data = request.form['text']
-    #-------------------------------------------
-    splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=75)
-    chunks = splitter.split_text(data)
-    return jsonify(chunks)
+# @main.route("/chunk_file", methods=["POST"])
+# @cross_origin()
+# def chunk_file():
+#     ##PARAMS
+#     data = request.form['text']
+#     #-------------------------------------------
+#     splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=75)
+#     chunks = splitter.split_text(data)
+#     return jsonify(chunks)
 
-@main.route("/insert_file/enhance", methods=["POST"])
-@cross_origin()
-def enhance_document():
-    ##PARAMS
-    article = request.form['article']
-    collection_name = request.form['collection_name']
-    if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        collection_name = "_" + collection_name
-    # model = current_app.config['CHAT_MODEL']
-    model_configs = get_llm_configs('ACTIVE')
-    
-    model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
-    database = current_app.config['DATABASE']
-    #-------------------------------------------
-    #TODO: Enhance document
-    pydantic_schema = database.pydantic_collections[collection_name]
-    result = rag_utils.enhance_document(article=article, model=model, collection_name=collection_name, pydantic_schema=pydantic_schema)
-    if result != -1:
-        splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=75)
-        chunks = splitter.split_text(result['article'])
-        result['chunks'] = chunks
-        metadata = {}
-        for k,v in result.items():
-            if k == 'article' or k == 'chunks':
-                continue
-            metadata[k] = v
-            #result.pop(k)
-        result['metadata'] = metadata
-        return jsonify(result)
+# @main.route("/insert_file/enhance", methods=["POST"])
+# @cross_origin()
+# def enhance_document():
+#     ##PARAMS
+#     article = request.form['article']
+#     collection_name = request.form['collection_name']
+#     if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#         collection_name = "_" + collection_name
 
-@main.route("/collection", methods=["POST"])
-@cross_origin()
-def create_collection():
-    ##PARAMS
-    name = request.form['name']
-    long_name = request.form['long_name']
-    description = request.form['description']
-    metadata = {
-        "title": {"description": "", "datatype": "string", "params": {"max_length": 700}},
-        "article": {"description": "", "datatype": "string", "params": {"max_length": 5000}},
-        "embedding": {"description": "", "datatype": "vector", "params": {"dim": 3072}}, #1024
-        "url": {"description": "", "datatype": "string", "params": {"max_length": 300}},
-        "chunk_id": {"description": "", "datatype": "int", "params": {}},
-        "created_at": {"description": "", "datatype": "string", "params": {"max_length": 50}},
-        "updated_at": {"description": "", "datatype": "string", "params": {"max_length": 50}},
-        "is_active": {"description": "", "datatype": "bool", "params": {}}, #Float,int,string,list,bool
-        "document_id": {"description": "", "datatype": "string", "params": {"max_length": 50}},
-        "id": {"description": "", "datatype": "int", "params": {"is_primary": True, "auto_id": True}},
-    }
+#     #-------------------------------------------
+#     model_configs = get_llm_configs('ACTIVE')
+    
+#     model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
+#     database = current_app.config['DATABASE']
+    
+#     #TODO: Enhance document
+#     pydantic_schema = database.pydantic_collections[collection_name]
+#     result = rag_utils.enhance_document(article=article, model=model, collection_name=collection_name, pydantic_schema=pydantic_schema)
+#     if result != -1:
+#         splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=75)
+#         chunks = splitter.split_text(result['article'])
+#         result['chunks'] = chunks
+#         metadata = {}
+#         for k,v in result.items():
+#             if k == 'article' or k == 'chunks':
+#                 continue
+#             metadata[k] = v
+#             #result.pop(k)
+#         result['metadata'] = metadata
+#         return jsonify(result)
 
-    #print(request.form['metadata'][0])
-    # custom_meta = json.loads(request.form['metadata'])
-    # metadata.update(custom_meta)
-    
-    # custom_metas = request.form['metadata']
-    
-    # print(type(custom_metas))
-    # for custom_meta in custom_metas:
-    #     metadata.update(custom_meta)
-    
-    print('custom_metas (string): ', request.form['metadata'])
-    print('name (string): ', request.form['name'])
-    print('long_name (string): ', request.form['long_name'])
-    print('description (string): ', request.form['description'])
-    
-    custom_meta_array = json.loads(request.form['metadata'])
-    custom_metas = [json.loads(item) for item in custom_meta_array]
+# @main.route("/collection", methods=["POST"])
+# @cross_origin()
+# def create_collection():
+#     ##PARAMS
+#     name = request.form['name']
+#     long_name = request.form['long_name']
+#     description = request.form['description']
+#     metadata = {
+#         "title": {"description": "", "datatype": "string", "params": {"max_length": 700}},
+#         "article": {"description": "", "datatype": "string", "params": {"max_length": 5000}},
+#         "embedding": {"description": "", "datatype": "vector", "params": {"dim": 3072}}, #1024
+#         "url": {"description": "", "datatype": "string", "params": {"max_length": 300}},
+#         "chunk_id": {"description": "", "datatype": "int", "params": {}},
+#         "created_at": {"description": "", "datatype": "string", "params": {"max_length": 50}},
+#         "updated_at": {"description": "", "datatype": "string", "params": {"max_length": 50}},
+#         "is_active": {"description": "", "datatype": "bool", "params": {}}, #Float,int,string,list,bool
+#         "document_id": {"description": "", "datatype": "string", "params": {"max_length": 50}},
+#         "id": {"description": "", "datatype": "int", "params": {"is_primary": True, "auto_id": True}},
+#     }
 
-    for custom_meta in custom_metas:
-        metadata.update(custom_meta)
+#     #print(request.form['metadata'][0])
+#     # custom_meta = json.loads(request.form['metadata'])
+#     # metadata.update(custom_meta)
     
-    print('metadata (all): ', metadata)
+#     # custom_metas = request.form['metadata']
+    
+#     # print(type(custom_metas))
+#     # for custom_meta in custom_metas:
+#     #     metadata.update(custom_meta)
+    
+#     print('custom_metas (string): ', request.form['metadata'])
+#     print('name (string): ', request.form['name'])
+#     print('long_name (string): ', request.form['long_name'])
+#     print('description (string): ', request.form['description'])
+    
+#     custom_meta_array = json.loads(request.form['metadata'])
+#     custom_metas = [json.loads(item) for item in custom_meta_array]
+
+#     for custom_meta in custom_metas:
+#         metadata.update(custom_meta)
+    
+#     print('metadata (all): ', metadata)
         
-    database = current_app.config['DATABASE']
-    #-------------------------------------------
-    database.create_collection(name, long_name, description, metadata)
-    return jsonify({'collection_name': name})
+#     database = current_app.config['DATABASE']
+#     #-------------------------------------------
+#     database.create_collection(name, long_name, description, metadata)
+#     return jsonify({'collection_name': name})
 
-@main.route("/collection", methods=["PATCH"])
-def drop_collection():
-    collection_name = request.form['collection_name']
-    if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
-        collection_name = "_" + collection_name
-    database = current_app.config['DATABASE']
-    status, msg = database.drop_collection(collection_name)
-    if status:
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failed', 'message': msg}), 500
+# @main.route("/collection", methods=["PATCH"])
+# def drop_collection():
+#     collection_name = request.form['collection_name']
+#     if collection_name not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+#         collection_name = "_" + collection_name
+#     database = current_app.config['DATABASE']
+#     status, msg = database.drop_collection(collection_name)
+#     if status:
+#         return jsonify({'status': 'success'})
+#     else:
+#         return jsonify({'status': 'failed', 'message': msg}), 500
 
 @main.route("/params", methods=["POST"])
 @cross_origin()

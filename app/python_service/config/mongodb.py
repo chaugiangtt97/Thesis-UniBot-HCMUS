@@ -8,24 +8,12 @@ Ensure that the configuration values are properly set before using this file to 
 a connection to the database.
 """
 
-import os
+from flask import current_app # type: ignore
+
 from middlewares.buildErrorObject import buildErrorObject
 
 from pymongo import MongoClient # type: ignore
 
-def get_db():
-  client = MongoClient(os.getenv("MONGO_CONNECTION_STRING", 'mongodb://admin_chatbot:admin_chatbot@localhost:27017/chatbot_app?authMechanism=DEFAULT'))
-  
-  print(f"\n⏳ Loading Mongo Database ...")
-  try:
-    db = client[os.getenv("APP_DATABASE", 'chatbot_app')]
-    print(f"📚 Số collections trong DB: ", len(db.list_collection_names()))
-    print(f"✅ Kết nối MongoDB thành công!")
-      
-    return db
-  except Exception as e:
-    raise Exception(buildErrorObject("Lỗi khi khởi tạo kết nối đến MongoDB", str(e)))
-  
 class SingletonMeta(type):
     _instances = {}
     
@@ -36,7 +24,27 @@ class SingletonMeta(type):
 
 class MONGODB(metaclass=SingletonMeta):
     def __init__(self):
-        self.model = get_db()
+      connection_string = current_app.config.get('MONGO_CONNECTION_STRING') or 'mongodb://admin_chatbot:admin_chatbot@localhost:27017/chatbot_app?authMechanism=DEFAULT'
+      database_name = current_app.config.get('APP_DATABASE') or 'chatbot_app'
+      
+      try:
+        print(f"\n⏳ Loading Mongo Database ...")
+        client = MongoClient(connection_string)
+        
+        print(f"📚 Số collections trong DB: ", len(client[database_name].list_collection_names()))
+        print(f"✅ Kết nối MongoDB thành công!")
+          
+        self.client = client
+        
+        self.MONGO_CONNECTION_STRING = connection_string
+        self.DATABASE = database_name
+        
+      except Exception as e:
+        raise Exception(buildErrorObject("Lỗi khi khởi tạo kết nối đến MongoDB", str(e)))
     
-    def getDB(self): 
-      return self.model
+    def get_handler(self):
+      return self.client[self.DATABASE]
+    
+    def close(self):
+      if self.client:
+          self.client.close()
