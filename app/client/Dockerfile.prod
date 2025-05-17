@@ -15,4 +15,10 @@ RUN npm run build
 
 COPY . .
 
+ARG CLIENT_PORT
+
+ENV PORT=$CLIENT_PORT
+
+EXPOSE $PORT
+
 CMD ["npm", "run", "preview"]

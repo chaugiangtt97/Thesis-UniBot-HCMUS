@@ -1,5 +1,5 @@
 # type: ignore
-from app.python_service.controllers.generate_controller import Generate
+from controllers.generate_controller import Generate_Controller as Generate
 from controllers.helper.getLLMConfigs import get_llm_configs
 from middlewares.handleError import handleError
 

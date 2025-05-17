@@ -222,14 +222,17 @@ def get_document(filename, collection_name):
         output_fields=['article', chunk_id_name],
     )
     for r in search_results:
-                results[r[chunk_id_name]] = r['article']
+        results[r[chunk_id_name]] = r['article']
+      
     if len(results) == 0: #No matching documents
-        return -1
+        raise FileNotFoundError("No matching documents")
+      
     #Sort by distance and return only k results
     myKeys = list(results.keys())
     myKeys.sort()
     sorted_list = [results[i] for i in myKeys]
     return sorted_list
+  
   except Exception as e:
     raise e
 

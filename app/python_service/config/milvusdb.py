@@ -27,14 +27,15 @@ class MilvusDB(metaclass=SingletonMeta):
     def __init__(self) -> None:
       try:
         
-        if connections.has_connection(alias="default"):  return
-        
         milvus_uri = current_app.config.get('MILVUS_URI')
         milvus_token = current_app.config.get('MILVUS_TOKEN')
         milvus_host = current_app.config.get('MILVUS_HOST')
         milvus_port = current_app.config.get('MILVUS_PORT')
       
-        print(f"\n⏳ Loading Milvus Database ...")
+        if not ((milvus_port and milvus_host) or (milvus_uri and milvus_token)):
+            raise EnvironmentError("Either 'MILVUS_URI' or both 'MILVUS_HOST' and 'MILVUS_PORT' must be provided.")
+        
+        print(f"\n⏳   Loading Milvus Database ...")
         if milvus_uri: #Remote Zilliz cloud connection
             connections.connect(alias = 'default', uri = milvus_uri, token = milvus_token )
         else: 
@@ -43,27 +44,31 @@ class MilvusDB(metaclass=SingletonMeta):
         self.__handler = connections._fetch_handler('default')
         
         self.connections = connections
-        self.collection = Collection
         self.DataType = DataType
+        self.Collection = Collection
         
-        print("✅ Đã kết nối Milvus.")
-        
+        print("✅   Đã kết nối Milvus.")
+      
+      except EnvironmentError as e: 
+        print("⚠️   Kết nối Milvus thất bại", str(e))
+        raise e 
+      
       except Exception as e:
-        print("Kết nối Milvus thất bại", str(e))
+        print("⚠️   Kết nối Milvus thất bại", str(e))
         raise e
      
     def get_handler(self):
       try:
         if connections.has_connection(alias="default"):
           return self.__handler
-        raise RuntimeError("Không thể lấy datatype khi chưa kết nối milvus")
+        raise RuntimeError("⚠️ Không thể lấy datatype khi chưa kết nối milvus")
       except Exception as e: 
         raise e
       
     def close(self):
       try:
         self.connections.disconnect(alias='default')
-        print("✅ Đã đóng kết nối Milvus.")
+        print(f"✅   Đã đóng kết nối Milvus.")
       except Exception as e: 
-        print("❌ Đóng kết nối Milvus thất bại", str(e))
+        print(f"❌   Đóng kết nối Milvus thất bại", str(e))
         raise e

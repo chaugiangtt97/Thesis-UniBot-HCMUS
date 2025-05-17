@@ -1,11 +1,15 @@
-# Sử dụng image Nginx chính thức từ Docker Hub
 FROM nginx:1.18.0
-
-# Copy file cấu hình nginx tùy chỉnh vào trong container
-# COPY ./nginx.conf /etc/nginx/nginx.conf
-# COPY ./ssl /etc/ssl/  # Thư mục chứa chứng chỉ SSL (client-cert.pem và client-key.pem)
+# Copy template cấu hình và thư mục SSL vào container
+COPY ./ssl /etc/nginx/ssl
 COPY ./nginx.conf /etc/nginx/nginx.conf
-COPY ./ssl /etc/nginx/ssl 
+# Tạo thư mục ssl nếu chưa có (tùy trường hợp)
+RUN mkdir -p /etc/nginx/ssl
 
-# Lệnh mặc định để chạy Nginx trong container
+# COPY docker-entrypoint.sh /docker-entrypoint.sh
+# RUN chmod +x /docker-entrypoint.sh
+
+# ENTRYPOINT ["/docker-entrypoint.sh"]
+
 CMD ["nginx", "-g", "daemon off;"]
+
+# ENTRYPOINT ["/bin/sh", "-c", "envsubst < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && exec nginx -g 'daemon off;'"]

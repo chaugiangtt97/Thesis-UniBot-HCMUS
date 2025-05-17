@@ -9,8 +9,6 @@ RUN npm install --force
 
 COPY ./ /app
 
-EXPOSE 3000
-
 COPY . .
 
 CMD ["npm", "run", "dev"]

@@ -15,37 +15,40 @@ Raises:
     KeyError: If `configs` is not a dictionary or does not contain the required keys.
     Exception: If an error occurs during initialization.
 """
-class ChatModel:
-    def __init__(self, configs = None, max_new_tokens=1500):
-        try:
-            required_keys = {"chat_model_id", "provider", "apikey"}
-            if configs is None or not isinstance(configs, dict):
-                raise TypeError("Variable must be an object")
-            
-            if not required_keys.issubset(configs.keys()):
-                raise KeyError("The 'configs' parameter must be a dictionary containing the keys: 'chat_model_id', 'provider', and 'apikey'.")
-            
-            self.configs = configs                      # Object
-            self.provider = configs['provider']         # String
-            self.model_id = configs["chat_model_id"]    # String
-            
-            self.max_new_tokens = max_new_tokens
-            
-            if configs['provider'].lower() == "openai":
-                try: 
-                    model_connected = openai.OpenAI(api_key=configs["apikey"])
-                    self.model = model_connected
+class ChatModel_v2:
+  
+    max_new_tokens = 1500
+    
+    def __init__(self, configs = None, max_new_tokens = 1500):
+      try:
+          required_keys = {"chat_model_id", "provider", "apikey"}
+          if configs is None or not isinstance(configs, dict):
+              raise TypeError("Variable must be an object")
+          
+          if not required_keys.issubset(configs.keys()):
+              raise KeyError("The 'configs' parameter must be a dictionary containing the keys: 'chat_model_id', 'provider', and 'apikey'.")
+          
+          self.configs = configs                      # Object
+          self.provider = configs['provider']         # String
+          self.model_id = configs["chat_model_id"]    # String
+          
+          self.max_new_tokens = max_new_tokens
+          
+          if configs['provider'].lower() == "openai":
+              try: 
+                  model_connected = openai.OpenAI(api_key=configs["apikey"])
+                  self.model = model_connected
 
-                    print("\n✅ _Tạo kết nối OpenAI thành công ")
+                  print(f"\n✅   Tạo kết nối OpenAI thành công ")
 
-                except Exception as e:
-                    print("❌ _ChatModel khởi tạo, Kết nối với OpenAI thất bại:", e)
-            
-        except KeyError as e:
-            raise Exception('Cannot init ChatModel Object - ', str(e))
-        
-        except Exception as e:
-            raise Exception('Cannot connection with OpenAI - ', str(e))
+              except Exception as e:
+                  print("❌ _ChatModel khởi tạo, Kết nối với OpenAI thất bại:", e)
+          
+      except KeyError as e:
+          raise Exception('Cannot init ChatModel Object - ', str(e))
+      
+      except Exception as e:
+          raise Exception('Cannot connection with OpenAI - ', str(e))
 
     def _generate(self, prompt, max_new_tokens=1000, history=None, streaming=False, response_schema=None):
         if self.provider.lower() == "openai":
@@ -83,30 +86,58 @@ class ChatModel:
 
     def generate(self, question: str, context: str = None, streaming=False, max_new_tokens=2048, k=3, history=None, 
                  theme=None, theme_context=None, themes_descriptions=None, user_profile=None):
-
+      try:
         if context == None or context == "":
             if history is None or len(history) == 0:
-                prompt = prompts['NO_CONTEXT_NO_HISTORY']
                 print("Chosen prompt style: NO_CONTEXT_NO_HISTORY")
-                formatted_prompt = prompt.format(question=question, user_profile=user_profile, themes_descriptions=themes_descriptions)
+                
+                prompt = prompts['NO_CONTEXT_NO_HISTORY']
+                formatted_prompt = prompt.format(
+                  question=question, 
+                  user_profile=user_profile, 
+                  themes_descriptions=themes_descriptions )
+                
             else:
-                prompt = prompts['NO_CONTEXT_HISTORY']
                 print("Chosen prompt style: NO_CONTEXT_HISTORY")
+                
+                prompt = prompts['NO_CONTEXT_HISTORY']
                 conversation = ""
                 for pair in history:
                     conversation = conversation + "\nUser: " + pair['question'] + "\nChatbot: " + pair['anwser'] #answer
-                formatted_prompt = prompt.format(history=conversation, question=question, user_profile=user_profile, themes_descriptions=themes_descriptions)
+                formatted_prompt = prompt.format(
+                  question=question, 
+                  history=conversation, 
+                  user_profile=user_profile, 
+                  themes_descriptions=themes_descriptions )
+                
         else:
             if history is None or len(history) == 0:
-                prompt = prompts['CONTEXT_NO_HISTORY']
                 print("Chosen prompt style: CONTEXT_NO_HISTORY")
-                formatted_prompt = prompt.format(context=context, question=question, theme=theme, user_profile=user_profile, themes_descriptions=themes_descriptions)
+                
+                prompt = prompts['CONTEXT_NO_HISTORY']
+                formatted_prompt = prompt.format(
+                  theme=theme, 
+                  context=context, 
+                  question=question, 
+                  user_profile=user_profile, 
+                  themes_descriptions=themes_descriptions )
+                
             else:
-                prompt = prompts['CONTEXT_HISTORY_FULL']
                 print("Chosen prompt style: CONTEXT_HISTORY_FULL")
+                
+                prompt = prompts['CONTEXT_HISTORY_FULL']
                 conversation = ""
                 for pair in history:
                     conversation = conversation + "\nUser: " + pair['question'] + "\nChatbot: " + pair['anwser']
-                formatted_prompt = prompt.format(context=context, history=conversation, question=question, theme=theme, user_profile=user_profile, themes_descriptions=themes_descriptions)
+                formatted_prompt = prompt.format(
+                  theme=theme, 
+                  context=context, 
+                  question=question, 
+                  history=conversation, 
+                  user_profile=user_profile, 
+                  themes_descriptions=themes_descriptions)
 
         return self._generate(formatted_prompt, max_new_tokens, streaming=streaming)
+      
+      except Exception as e:
+        raise Exception("Không thể tạo câu trả lời: ", str(e))

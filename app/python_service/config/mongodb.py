@@ -28,11 +28,11 @@ class MONGODB(metaclass=SingletonMeta):
       database_name = current_app.config.get('APP_DATABASE') or 'chatbot_app'
       
       try:
-        print(f"\n⏳ Loading Mongo Database ...")
+        print(f"\n⏳  Loading Mongo Database ...")
         client = MongoClient(connection_string)
         
-        print(f"📚 Số collections trong DB: ", len(client[database_name].list_collection_names()))
-        print(f"✅ Kết nối MongoDB thành công!")
+        print(f"📚   Số collections trong DB - {database_name}: ", len(client[database_name].list_collection_names()))
+        print(f"✅   Kết nối MongoDB thành công!")
           
         self.client = client
         
@@ -40,7 +40,7 @@ class MONGODB(metaclass=SingletonMeta):
         self.DATABASE = database_name
         
       except Exception as e:
-        raise Exception(buildErrorObject("Lỗi khi khởi tạo kết nối đến MongoDB", str(e)))
+        raise Exception(buildErrorObject("⚠️   Lỗi khi khởi tạo kết nối đến MongoDB", str(e)))
     
     def get_handler(self):
       return self.client[self.DATABASE]

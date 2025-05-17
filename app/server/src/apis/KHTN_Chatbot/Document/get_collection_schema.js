@@ -6,7 +6,7 @@ import { buildErrObject } from '../../../middlewares/utils'
 const domain = process.env.PYTHON_URI || 'http://localhost:5000'
 
 export const get_collection_schema = async (collectionName = null) => {
-  const url = `${domain}/get_collection_schema?collection_name=${encodeURIComponent(collectionName)}`
+  const url = `${domain}/collection/schema?collection_name=${encodeURIComponent(collectionName)}`
   // Thực hiện GET request
   return fetch(url)
     .then(response => {

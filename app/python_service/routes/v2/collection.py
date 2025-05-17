@@ -33,12 +33,8 @@ def create_collection():
     except json.JSONDecodeError:
       raise ValueError("Invalid JSON format for metadata.")
     
-  #-------------------------------------------
-  
-    collectionObject = Collection_Controller()
-    collectionObject.create_collection(name, long_name, description, metadata)
-    
-    return jsonify({'collection_name': name})
+    #----------------------------------------
+    return Collection_Controller().create_collection(name, long_name, description, metadata)
   
   except ValueError as e: 
       return handleError(400, str(e))
@@ -58,14 +54,7 @@ def drop_collection():
         collection_name = "_" + collection_name
     
     #-------------------------------------------
-        
-    collectionObject = Collection_Controller()
-    status, msg = collectionObject.drop_collection(collection_name)
-    
-    if status:
-        return jsonify({'status': 'success'})
-    else:
-        return jsonify({'status': 'failed', 'message': msg}), 500
+    return Collection_Controller().drop_collection(collection_name)
 
   except ValueError as e: 
       return handleError(400, str(e))
@@ -85,12 +74,8 @@ def get_schema():
         collection_name = "_" + collection_name
     
     #-------------------------------------------
+    return Collection_Controller().drop_collection(collection_name)
     
-    collectionObject = Collection_Controller()
-    schema = collectionObject.drop_collection(collection_name)
-    
-    return jsonify(schema)
-  
   except ValueError as e: 
       return handleError(400, str(e))
   except Exception as e:

@@ -6,7 +6,7 @@ CACHE_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "...", "models")
 )
 
-class Encoder:
+class Encoder_v2:
     def __init__( self, configs = None ):    
         try:  
             required_keys = {"chat_model_id", "provider", "apikey"}

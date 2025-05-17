@@ -8,12 +8,23 @@ from pymilvus import (              # type: ignore
 )
 
 class Milvus_Handler:
+  
+    persistent_collections = []
+    pydantic_collections = {}
+    themes_descriptions = ""
+    filter_bias = 0.4
+    k = 4
+    
     def __init__(self, k = 4, filter_bias = 0.4) -> None:
       try:
         self.search_threshold = current_app.config.get('SEARCH_THRESHOLD') or 1.1 # os.getenv('SEARCH_THRESHOLD', 1.1)
         self.latest_timespan_months = current_app.config.get('LATEST_TIMESPAN_MONTHS') or 5 # os.getenv('LATEST_TIMESPAN_MONTHS', 5)
         
         milvus_handler = MilvusDB().get_handler() # connections._fetch_handler('default')
+        
+        self.k = k
+        self.filter_bias = filter_bias
+        self._handler = milvus_handler
 
         # Create pydantic representation of collections schemas
         collections = milvus_handler.list_collections()
@@ -21,14 +32,7 @@ class Milvus_Handler:
             self.update_pydantic_schema(col) #Update pydantic schema for each collection
         
         # Create descriptions of themes (collections) in the database
-        self.themes_descriptions = ""
         self.update_collection_descriptions()
-      
-        self.k = k
-        self._handler = milvus_handler
-        self.filter_bias = filter_bias
-        self.pydantic_collections = {}
-        self.persistent_collections = []
         
       except Exception as e:
         raise e
@@ -120,9 +124,6 @@ class Milvus_Handler:
             collection = Collection(name)
             collection.load()
 
-        # for c in connections._fetch_handler('default').list_collections():
-        #     if c not in self.persistent_collections and c != name:
-        #         Collection(c).release()
         return Status()
     
     def similarity_search(self, collection:str, query_embeddings, k: int = 4, search_params=None, output_fields=['title','article', 'url'], filters: dict = None):

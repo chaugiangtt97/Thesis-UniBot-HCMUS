@@ -11,25 +11,34 @@ from middlewares.buildErrorObject import buildErrorObject
 from controllers.handler.milvus_handler import Milvus_Handler
 from controllers.helper.getLLMConfigs import get_llm_configs
 
-from models.v2 import ChatModel
+from models.v2.ChatModel import ChatModel_v2 as ChatModel
 
-from utils.v2 import rag_utils_v2 as rag_utils
+from utils.v2 import rag as rag_utils
 
 
 class File_Controller:
   def __init__(self):
-    self.AIRFLOW_HOST = current_app.config.get('AIRFLOW_HOST')
-    self.AIRFLOW_PORT = current_app.config.get('AIRFLOW_PORT')
-    self.AIRFLOW_USERNAME = current_app.config.get('AIRFLOW_USERNAME', ' ')
-    self.AIRFLOW_PASSWORD = current_app.config.get('AIRFLOW_PASSWORD', ' ')
-    self.AIRFLOW_TEMP_FOLDER = current_app.config.get('AIRFLOW_TEMP_FOLDER', ' ')
-    self.AIRFLOW_DAGID_INSERT = current_app.config.get('AIRFLOW_DAGID_INSERT', ' ')
+    try:
+      self.AIRFLOW_HOST = current_app.config.get('AIRFLOW_HOST')
+      self.AIRFLOW_PORT = current_app.config.get('AIRFLOW_PORT')
+      self.AIRFLOW_USERNAME = current_app.config.get('AIRFLOW_USERNAME', ' ')
+      self.AIRFLOW_PASSWORD = current_app.config.get('AIRFLOW_PASSWORD', ' ')
+      self.AIRFLOW_TEMP_FOLDER = current_app.config.get('AIRFLOW_TEMP_FOLDER', ' ')
+      self.AIRFLOW_DAGID_INSERT = current_app.config.get('AIRFLOW_DAGID_INSERT', ' ')
+      
+      self.__database = Milvus_Handler()
+    
+    except Exception as e: 
+      raise Exception("Không thể khởi tạo File_Controller", str(e)) 
 
 
   def get_file(self, filename, collection_name):
     try:
       chunks = rag_utils.get_document(filename, collection_name)
       return chunks
+    except FileNotFoundError:
+      raise Exception(buildErrorObject('No matching documents'))
+    
     except Exception as e:
       raise Exception(buildErrorObject('Lỗi ở File_Controller/get_file', str(e)))
   
@@ -70,8 +79,7 @@ class File_Controller:
   
   def delete_file(self, document_id, collection_name):
     try:
-      database = Milvus_Handler()
-      return database.delete_document(document_id=document_id, collection_name=collection_name)
+      return self.__database.delete_document(document_id=document_id, collection_name=collection_name)
     
     except Exception as e: 
       raise Exception(buildErrorObject('Lỗi ở File_Controller/delete_file', str(e)))
@@ -88,14 +96,16 @@ class File_Controller:
   def enhance(self, collection_name, article):
     try:
       model_configs = get_llm_configs('ACTIVE')
-      model = ChatModel(provider= model_configs.provider, model_id=model_configs.chat_model_id)
+      model = ChatModel( model_configs )
       
-      database = Milvus_Handler()
-      pydantic_schema = database.pydantic_collections[collection_name]
-      result = rag_utils.enhance_document(article=article, model=model, collection_name=collection_name, pydantic_schema=pydantic_schema)
+      pydantic_schema = self.__database.pydantic_collections[collection_name]
+      result = rag_utils.enhance_document(article = article, 
+                                          model = model, 
+                                          collection_name = collection_name, 
+                                          pydantic_schema = pydantic_schema)
       
       if result != -1:
-          splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=75)
+          splitter = RecursiveCharacterTextSplitter( chunk_size = 1500, chunk_overlap = 75 )
           chunks = splitter.split_text(result['article'])
           result['chunks'] = chunks
           metadata = {}
