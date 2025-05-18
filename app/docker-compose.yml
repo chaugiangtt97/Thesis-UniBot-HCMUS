@@ -87,19 +87,19 @@ services:
       - "etcd"
       - "minio"
 
-  # milvus-ingestor:
-  #   build:
-  #     context: ./milvus/scripts
-  #   container_name: milvus-ingestor
-  #   depends_on:
-  #     standalone:
-  #       condition: service_healthy
-  #   networks:
-  #     - chatbot-network
-  #   volumes:
-  #     - ./milvus/scripts:/app
-  #   working_dir: /app
-  #   restart: "no"  # Chạy 1 lần, không cần restart
+  milvus-ingestor:
+    build:
+      context: ./milvus/scripts
+    container_name: milvus-ingestor
+    depends_on:
+      standalone:
+        condition: service_healthy
+    networks:
+      - chatbot-network
+    volumes:
+      - ./milvus/scripts:/app
+    working_dir: /app
+    restart: "no"  # Chạy 1 lần, không cần restart
 
   python_service:
     build:
@@ -125,8 +125,8 @@ services:
       - MONGO_CONNECTION_STRING=${MONGODB_URI}
       - MONGODB=${MONGO_INITDB_DATABASE}
     depends_on:
-      # milvus-ingestor:
-      #   condition: service_completed_successfully
+      milvus-ingestor:
+        condition: service_completed_successfully
       standalone:
         condition: service_started
       minio:
