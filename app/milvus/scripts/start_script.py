@@ -79,6 +79,7 @@ def ingest_pipeline(student_path, news_path):
     )
     # connections.connect(alias='default', uri=uri, token=token)
     handler = connections._fetch_handler('default')
+    existing_collections = []
     # News Collections ingestion
     fields = [
         FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
@@ -125,6 +126,7 @@ Note that values may not be explicitly mentioned, but derived or written in acro
                              )
         if handler.has_collection(col):
             collection = Collection(col)
+            existing_collections.append(col)
         else:
             collection = Collection(col, schema)
             index_params = {
@@ -151,6 +153,7 @@ Note that values may not be explicitly mentioned, but derived or written in acro
     schema = CollectionSchema(fields, "student handbook schema")
     if handler.has_collection('student_handbook'):
         collection = Collection('student_handbook')
+        existing_collections.append('student_handbook')
     else:
         collection = Collection('student_handbook', schema)
         index_params = {
@@ -160,19 +163,22 @@ Note that values may not be explicitly mentioned, but derived or written in acro
         }
         collection.create_index(field_name='embedding', index_params=index_params)
     #Inserting
-    collection = Collection('student_handbook')
-    path = './data/student_handbook_embedded.json'
-    #path = './data/student_handbook_embedded_OpenAI.json'
-    with open(student_path, 'r') as rstream:
-        data = json.load(rstream)
-        for d in data:
-            d['in_effect'] = str(d['in_effect'])
-            d['is_active'] = True
-        collection.insert(data)
+    if 'student_handbook' not in existing_collections: #Check if collection already exists
+        collection = Collection('student_handbook')
+        path = './data/student_handbook_embedded.json'
+        #path = './data/student_handbook_embedded_OpenAI.json'
+        with open(student_path, 'r') as rstream:
+            data = json.load(rstream)
+            for d in data:
+                d['in_effect'] = str(d['in_effect'])
+                d['is_active'] = True
+            collection.insert(data)
 
     df = read_news_csv(news_path)
     #df = read_news_csv('./data/FIT_news_combined.csv')
     for col in df['type'].unique():
+        if col in existing_collections: #Check if collection already exists
+            continue
         data = df[df['type'] == col].loc[:, df.columns != 'type'].dropna(axis=1, how='all') #Get by type, remove columns with all NaN
         data = data.to_dict('records')
         for d in data:
