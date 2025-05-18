@@ -67,7 +67,7 @@ export const ChatWithChatBot = async (socket) => {
       }
       else {
         chosen_collections = await chatbot.determine_collection(message, conservationBefore).then((res) => {
-          return res.collection
+          return res['data'].collection
         }).catch((err) => { throw 'Lỗi ở bước determine_collection: ' + JSON.stringify(err) })
       }
       const end_point_1 = (new Date()).getTime()
@@ -116,7 +116,7 @@ export const ChatWithChatBot = async (socket) => {
         objectConservation = { ...objectConservation, 'resource': { type: 'recommended' } }
       } else {
         filter_expressions = await chatbot.extract_meta(message, chosen_collections, conservationBefore).then((res) => {
-          return res
+          return res['data']
         }).catch((err) => { throw 'Lỗi ở bước extract_meta: ' + JSON.stringify(err) })
       }
       const end_point_2 = (new Date()).getTime()
@@ -161,7 +161,7 @@ export const ChatWithChatBot = async (socket) => {
         objectConservation = { ...objectConservation, 'resource': { type: 'recommended' } }
       } else {
         searchResult = await chatbot.search(message, chosen_collections, JSON.stringify(filter_expressions), chosen_collections).then((res) => {
-          return res
+          return res['data']
         }).catch((err) => { throw 'Lỗi ở bước search: ' + JSON.stringify(err) })
       }
       const end_point_3 = (new Date()).getTime()
@@ -203,7 +203,6 @@ export const ChatWithChatBot = async (socket) => {
 
       // Step 4
       let finalResponse
-      console.log('searchResult: ',searchResult)
       finalResponse = await chatbot.generate(typeof message === 'object' ? message.question : message, searchResult.context, true, conservationBefore, getProfileToString(socket.user), chosen_collections).then((res) => {
         return res // StreamObject
       }).catch((err) => { throw 'Lỗi ở bước generate: ' + JSON.stringify(err) })

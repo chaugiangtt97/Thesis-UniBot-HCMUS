@@ -24,4 +24,10 @@ EXPOSE 8017
 
 COPY . .
 
+ARG NODE_PORT
+
+ENV PORT=$NODE_PORT
+
+EXPOSE $PORT
+
 CMD ["npm", "run", "deploy"]

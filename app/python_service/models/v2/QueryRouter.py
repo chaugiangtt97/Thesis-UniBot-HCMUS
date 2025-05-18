@@ -8,7 +8,7 @@ CACHE_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "models")
 )
 
-class QueryRouter:
+class QueryRouter_v2:
     def __init__(self, configs = None, model_dir: str = CACHE_DIR, threshold=0.5, use_history=True, database=None):
         try:
             required_keys = {"chat_model_id", "provider", "apikey"}
@@ -24,10 +24,7 @@ class QueryRouter:
             self.provider = configs['provider']         # String
             self.model_id = configs["chat_model_id"]    # String  
             
-            if configs['provider'].lower() == 'local':
-                self.model = pipeline('text-classification', model=model_dir + "/phobert_queryrouting")
-
-            elif configs['provider'].lower() == 'openai':
+            if configs['provider'].lower() == 'openai':
                 self.model = openai.OpenAI(api_key=configs["apikey"])
                 self.model_id = configs["chat_model_id"] # model_id if model_id is not None else "gpt-4o"
                 

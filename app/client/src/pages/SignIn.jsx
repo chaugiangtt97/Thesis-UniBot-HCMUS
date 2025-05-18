@@ -86,8 +86,9 @@ function SignIn() {
     await useAuth.login(userData)
       .then((userData) => {
         processHandler.remove('#login', logInEvent)
-        dispatch(login(userData))}) 
+        dispatch(login(userData))
         navigate('/')
+      }) 
       .catch((err) => {
         processHandler.remove('#login', logInEvent)
         setNotification(useErrorMessage(err))

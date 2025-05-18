@@ -21,13 +21,14 @@ export const findUser = async (email = '', _id = null) => {
   }
 
   try {
-    return await User.findOne({ email }).then(async (item) => {
+    const res = await User.findOne({ email }).then(async (item) => {
       await itemNotFound(false, item, 'USER_DOES_NOT_EXIST')
       return new User(item)
     }).catch(async (err) => {
       await itemNotFound(err, null, 'USER_DOES_NOT_EXIST')
       throw err
     })
+    return res
   } catch (error) {
     throw buildErrObject(300, error.message)
   }

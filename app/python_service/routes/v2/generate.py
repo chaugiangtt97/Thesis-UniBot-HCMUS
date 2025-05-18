@@ -1,9 +1,11 @@
-from flask import Blueprint, request, jsonify, Response, stream_with_context # type: ignore
 from flask_cors import cross_origin # type: ignore
+from flask import (               # type: ignore
+  Blueprint, request, jsonify, 
+  Response, stream_with_context )
 
 import json
 
-from controllers.generate import Generate
+from controllers.generate_controller import Generate_Controller as Generate
 from middlewares.handleError import handleError
 
 main = Blueprint("generate", __name__)
@@ -28,10 +30,8 @@ def determine_collection_route():
         except ValueError as ve:
             return handleError(400, str(ve))
             
-        generateObject = Generate() 
-        collection = generateObject.determine_collection(query, history)
-        
-        return collection, 200
+      #-------------------------------------------
+        return Generate() .determine_collection(query, history)
     
     except Exception as e: 
         return handleError(500, str(e))
@@ -60,10 +60,9 @@ def extract_metadata_route():
         except (json.JSONDecodeError, ValueError) as e:
             return handleError(400, str(e))
 
-        generate_object = Generate()
-        filter_expressions = generate_object.extract_metadata(query, chosen_collection, history)
-        print('filter_expressions', filter_expressions)
-        return jsonify({ "filter_expressions": filter_expressions }), 200
+      #-------------------------------------------
+        return Generate().extract_metadata(query, chosen_collection, history) # return filter_expressions
+
     except Exception as e:
         return handleError(500, str(e))  
 
@@ -91,10 +90,8 @@ def search_route():
             except json.JSONDecodeError:
                 return handleError(400, "Invalid JSON format for 'filter_expressions'")
 
-        generate_object = Generate()
-        context, source = generate_object.search(query, chosen_collection, filter_expressions)
-
-        return jsonify({ "context": context, "source": source}), 200
+      #-------------------------------------------
+        return Generate().search(query, chosen_collection, filter_expressions) # context, source
 
     except Exception as e:
         return handleError(500, str(e))
@@ -123,19 +120,19 @@ def generate_route():
         except (json.JSONDecodeError, ValueError) as e:
             return handleError(400, str(e))
         
-        theme = request.form.get('collection_name', '') # Collection name
+        theme = request.form.get('collection_name', '')     # Collection name
         user_profile = request.form.get('user_profile', '') # User profile
-        
-        print(query, context, streaming, theme )
+      
+      #-------------------------------------------
         answer = Generate().generate(query, context, streaming, theme, user_profile, history)
         
         if answer and streaming:
           def generate_stream():
             for part in answer:
-              yield part  # Yield từng phần của câu trả lời
+              yield part            # Yield từng phần của câu trả lời
           return Response(stream_with_context(generate_stream()), content_type='text/plain;charset=utf-8')
           
-        return jsonify({ answer }), 200
+        return answer
     
     except Exception as e: 
         return handleError(500, e)

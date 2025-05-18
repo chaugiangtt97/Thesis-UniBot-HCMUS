@@ -8,8 +8,6 @@ const LOGIN_ATTEMPTS = 5
 export const passwordsDoNotMatch = async (user = {}) => {
   const run = async () => {
     try {
-      // user.loginAttempts += 1
-      // await saveLoginAttemptsToDB(user)
       if (user.loginAttempts <= LOGIN_ATTEMPTS) {
         throw buildErrObject(409, 'WRONG_PASSWORD')
       }

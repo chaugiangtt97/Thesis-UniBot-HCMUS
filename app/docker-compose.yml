@@ -120,7 +120,6 @@ services:
       - AIRFLOW_DAGID_INSERT=${AIRFLOW_DAGID_INSERT}
       - PROVIDER=${PROVIDER}
       - CHAT_MODEL_ID=${CHAT_MODEL_ID}
-      - OPENAI_APIKEY=${OPENAI_APIKEY}
       - QUERYROUTER_PROVIDER=${QUERYROUTER_PROVIDER}
       - MONGO_CONNECTION_STRING=${MONGODB_URI}
       - MONGODB=${MONGO_INITDB_DATABASE}
@@ -146,11 +145,11 @@ services:
     build:
       dockerfile: Dockerfile.prod
       context: ./server # đường dẫn đến folder server
+      args:
+        NODE_PORT: ${NODE_PORT}
     container_name: app-server
     networks:
       - chatbot-network
-    env_file:
-      - ./server/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -175,9 +174,9 @@ services:
     build:
       dockerfile: Dockerfile.prod
       context: ./client # đường dẫn đến folder client
+      args:
+        CLIENT_PORT: ${CLIENT_PORT}
     container_name: app-client
-    env_file:
-      - ./client/.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
@@ -197,13 +196,23 @@ services:
   nginx:
     image: nginx:1.18.0
     ports:
-      - "80:8000"  # Chạy https nginx trên cổng 80
-      - "443:8080"  # Chạy http nginx trên cổng 80
+      - "80:5280"  # Chạy https nginx trên cổng 80
+      - "443:5180"  # Chạy http nginx trên cổng 80
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+      - SUBDIR=${SUBDIR}
+      - CLIENT_HOST=${CLIENT_HOST}
+      - CLIENT_PORT=${CLIENT_PORT}
+      - NODE_HOST=${NODE_HOST}
+      - NODE_PORT=${NODE_PORT}
+      - PYTHON_HOST=${PYTHON_HOST}
+      - PYTHON_PORT=${PYTHON_PORT}
     restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
     volumes:
       - ./client:/usr/share/nginx/html  # Mount mã nguồn client
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Cấu hình Nginx
       - ./nginx/ssl/:/etc/nginx/ssl/
+      # - ./nginx/templates:/etc/nginx/templates
     depends_on:
       - client
       - server

@@ -6,7 +6,7 @@ import { buildErrObject } from '../../../middlewares/utils'
 const domain = process.env.PYTHON_URI || 'http://localhost:5000'
 
 export const delete_file = async (formData = null) => {
-  const url = `${domain}/delete_file`
+  const url = `${domain}/file/delete`
   const structure = {
     method: 'POST',
     body: formData

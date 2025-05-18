@@ -1,8 +1,10 @@
+# type: ignore
+
 import os
 from flask import Flask
 from dotenv import load_dotenv
 
-from app.python_service.routes.v1.generate import main as generateRoute
+from routes.v2.generate import main as generateRoute
 from routes.initRoutes  import main as initRoute
 
 from models.model import QueryRouter
@@ -87,7 +89,7 @@ def createApp():
         if 'student_handbook' in collections:
             database.load_collection('student_handbook', persist=True)
             app.config["DATABASE"] = database
-            print(f"✅ Database loaded successfully - {os.getenv('MILVUS_HOST', '')}:{os.getenv('MILVUS_PORT', '')}")
+            print(f"✅   Database loaded successfully - {os.getenv('MILVUS_HOST', '')}:{os.getenv('MILVUS_PORT', '')}")
         else:
             raise Exception("⚠️ Collection 'student_handbook' not found in Milvus.")
         

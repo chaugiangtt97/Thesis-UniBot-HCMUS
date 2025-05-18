@@ -20,18 +20,11 @@ export default ({ mode }) => {
     build: {
       chunkSizeWarningLimit: 1600,
     },
-    // https: {
-    //   key: fs.readFileSync(path.join(process.cwd(), './cert/client-key.pem')),
-    //   cert: fs.readFileSync(path.join(process.cwd(), './cert/client-cert.pem'))
-    // },
-    //change port for dev
     server: {
-      // https: true,
       https: false,
       proxy: {
         '/api': {
           target: 'http://localhost:8017',
-          // rewrite: (path) => path.replace(/^\/api/, ''), // Loại bỏ /api trước khi gửi yêu cầu đến API server
           secure: false,
           ws: true,
           configure: (proxy, _options) => {

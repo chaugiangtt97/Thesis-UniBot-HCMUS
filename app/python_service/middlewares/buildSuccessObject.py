@@ -1,4 +1,4 @@
-def buildSuccessObject(data=None, message="Operation successful"):
+def buildSuccessObject( data = {}, message = "Operation successful" ):
     """
     Constructs a standardized success response object.
 
@@ -12,5 +12,5 @@ def buildSuccessObject(data=None, message="Operation successful"):
     return {
         "code": 200,
         "message": message,
-        "details": data
+        "data": data
     }

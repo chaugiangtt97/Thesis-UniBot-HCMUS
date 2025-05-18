@@ -10,7 +10,7 @@ export const login = async (data, api_key = null) => {
 		body: JSON.stringify(data)
 	  }
 
-	const res = await fetch(url, structure)
+	return await fetch(url, structure)
 		.then(async (response) => {
 			if (!response.ok) {
 				return response.json().then(errorData => {
@@ -23,11 +23,12 @@ export const login = async (data, api_key = null) => {
 			return data
 		})
 		.catch((err) => {
+			console.log('err',err)
 			if(typeof(err) == "object"){
 				throw 'ERR_CONNECTION_REFUSED'
 			}
+			console.log(err)
 			throw err
 		}) 
 
-	return res
 }

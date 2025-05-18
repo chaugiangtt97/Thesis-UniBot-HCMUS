@@ -1,7 +1,7 @@
-from flask import current_app
+from flask import current_app # type: ignore
 from datetime import datetime, timezone, timedelta
-from PyPDF2 import PdfReader
-from docx import Document
+from PyPDF2 import PdfReader # type: ignore
+from docx import Document # type: ignore
 from io import BytesIO
 
 
@@ -39,6 +39,7 @@ def get_curent_time():
 
 
 def transPdfToText(file):
+  try:
     # read file
     pdf_reader = PdfReader(BytesIO(file.read()))
 
@@ -46,11 +47,14 @@ def transPdfToText(file):
     # extract to text
     for page in pdf_reader.pages:
         content += page.extract_text()
-
     return content
+  
+  except Exception as e: 
+    raise Exception("Không thể chuyển PDF to Text: ", str(e))
 
 
 def transDocToText(file):
+  try:
     # read file
     doc_reader = Document(BytesIO(file.read()))
 
@@ -60,10 +64,15 @@ def transDocToText(file):
         content += paragraph.text + "\n"
 
     return content
+  except Exception as e: 
+    raise Exception("Không thể chuyển Doc to Text: ", str(e))
 
 
 def transTxtToText(file):
+  try:
     # read file
     content = file.read().decode("utf-8")
 
     return content
+  except Exception as e: 
+    raise Exception("Không thể chuyển Txt to Text: ", str(e))

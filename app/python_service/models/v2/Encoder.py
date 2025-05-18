@@ -6,7 +6,7 @@ CACHE_DIR = os.path.normpath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "...", "models")
 )
 
-class Encoder:
+class Encoder_v2:
     def __init__( self, configs = None ):    
         try:  
             required_keys = {"chat_model_id", "provider", "apikey"}
@@ -21,7 +21,7 @@ class Encoder:
             self.model_id = configs["chat_model_id"]    # String
             
             if configs['provider'].lower() == "openai":
-                openai.api_key =  configs['apikey'] # os.environ['OPENAI_APIKEY']
+                openai.api_key =  configs['apikey']
                 
                 def embed(text):
                     response = openai.embeddings.create (

@@ -531,7 +531,7 @@ const sendEmails = async () => {
       }
 
       await transporter.sendMail(mailOptions)
-      console.log(`✅ ${count + 1} Email gửi đến ${info.email} thành công!`)
+      console.log(`✅  ${count + 1} Email gửi đến ${info.email} thành công!`)
 
       // Nghỉ 5 giây trước khi gửi email tiếp theo
       await delay(4000)

@@ -92,7 +92,6 @@ function RegisterAA() {
 
     await useAuth.register(userData)
       .then((userData) => {
-        console.log(userData)
           processHandler.remove('#register', logInEvent)
           noticeHandler.add({
             id: '#542',
@@ -106,7 +105,6 @@ function RegisterAA() {
         }) 
       .catch((err) => {
         processHandler.remove('#register', logInEvent)
-        console.log(err)
         setNotification(useErrorMessage(err))
       })
   };

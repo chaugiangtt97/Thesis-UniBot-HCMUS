@@ -3,7 +3,7 @@ from config.mongodb import MONGODB
 class Api_Service_Repository:
   def __init__(self):
     mongoObject = MONGODB()
-    self.collection = mongoObject.getDB()["api_configurations"]
+    self.collection = mongoObject.get_handler()["api_configurations"]
 
   # ----------------------------------------
   # ----------------------------------------

@@ -1,6 +1,6 @@
 import { matchedData } from 'express-validator'
 
-import { findUser, passwordsDoNotMatch, saveUserAccessAndReturnToken } from './helpers'
+import { findUser, saveUserAccessAndReturnToken } from './helpers'
 
 import { handleError, buildErrObject } from '../../middlewares/utils'
 import { checkPassword } from '../../middlewares/auth'
@@ -21,12 +21,13 @@ export const login = async (req, res) => {
         handleError(res, buildErrObject(422, 'Captcha token is required.'))
         return
       }
+    }
+
+    // eslint-disable-next-line no-console
+    if (!(await reCAPTCHA(data.captchaToken)) && node_env == 'production') {
       // eslint-disable-next-line no-console
-      if (!reCAPTCHA(data.captchaToken)) {
-        // eslint-disable-next-line no-console
-        node_env == 'development' && console.log('Captcha verification failed')
-        throw buildErrObject(422, 'Invalid captcha token.')
-      }
+      console.log('Captcha verification failed')
+      throw buildErrObject(422, 'Invalid captcha token.')
     }
 
     const user = await findUser(data.email)
@@ -38,13 +39,16 @@ export const login = async (req, res) => {
     const isPasswordMatch = await checkPassword(data.password, user)
 
     if (!isPasswordMatch ) {
-      handleError(res, await passwordsDoNotMatch(user))
+      console.log('isPasswordMatch not')
+      throw buildErrObject(409, 'WRONG_PASSWORD')
+
     } else if (user?.verified) {
       res.status(200).json(await saveUserAccessAndReturnToken(req, user))
+
     } else {
-      handleError(res, buildErrObject(422, 'The account has not been email verified.'))
-      return
+      throw buildErrObject(422, 'The account has not been email verified.')
     }
+    return
   } catch (error) {
     handleError(res, error)
   }

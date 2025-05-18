@@ -61,11 +61,11 @@ function ModelsManager() {
 
     token && role == 'administrator' && getParamsAPI()
       .then((data) => {
-        set_max_token_output(data?.max_tokens)
-        set_k_document(data?.k)
-        set_threshold(data?.threshold)
-        setHitoryInExtract(data?.use_history)
-        set_filter_bias(data?.filter_bias)
+        set_max_token_output(data['data']?.max_tokens)
+        set_k_document(data['data']?.k)
+        set_threshold(data['data']?.threshold)
+        setHitoryInExtract(data['data']?.use_history)
+        set_filter_bias(data['data']?.filter_bias)
       })
 
     return () => ( dashboard.navigate.active('#') )
@@ -75,7 +75,7 @@ function ModelsManager() {
   const getParamsAPI = async () => {
     const getPramsEvent = processHandler.add('#getPrams')
     return getParams(token)
-      .then((data) => { processHandler.remove('#getPrams', getPramsEvent); return data })
+      .then((data) => { processHandler.remove('#getPrams', getPramsEvent); return data['data'] })
       .catch((err) => { 
         processHandler.remove('#getPrams', getPramsEvent)
         noticeHandler.add({
