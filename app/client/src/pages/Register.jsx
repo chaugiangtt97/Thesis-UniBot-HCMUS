@@ -2,12 +2,12 @@ import styled from '@emotion/styled';
 import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLabel, Button, CircularProgress, MenuItem, Select } from '@mui/material';
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useApi } from '~/apis/apiRoute';
 
 const RegisterCard = styled(Card)(({ theme }) => ({
   width: '90vw',
@@ -111,34 +111,26 @@ function Register() {
 
     const formData = new FormData(event.currentTarget)
 
-    const dataRegister = { 
-      email: formData.get('email'), 
-      password: formData.get('password'),  
-      name: formData.get('name'),
-      educationRole: 'student',
-      captchaToken: captchaToken,
-      academicInformation: {
+    const registerEvent = processHandler.add('#register')
+
+    await useApi.register(
+      formData.get('email'), 
+      formData.get('password'),  
+      formData.get('name'),
+      'student',
+      captchaToken, {
         trainingProgram: userRecord?.trainingProgram,
         trainingBatch: userRecord?.trainingBatch,
         selectedMajor: userRecord?.selectedMajor
-      }
-    }
-
-    const registerEvent = processHandler.add('#register')
-
-    await useAuth.register(dataRegister)
+      }, captchaToken)
       .then((userData) => {
-        console.log(userData)
           processHandler.remove('#register', registerEvent)
           noticeHandler.add({
             id: '#542',
             status: 'success',
             message: 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
           })
-          setTimeout(() => {
-            import.meta.env.VITE_ENVIRONMENT == 'production' ? 
-            navigate('/validateEmail') : navigate('/signin')
-          }, 500);
+          navigate('/email/verify-email', { state: { email: formData.get('email') } })
         }) 
       .catch((err) => {
         processHandler.remove('#register', registerEvent)
@@ -249,7 +241,8 @@ function Register() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/signin"
+                // href="/signin"
+                onClick = {() => navigate(`/signin`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >
@@ -260,7 +253,8 @@ function Register() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/register/lecturer"
+                // href="/register/lecturer"
+                onClick = {() => navigate(`/register/lecturer`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >

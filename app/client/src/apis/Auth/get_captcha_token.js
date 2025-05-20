@@ -1,7 +1,8 @@
-const domain = import.meta.env.VITE_SERVER
+import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
 export const get_captcha_token = async (api_key = null) => {
-	const url = `${domain}/captcha_token?code=RECAPTCHA`;
+	console.log(SERVER_DOMAIN)
+	const url = `${SERVER_DOMAIN}/captcha_token?code=RECAPTCHA`;
     
 	const structure = {
 		method: 'GET',
@@ -22,7 +23,6 @@ export const get_captcha_token = async (api_key = null) => {
 			return data
 		})
 		.catch((err) => {
-			console.log(err)
 			if(typeof(err) == "object"){
 				throw 'ERR_CONNECTION_REFUSED'
 			}

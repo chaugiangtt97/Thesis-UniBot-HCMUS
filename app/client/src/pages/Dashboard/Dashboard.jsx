@@ -6,8 +6,6 @@ import { Block as CustomBlock } from '~/components/Mui/Block';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import Grid from '@mui/material/Grid2';
-import { useProfile } from '~/apis/Profile';
-import { GPTdata } from '~/apis/mockData_chatGPT';
 import StarIcon from '@mui/icons-material/Star';
 
 export function Dashboard() {

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { useAirflow } from '../../apis/Airflow'
-import { saveNewDocumentToDB } from '../../controllers/document/helper/saveNewDocumentToDB'
+import { saveNewDocumentToDB } from '../../controllers/v1/document/helper/saveNewDocumentToDB'
 
 const airflow = useAirflow()
 function delay(ms) {

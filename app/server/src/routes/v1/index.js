@@ -3,28 +3,33 @@ import { Router } from 'express'
 const fetch = require('node-fetch')
 const cheerio = require('cheerio')
 
+const subdir = ('/' + process.env.SUBDIR) || ''
+
 import '../../config/passport'
 const router = Router()
 /*
  * Load routes statically and/or dynamically
  */
 
-router.use('/api/', require('./auth'))
-router.use('/api/', require('./profile'))
-router.use('/api/', require('./conservation'))
-router.use('/api/collections', require('./collection'))
-router.use('/api/documents', require('./document'))
-router.use('/api/admin/chatbot/', require('./administrator/chatbot'))
-router.use('/api/admin/config/', require('./administrator/api_configurations'))
+// eslint-disable-next-line no-console
+console.log(`SubDir Route is:  ${subdir}/api/`)
+
+router.use(`${subdir}/api/auth`, require('./auth'))
+router.use(`${subdir}/api/profile`, require('./profile'))
+router.use(`${subdir}/api/conservation`, require('./conservation'))
+router.use(`${subdir}/api/collections`, require('./collection'))
+router.use(`${subdir}/api/documents`, require('./document'))
+router.use(`${subdir}/api/admin/chatbot/`, require('./administrator/chatbot'))
+router.use(`${subdir}/api/admin/config/`, require('./administrator/api_configurations'))
 
 /*
  * Setup routes for index
  */
-router.get('/api/admin', (req, res) => {
+router.get(`${subdir}/api/admin`, (req, res) => {
   res.render('index')
 })
 
-router.get('/api/proxy', async (req, res) => {
+router.get(`${subdir}/api/proxy`, async (req, res) => {
   const targetUrl = req.query?.url
 
   if (!targetUrl) {
@@ -83,6 +88,8 @@ router.get('/api/proxy', async (req, res) => {
  * Handle 404 error
  */
 router.use('*', (req, res) => {
+  // eslint-disable-next-line no-console
+  console.log('baseUrl: ', req?.baseUrl)
   res.status(404).json({
     errors: {
       msg: 'URL_NOT_FOUNDDDD'

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
-import { useProfile } from '~/apis/Profile';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import { useApi } from '~/apis/apiRoute';
 import { logout, refresh } from '~/store/actions/authActions';
 
 const GuessRoute = ({ children }) => {
@@ -16,20 +16,19 @@ const GuessRoute = ({ children }) => {
     if(token){
       if (!auth.loggedIn) {
         const eventID = processHandler.add('#verifyToken')
-        useProfile.verifyToken(token).then((usr_profile) => {
-          dispatch(refresh(token, usr_profile))
-          processHandler.remove('#verifyToken', eventID)
+        useApi.login_by_token(token).then((usr_profile) => {
+            dispatch(refresh(token, usr_profile))
+            processHandler.remove('#verifyToken', eventID)
 
-          if(usr_profile?.role && ['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role)){
-            navigate('/dashboard')
-          } else if (usr_profile?.role && ['student', 'researcher'].includes(usr_profile?.role)){
-            navigate('/')
-          }
-
-        }).catch((error) => {
-          processHandler.remove('#verifyToken', eventID)
-          dispatch(logout())
-        })
+            if(usr_profile?.role && ['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role)){
+              navigate('/dashboard')
+            } else if (usr_profile?.role && ['student', 'researcher'].includes(usr_profile?.role)){
+              navigate('/')
+            }
+          }).catch((error) => {
+            processHandler.remove('#verifyToken', eventID)
+            dispatch(logout())
+          })
       } else {
         const usr_profile = auth.user
         if(usr_profile?.role && ['administrator', 'academic_administration', 'lecturer'].includes(usr_profile?.role)){

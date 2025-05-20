@@ -125,7 +125,7 @@ def generate_route():
       
       #-------------------------------------------
         answer = Generate().generate(query, context, streaming, theme, user_profile, history)
-        
+        print(answer,query, streaming)
         if answer and streaming:
           def generate_stream():
             for part in answer:

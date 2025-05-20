@@ -2,8 +2,14 @@
 import { io } from 'socket.io-client';
 
 let socket = null;
-const domain = import.meta.env.VITE_SOCKET
-const env = import.meta.env?.VITE_ENVIRONMENT
+const socker_dir = import.meta.env.VITE_SOCKET
+const sub_dir = import.meta.env.VITE_SUBDIR
+let domain_socker = null
+if (sub_dir) 
+  domain_socker = `/${sub_dir}/${socker_dir}/`
+else 
+  domain_socker = `/${socker_dir}/`
+
 
 export const disconnectSocket = () => {
   if(socket){
@@ -20,11 +26,13 @@ export const connectSocket = (token) => {
       auth: {
         token: token, // Truyền token vào trong auth
       },
-      path: "/socket.io/",
+      path: `/${socker_dir}/`,
       withCredentials: true,
       transports: ['websocket', 'polling'], // Chỉ sử dụng WebSocket
       reconnection: true, // Tự động kết nối lại khi bị ngắt
     });
+
+    console.log('connect socket')
 
     socket.on('connect', () => {
       console.log('Socket connected:', socket);

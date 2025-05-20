@@ -9,10 +9,10 @@ const requireAuth = passport.authenticate('jwt', {
   session: false
 })
 const path = require('path')
-import roleAuthorization from '../../controllers/auth/roleAuthorization'
+import roleAuthorization from '../../controllers/v1/auth/roleAuthorization'
 
-import { getChunkInDocument, uploadFile, updateDocument, processDocument, deleteFile } from '../../controllers/document'
-import enhance from '~/controllers/document/enhance'
+import { getChunkInDocument, uploadFile, updateDocument, processDocument, deleteFile } from '../../controllers/v1/document'
+import enhance from '~/controllers/v1/document/enhance'
 
 // const directory = './src/storage'
 

@@ -7,9 +7,11 @@ import { sendEmail } from './sendEmail'
  * @param {string} subject - subject
  * @param {string} htmlMessage - html message
  */
-const prepareToSendEmail = (user = {}, code = '') => {
+const prepareToSendEmail = (user = {}, code = 'VERIFY_EMAIL') => {
 
   let content = { subject: '', html: '' }
+
+  console.log('code: ', code)
 
   if (code === 'VERIFY_EMAIL') {
     content = {
@@ -157,9 +159,9 @@ const prepareToSendEmail = (user = {}, code = '') => {
                     <h1>Khôi phục tài khoản</h1>
                 </div>
                 <div class="content">
-                    <p>Xin chào bạn,</p>
-                    <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Dưới đây là mật khẩu mới của bạn. Đây là mã xác minh của bạn:</p>
-                    <div class="otp">${user.forgotpassword}</div>
+                    <p>Xin chào bạn, ${user?.name}</p>
+                    <p>Chúng tôi đã nhận được yêu cầu đặt lại mật khẩu cho tài khoản của bạn. Đây là mã xác minh của bạn:</p>
+                    <div class="otp">${user.verification}</div>
                     <p>Để bảo mật tài khoản của bạn, vui lòng đăng nhập và thay đổi mật khẩu này ngay sau khi nhận được email này.</p>
                     <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng liên hệ với chúng tôi ngay lập tức để bảo vệ tài khoản của bạn. Trân trọng,</p>
                     <p><strong>Dự Án UniBot HCMUS - Thử nghiệm</strong></p>
@@ -187,15 +189,15 @@ const prepareToSendEmail = (user = {}, code = '') => {
       : console.log(`Email FAILED to: ${user.email}`)
   )
 
-  // if (process.env.NODE_ENV === 'production') {
-  //   sendEmail(data, (messageSent) =>
-  //     messageSent
-  //       ? console.log(`Email SENT to: ${user.email}`)
-  //       : console.log(`Email FAILED to: ${user.email}`)
-  //   )
-  // } else if (process.env.NODE_ENV === 'development') {
-  //   console.log('Xác thực email thành công')
-  // }
+//   if (process.env.NODE_ENV === 'production') {
+//     sendEmail(data, (messageSent) =>
+//       messageSent
+//         ? console.log(`Email SENT to: ${user.email}`)
+//         : console.log(`Email FAILED to: ${user.email}`)
+//     )
+//   } else if (process.env.NODE_ENV === 'development') {
+//     console.log('Xác thực email thành công')
+//   }
 }
 
 export default { prepareToSendEmail }

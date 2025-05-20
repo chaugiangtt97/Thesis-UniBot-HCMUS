@@ -8,22 +8,18 @@ import buildErrObject from '../utils/buildErrObject'
  */
 export const checkPassword = async (password = '', user = {}) => {
 
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     try {
-      user.comparePassword(password, (err, isMatch) => {
-        if (err) {
-          return reject(buildErrObject(422, err.message))
-        }
-        if (!isMatch) {
-          resolve(false)
-        }
-        resolve(true)
-      })
+      user.comparePassword(password,
+        (err, isMatch) => {
+          if (err) return reject(buildErrObject(422, err.message))
+          if (!isMatch) resolve(false)
+          resolve(true)
+        })
     } catch (error) {
       resolve(false)
     }
   })
-
 }
 
 export default checkPassword

@@ -36,6 +36,8 @@ import RegisterAA from '~/pages/RegisterAA';
 import ForgotPasswords from '~/pages/ForgotPasswords';
 import GeneratedPassword from '~/pages/GeneratedPassword';
 
+const subdir = import.meta.env.VITE_SUBDIR
+
 // Define the routes
 const router = createBrowserRouter([
   {
@@ -57,15 +59,15 @@ const router = createBrowserRouter([
             element: <RegisterAA />,
           },
           {
-            path: '/validateEmail',
+            path: '/email/verify-email',
             element: <VerifyEmail />,
           },
           {
-            path: '/forgotPassword/email',
+            path: '/email/request-verification',
             element: <ForgotPasswords />,
           },
           {
-            path: '/forgotPassword/:_id',
+            path: '/password/reset-password',
             element: <GeneratedPassword />,
           },
         ],
@@ -162,6 +164,7 @@ const router = createBrowserRouter([
   },
 ],
   {
+    basename: `/${subdir}`, // 👈 Quan trọng để chạy trong subdir
     future: {
       v7_relativeSplatPath: true, // Enables relative paths in nested routes
       v7_fetcherPersist: true,   // Retains fetcher state during navigation
@@ -170,6 +173,7 @@ const router = createBrowserRouter([
       v7_skipActionErrorRevalidation: true, // Prevents revalidation when action errors occur
       v7_starttransition: true
     },
-  });
+  },
+);
 
 export default router;

@@ -8,8 +8,7 @@ const pw_airflow = process.env?.PASSWORD_AIRFLOW
 // https://airflow.apache.org/api/v1/dags/{dag_id}/dagRuns/{dag_run_id}
 export const CheckStatus = async (dag_id = null, dag_run_id = null, api_key = null) => {
   const url = `${domain}/api/v1/dags/${dag_id}/dagRuns/${dag_run_id}`
-  console.log(domain)
-  console.log(usr_airflow, pw_airflow)
+
   // Thực hiện GET request
   return fetch(url, {
     method: 'GET', // Sử dụng phương thức POST

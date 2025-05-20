@@ -3,11 +3,11 @@ import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLa
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useSelector } from 'react-redux';
+import { useApi } from '~/apis/apiRoute';
 
 const SignInCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column', 
@@ -35,7 +35,7 @@ function ForgotPasswords() {
   const [notificationError, setNotification] = useState(null)
   const [notificationSuccess, setNotificationSuccess] = useState(null)
   const [captchaToken, setCaptchaToken] = useState(null);
-
+  const token = useSelector(state => state.auth.token)
   const recaptchaRef = useRef();
 
   const handleCaptchaChange = (token) => {
@@ -80,12 +80,12 @@ function ForgotPasswords() {
     }
     const verifyEmailEvent = processHandler.add('#verifyEmail')
 
-    await useAuth.send_verifyEmail(email.value, 'FORGOT_PASSWORD', captchaToken)
+    await useApi.email_request_verification(email.value, 'FORGOT_PASSWORD', captchaToken)
       .then((data) => {
           processHandler.remove('#verifyEmail', verifyEmailEvent)
           setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
           setNotification()
-          navigate(`/forgotPassword/${data.temp_id}`)
+          navigate(`/password/reset-password`, { state: { email: email.value } })
         }) 
       .catch((err) => {
         processHandler.remove('#verifyEmail', verifyEmailEvent)

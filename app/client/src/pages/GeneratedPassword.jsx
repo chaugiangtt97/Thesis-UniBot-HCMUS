@@ -3,7 +3,7 @@ import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLa
 import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useOutletContext, useParams } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom';
 import { login } from '~/store/actions/authActions';
 import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
@@ -32,13 +32,23 @@ const TextInput = styled(TextField) (({ theme }) => ({
   '&:hover fieldset': { borderColor: `${theme.palette.primary.main} !important` }
 }));
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { useProfile } from '~/apis/Profile';
+import { useApi } from '~/apis/apiRoute';
+
+
 function GeneratedPassword() {
+
   const [notificationError, setNotification] = useState(null)
   const [notificationSuccess, setNotificationSuccess] = useState(null)
   const [captchaToken, setCaptchaToken] = useState(null);
   const navigate = useNavigate();
   const recaptchaRef = useRef();
+
+  const location = useLocation();
+  const email = location.state?.email;
+
+  if (!email) {
+    return <Navigate to="/forgotPassword/email" replace />;
+  }
 
   const handleCaptchaChange = (token) => {
     setCaptchaToken(token);
@@ -55,7 +65,7 @@ function GeneratedPassword() {
 
     const new_password = document.getElementById('new-password');
     const new_password_2 = document.getElementById('new-password-2');
-    console.log(new_password.value, new_password_2.value)
+
     if (!new_password.value || new_password.value.length < 6) {
       setNotificationSuccess(null)
       setNotification('Password phải tối thiểu có 6 kí tự !')
@@ -71,7 +81,6 @@ function GeneratedPassword() {
     setNotification(null)
     return true;
   };
-  const { _id } = useParams();
 
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -79,15 +88,9 @@ function GeneratedPassword() {
     if (notificationError) return
 
     const data = new FormData(event.currentTarget)
-    const userData = { 
-      _id: _id, 
-      newPassword: data.get('new-password'), 
-      verification: data.get('verify-password'),
-      captchaToken: captchaToken
-    };
 
     const updatePasswordEvent = processHandler.add('#updatePassword')
-    await useProfile.updatePassword(userData)
+    await useApi.forgot_password(email, data.get('verify-password'), data.get('new-password'))
       .then(() => {
           processHandler.remove('#updatePassword', updatePasswordEvent)
           noticeHandler.add({

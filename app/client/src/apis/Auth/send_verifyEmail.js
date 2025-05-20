@@ -1,8 +1,7 @@
-const domain = import.meta.env.VITE_SERVER
+import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
-    const password = document.getElementById('password');
 export const send_verifyEmail = async (email, code = null, captchaToken = null) => {
-	const url = `${domain}/request_verifyEmail?email=${email}&code=${code}&captchaToken=${captchaToken}`;
+	const url = `${SERVER_DOMAIN}/request_verifyEmail?email=${email}&code=${code}&captchaToken=${captchaToken}`;
 	const structure = {
 		method: 'GET',
 		headers: {

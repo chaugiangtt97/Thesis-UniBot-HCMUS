@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Avatar, Box, Chip, FormControl, FormLabel, Typography, TextField, Select, MenuItem, Backdrop, CircularProgress, Skeleton, Button, styled } from '@mui/material';
+import { Box, Chip, FormControl, FormLabel, Typography, TextField, Select, MenuItem, Backdrop, CircularProgress, Skeleton, Button, styled } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { useProfile } from '~/apis/Profile';
 import { useOutletContext } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import MaleIcon from '@mui/icons-material/Male';  
@@ -21,6 +20,8 @@ import { useCode } from '~/hooks/useMessage';
 import Block from '~/components/Mui/Block';
 import { getDate } from '~/utils/GetDate';
 import { refresh } from '~/store/actions/authActions';
+import AvatarUserDefault from '~/components/Avatar/AvatarUserDefault';
+import { useApi } from '~/apis/apiRoute';
 const Container_Style = { height: 'fit-content', paddingX:1, paddingY: 4,
   background: theme => theme.palette.mode == 'dark' ? '#3e436b' : '#7474742b',
   minWidth: {md: '900px', xs: ''},
@@ -73,9 +74,8 @@ export function Profile() {
 
   const getUser = async (token) => {
     const eventID = processHandler.add('#GetUser')
-    return useProfile.get(token).then(async(user) => {
+    return useApi.get_profile(token).then(async(user) => {
       processHandler.remove('#GetUser', eventID)
-      console.log(user)
       return user
     })
   }
@@ -83,28 +83,14 @@ export function Profile() {
   const updateClick = async (e) => {
     e.preventDefault()
     const updateUserEvent = processHandler.add('#UpdateUser')
-    useProfile.update({...user, interest }, token)
-    .then(async (user) => {
-      setUser(user)
-      dispatch(refresh(token, {
-        name: user?.name,
-        role: user?.role,
-        email: user?.email,
-        academicInformation: user?.academicInformation,
-        generalInformation: user?.generalInformation
-      }))
-
-      noticeHandler.add({
-        status: 'success',
-        message: 'Cập nhật thành công'
+    useApi.update_profile(token, {...user, interest })
+      .then(async (user_profile) => {
+        setUser(user)
+        dispatch(refresh(token, user_profile))
+        noticeHandler.add({ status: 'success', message: 'Cập nhật thành công' })
       })
-    }).catch((err) => {
-      noticeHandler.add({
-        status: 'error',
-        message: err
-      })
-      console.error('Cập Nhật Thông Tin User Thất Bại !')
-    }).finally(() => processHandler.remove('#UpdateUser', updateUserEvent))
+      .catch((err) =>noticeHandler.add({ status: 'error', message: err }))
+      .finally(() => processHandler.remove('#UpdateUser', updateUserEvent))
   }
 
   const chipClick = (id) => {
@@ -125,14 +111,8 @@ export function Profile() {
           { user && <>
           <Box sx = {{ width: '100%', height: {md: '175px', xs: 'fit-content'}, display: {md: 'flex', xs: 'block'}, gap: 6, paddingX: {md: 5, xs: 0} }}>
             <Box sx = {{ display: { xs: 'flex', md: 'auto' }, flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-              
-              <Avatar sx={{ background: '#eaeff1', height: '140px', width: '140px' }} 
-                src={`/studentAvatar_${user.generalInformation?.sex}.png`} />
-                
-              {/* <Chip label={user?.role ? user?.role.replace(/\b\w/g, char => char.toUpperCase()) : '#undefine'}  
-                sx = {{ background: '#4d6b38', fontWeight: '600', cursor: 'pointer' }}/> */}
+               <AvatarUserDefault sx = {{ width: '140px', height: '140px', display: { xs: 'none', md: 'block' } }} /> 
             </Box>
-
 
             <Box sx ={{  display: 'flex', position: 'relative', flexDirection: 'column', justifyContent:'center', alignItems: {xs: 'center', md: 'start'}, width: '100%', minWidth: {md: '600px', xs: 'auto' }, height: '100%' }}>
               <Typography sx = {{  fontSize: '1.525rem !important', fontWeight: '900',  width: 'fit-content' }}>
@@ -449,7 +429,8 @@ function UpdatePasswordModal({onClose, parent}) {
   const {noticeHandler,processHandler, user, token} = parent
   const [updateUser, setUpdateUser] = useState({})
   const [useError, setError] = useState('')
-
+  const Accesstoken = useSelector(state => state.auth.token)
+  
   const buttonHandle = () => {
     if (!updateUser?.current_password) {
       setError('WRITE_CURRENT_PASSWORD')
@@ -476,21 +457,18 @@ function UpdatePasswordModal({onClose, parent}) {
     }
     
     const ResetPasswordEvent =  processHandler.add('#ResetPassword')
-    useProfile.updatePassword({
-      email: user?.email,
-      password: updateUser?.current_password,
-      newPassword: updateUser?.newPassword,
-    }, token).then(() => {
-      noticeHandler.add({
-        status: 'success',
-        message: 'Đặt lại mật khẩu thành công !'
+    useApi.reset_password(Accesstoken, updateUser?.current_password, updateUser?.newPassword)
+      .then(() => {
+        noticeHandler.add({
+          status: 'success',
+          message: 'Đặt lại mật khẩu thành công !'
+        })
+        onClose()
       })
-      onClose()
-    }).catch((err) => { 
-      setError(err)
-    }).finally(() => processHandler.remove('#ResetPassword', ResetPasswordEvent))
-
+      .catch((err) => setError(err))
+      .finally(() => processHandler.remove('#ResetPassword', ResetPasswordEvent))
   }
+  
   return (
     <Box component="form" 
       sx= {{ display: 'flex', flexDirection: 'column', minWidth: { xs: '80vw', md: '50vw', lg: '35vw' }, width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }}>

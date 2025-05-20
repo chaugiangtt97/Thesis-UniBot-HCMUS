@@ -1,7 +1,7 @@
-const domain = import.meta.env.VITE_SERVER
+import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
 export const validateEmail = async (data, api_key = null) => {
-	const url = `${domain}/verifyEmail?_id=${encodeURIComponent(data)}`;
+	const url = `${SERVER_DOMAIN}/verifyEmail?_id=${encodeURIComponent(data)}`;
 
 	const structure = {
 		method: 'GET',

@@ -1,7 +1,7 @@
-const domain = import.meta.env.VITE_SERVER
+import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
 export const forgotPassword = async (data, api_key = null) => {
-	const url = `${domain}/register`;
+	const url = `${SERVER_DOMAIN}/register`;
 	const structure = {
 		method: 'POST',
 		headers: {

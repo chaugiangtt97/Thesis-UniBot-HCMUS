@@ -2,7 +2,6 @@ import { Box, CircularProgress } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Outlet } from 'react-router-dom'
-import { useProfile } from '~/apis/Profile'
 import { connectSocket } from '~/socket'
 import { refresh } from '~/store/actions/authActions'
 import NotifycationModal from '~/components/Mui/NotifycationModal'
@@ -78,21 +77,23 @@ function AppLayout() {
 
       if(token) {
         const eventID = processHandler.add('#verifyToken')
-        useProfile.verifyToken(token).then((usr_profile) => {
-          dispatch(refresh(token, usr_profile))
-        }).finally(() => processHandler.remove('#verifyToken', eventID))
-        .catch(() => noticeHandler.add({
-          status: 'error',
-          message: 'Tự động đăng nhập thất bại !'
-        }))
+        useApi.login_by_token(token).then((usr_profile) => {
+            dispatch(refresh(token, usr_profile))
+          }).finally(() => processHandler.remove('#verifyToken', eventID))
+          .catch(() => {
+            noticeHandler.add({
+              status: 'error',
+              message: 'Tự động đăng nhập thất bại !'
+          })})
       }
 
       if( !reducers_data?.captcha_token) {
         const eventID = processHandler.add('#verifyToken')
-        useAuth.get_captcha_token().then((token) => {
-          dispatch(captcha_token(token.key))
-        })
-        .finally(() => processHandler.remove('#verifyToken', eventID))
+        useApi.get_captcha_token()
+          .then((token) => {
+            dispatch(captcha_token(token.key))
+          })
+          .finally(() => processHandler.remove('#verifyToken', eventID))
       }
     }
     setFirstRendering(false)
@@ -149,6 +150,7 @@ const BasicAlerts = ({noticeHandler, notifications}) => {
 import FadeIn from 'react-fade-in';
 import { useAuth } from '~/apis/Auth'
 import { captcha_token } from '~/store/actions/actions'
+import { useApi } from '~/apis/apiRoute'
 const AlertComponent = ({ id , zIndex, onClose, severity, message, duration, autoHidden }) => {
   useEffect(() => {
     if(autoHidden != false){

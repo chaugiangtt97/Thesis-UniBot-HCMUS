@@ -14,10 +14,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
-import { useProfile } from '~/apis/Profile';
 import { useCode } from '~/hooks/useMessage';
 import { refresh } from '~/store/actions/authActions';
 import { getDate } from '~/utils/GetDate';
+import { useApi } from '~/apis/apiRoute';
 
 export function UserProfile() {
   const dispatch = useDispatch()
@@ -30,12 +30,10 @@ export function UserProfile() {
     document.title = 'Chatbot - Thông Tin Cá Nhân';
     dispatch(sidebarAction({index: 912}))
 
-    useProfile.get(token).then(async(user) => {
+    useApi.get_profile(token).then((user) => {
       setUser(user)
       setHide(false)
-    }).catch((err) => {
-      console.error('Lấy thông tin user thất bại!')
-    })
+    }).catch((err) => console.error('Lấy thông tin user thất bại!'))
 
     return () => (
       dispatch(sidebarAction({index: null}))
@@ -45,18 +43,13 @@ export function UserProfile() {
   const updateClick = async (e) => {
     e.preventDefault()
     setUpdateButtonActive(false)
-    useProfile.update(user, token).then(async (user) => {
-      setUpdateButtonActive(true)
-      setUser(user)
-      dispatch(refresh(token, {
-        name: user?.name,
-        role: user?.role,
-        email: user?.email
-      }))
-    }).catch((err) => {
-      console.error('update Thất bại  ', err)
-
-    })
+    useApi.update_profile(token, user)
+      .then((user) => {
+        setUpdateButtonActive(true)
+        setUser(user)
+        dispatch( refresh(token, user) )
+      })
+      .catch((err) => console.error('update Thất bại  ', err))
   }
 
   return (

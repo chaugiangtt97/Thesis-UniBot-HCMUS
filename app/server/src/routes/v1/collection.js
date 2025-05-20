@@ -11,11 +11,11 @@ const requireAuth = passport.authenticate('jwt', {
 //   getCollectionSchema
 // } = import '../../controllers/collection')
 
-import loadCollectionsList from '../../controllers/collection/loadCollectionList'
-import loadDocumentList from '../../controllers/collection/loadDocumentList'
-import getCollectionSchema from '../../controllers/collection/getCollectionSchema'
-import new_collection from '../../controllers/collection/newCollection'
-import remove_collection from '~/controllers/collection/removeCollection'
+import loadCollectionsList from '../../controllers/v1/collection/loadCollectionList'
+import loadDocumentList from '../../controllers/v1/collection/loadDocumentList'
+import getCollectionSchema from '../../controllers/v1/collection/getCollectionSchema'
+import new_collection from '../../controllers/v1/collection/newCollection'
+import remove_collection from '~/controllers/v1/collection/removeCollection'
 
 router.get('/', requireAuth, trimRequest.all, loadCollectionsList)
 router.get('/schema', requireAuth, trimRequest.all, getCollectionSchema)

@@ -28,7 +28,7 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
-import router from './routes/v1'
+import router from './routes/v2'
 app.use(router)
 app.set('views', path.join(path.join(process.cwd(), '/public/views')))
 app.set('storage', path.join(path.join(process.cwd(), '/public/storage')))

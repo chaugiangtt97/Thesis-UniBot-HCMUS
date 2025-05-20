@@ -4,8 +4,8 @@
  */
 
 import { useKHTN_Chatbot } from '../../apis/KHTN_Chatbot'
-import { saveConservationToDB } from '../../controllers/conservation/helper/saveConservationToDB'
-import { updateChatSession } from '../../controllers/conservation/helper/updateChatSession'
+import { saveConservationToDB } from '../../controllers/v1/conservation/helper/saveConservationToDB'
+import { updateChatSession } from '../../controllers/v1/conservation/helper/updateChatSession'
 import { getProfileToString } from '../../utils/getProfileToString'
 import { getTime } from '../../utils/getTime'
 const { ObjectId } = require('mongodb')
@@ -315,7 +315,7 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/EndProcess', history)
 
     } catch (error) {
-      console.log('Lỗi ở bước chat: ', error)
+      console.log('error:', error)
       await updateChatSession(current_session, { in_progress: null })
       socket.emit('/ChatWithChatBot/EndProcess', {
         ...objectConservation,

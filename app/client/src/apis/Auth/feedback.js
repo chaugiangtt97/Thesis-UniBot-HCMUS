@@ -1,7 +1,7 @@
-const domain = import.meta.env.VITE_SERVER
+import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
 export const feedback = async (token = null, data, api_key = null) => {
-	const url = `${domain}/feedback`;
+	const url = `${SERVER_DOMAIN}/feedback`;
 	const structure = {
 		method: 'POST',
 		headers: {

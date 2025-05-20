@@ -18,8 +18,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useConservation } from '~/apis/Conservation';
+import DialogTitle from '@mui/material/DialogTitle';;
 import { useOutletContext } from 'react-router-dom';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -285,23 +284,30 @@ export function ChatGenerator() {
   }, [sessions, currentChatSession])
 
   const loadChatSessionFromDB = async () => {
+    console.log('hihihi')
+
     setApiHandler(prev => ({...prev, session: true}))
-    return useConservation.get(token).then((chatSessionFromDB) => {
-      setApiHandler(prev => ({...prev, session: false}))
-      return chatSessionFromDB
-    }).catch(() => {
-      noticeHandler.add({
-        status: 'error',
-        message: err
+    console.log(token)
+    return useApi.get_chat_session(token)
+      .then((chatSessionFromDB) => {
+        console.log(chatSessionFromDB)
+        setApiHandler(prev => ({...prev, session: false}))
+        return chatSessionFromDB
+      }).catch((err) => {
+        console.log(err)
+        noticeHandler.add({
+          status: 'error',
+          message: err
+        })
+        setApiHandler(prev => ({...prev, session: false}))
+        return null
       })
-      setApiHandler(prev => ({...prev, session: false}))
-      return null
-    })
   }
 
   const loadHistoryBySession = async (session) => {
     setApiHandler(prev => ({...prev, history: true}))
-    return useConservation.getHistory({ session: session?._id }, token).then((sessionWithHistory) => {{
+        console.log(session?._id)
+    return useApi.get_history_in_chat_session( token, session?._id).then((sessionWithHistory) => {{
       setApiHandler(prev => ({...prev, history: false}))
       return sessionWithHistory
     }}).catch(() => {
@@ -334,7 +340,7 @@ export function ChatGenerator() {
 
     try{
       if(currentChatSession == null) {
-        session = await newChatAction({ name: message?.question || message })
+        session = await newChatAction({ name: message?.question || message, description: new Date() })
       } else {
         session = currentChatSession
       }
@@ -387,7 +393,7 @@ export function ChatGenerator() {
   }
 
   const newChatAction = async (data) => {
-    return useConservation.create(data, token).then(async (session) => {
+    return useApi.create_chat_session(token, data?.name, data?.description).then(async (session) => {
       setSessions(prev => ([session, ...prev]))
       setCurrentChatSession(session)
       const sessionWithHistory = await loadHistoryBySession(session)
@@ -439,7 +445,7 @@ export function ChatGenerator() {
     event.stopPropagation()
     // if(!messageHandler.isProcess) {
       setRemoveSessionEvent(prev => [...prev, session._id])
-      useConservation.remove({session: session._id}, token).then((removed_session) => {
+      useApi.delete_chat_session( token, session._id ).then((removed_session) => {
         setSessions(prev => prev.filter((session) => session._id != removed_session._id))
         noticeHandler.add({
           status: 'success',
@@ -470,13 +476,12 @@ export function ChatGenerator() {
     // }
   }
 
-  const feedback = async (value) => {
+  const rating = async ( _id ,value) => {
     const sendFeedbackEvent = processHandler.add('#sendFeedback')
-    await useConservation.update(value, token)
+    console.log(_id, value)
+    await useApi.update_history_in_chat_session(token, _id, value)
     .then((data) => { setConservations(prev => prev.map((prev_consv) => {
-      if(prev_consv._id == data._id){
-        return data
-      }
+      if(prev_consv._id == data._id) return data
       return prev_consv
     })) })
     .catch((err) => {
@@ -541,7 +546,7 @@ export function ChatGenerator() {
                       sx = {{ 
                         transition: 'none', width: '100%', justifyContent: 'start', textAlign: 'start', color: 'inherit' }}>
                     <Typography component={'span'}
-                      sx = {{ textAlign: 'start', fontWeight: 400, fontSize: {xs: '0.725rem !important', md: '0.725rem !important', xl: '1.125rem !important'}, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: '100%', maxWidth: '100%', textAlign: 'start' }}> 
+                      sx = {{ fontWeight: 400, fontSize: {xs: '0.725rem !important', md: '0.725rem !important', xl: '1.125rem !important'}, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: '100%', maxWidth: '100%', textAlign: 'start' }}> 
                       {zIndex + 1}. {data} </Typography>
                     </Button>
                   ))
@@ -575,7 +580,7 @@ export function ChatGenerator() {
                   <ChatDisplay conservation = {conservation} user={user}  
                     action = {{ 
                       re_prompt : ChatAction,
-                      addFeedback: feedback,
+                      addFeedback: rating,
                       chatWithColllection: ChatAction_with_collection
                     }} />
                 </div>
@@ -720,6 +725,7 @@ import Filter6OutlinedIcon from '@mui/icons-material/Filter6Outlined';
 import Filter7OutlinedIcon from '@mui/icons-material/Filter7Outlined';
 
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
+import { useApi } from '~/apis/apiRoute';
 
 const ICON_LIST = [<Filter1OutlinedIcon sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 
 <Filter2OutlinedIcon  sx = {{ fontSize:  { xs: '16px !important', xl: '28px !important'} }}/>, 

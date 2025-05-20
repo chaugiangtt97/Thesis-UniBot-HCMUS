@@ -5,14 +5,17 @@ import { defineConfig, loadEnv } from "vite";
 import fs from 'fs';
 import path from "path";
 import mkcert from 'vite-plugin-mkcert'
+
 // https://vitejs.dev/config/
 export default ({ mode }) => {
   // Load app-level env vars to node-level env vars. !!! BUT DON'T REASSIGN it to process.env (notice `const loadedEnv =`) !!!
-  const loadedEnv = { ...process.env, ...loadEnv(mode, process.cwd()) };
-
+  const loadedEnv = loadEnv(mode, process.cwd(), '');
+  loadedEnv.ENV_PORT;
   return defineConfig({
+    // base: `/${loadedEnv.VITE_SUBDIR}/`,
+    base: '/unibot/',
     plugins: [react(), svgr() ],
-    // base: './'
+    // base: './',
     __VALUE__: `"${process.env.VALUE}"`,
     resolve: {
       alias: [{ find: "~", replacement: "/src" }],
@@ -22,9 +25,10 @@ export default ({ mode }) => {
     },
     server: {
       https: false,
+      port: 3000,
       proxy: {
-        '/api': {
-          target: 'http://localhost:8017',
+        [`/api`]: {
+          target: `http://localhost:8017/`,
           secure: false,
           ws: true,
           configure: (proxy, _options) => {
@@ -45,10 +49,11 @@ export default ({ mode }) => {
           secure: false,
           changeOrigin: true,
           ws: true,
-        }
+        },
       },
       host: '0.0.0.0',
     },
+    
     //change port for production
     preview: {
       watch: {

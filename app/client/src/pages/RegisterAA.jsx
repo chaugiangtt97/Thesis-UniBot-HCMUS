@@ -4,10 +4,10 @@ import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useApi } from '~/apis/apiRoute';
 
 const RegisterCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column',
@@ -77,31 +77,29 @@ function RegisterAA() {
     const logInEvent = processHandler.add('#register')
 
     const data = new FormData(event.currentTarget)
-    const userData = { 
-      email: data.get('email'), 
-      password: data.get('password'),  
-      name: data.get('name'),
-      educationRole: 'lecturer',
-      academicInformation: {
+
+    await useApi.register(
+      data.get('email'), 
+      data.get('password'),  
+      data.get('name'),
+      'lecturer', {
         administrativeUnit: data.get('administrativeUnit'),
         lecturerPosition: data.get('lecturerPosition'),
         teachingDepartment: data.get('teachingDepartment')
       },
-      captchaToken: captchaToken
-    };
-
-    await useAuth.register(userData)
-      .then((userData) => {
+      captchaToken
+    )
+      .then(() => {
           processHandler.remove('#register', logInEvent)
           noticeHandler.add({
             id: '#542',
             status: 'success',
             message: 'Tạo tài khoản thành công, hãy kiểm tra email để xác thực tài khoản bạn nhé !',
           })
-          setTimeout(() => {
-            import.meta.env.VITE_ENVIRONMENT == 'production' ? 
-              navigate('/validateEmail') : navigate('/signin')
-          }, 500);
+          
+          navigate('/email/verify-email', { state: { email: document.getElementById('email').value } })
+          // import.meta.env.VITE_ENVIRONMENT == 'production' ? 
+          //   navigate('/email/verify-email', { state: { email: data.get('email') } }) : navigate('/signin')
         }) 
       .catch((err) => {
         processHandler.remove('#register', logInEvent)
@@ -203,7 +201,8 @@ function RegisterAA() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/signin"
+                // href="/signin"
+                onClick = {() => navigate(`/signin`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >
@@ -214,7 +213,8 @@ function RegisterAA() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/register"
+                // href="/register"
+                onClick = {() => navigate(`/register`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >

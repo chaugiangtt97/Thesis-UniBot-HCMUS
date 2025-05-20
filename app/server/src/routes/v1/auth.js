@@ -5,25 +5,29 @@ const trimRequest = require('trim-request')
 const passport = require('passport')
 const requireAuth = passport.authenticate('jwt', { session: false })
 
-import validateRegister from '../../controllers/auth/validators/validateRegister'
-import validateVerifyEmail from '../../controllers/auth/validators/validateVerifyEmail'
-import validateLogin from '../../controllers/auth/validators/validateLogin'
-import validateForgotPassword from '../../controllers/auth/validators/validateForgotPassword'
+import validateRegister from '../../controllers/v1/auth/validators/validateRegister'
+import validateVerifyEmail from '../../controllers/v1/auth/validators/validateVerifyEmail'
+import validateLogin from '../../controllers/v1/auth/validators/validateLogin'
+// import validateForgotPassword from '../../controllers/auth/validators/validateForgotPassword'
 
-import login from '../../controllers/auth/login'
-import register from '../../controllers/auth/register'
-import { feedback } from '../../controllers/auth/feedback'
-import validateEmail from '../../controllers/auth/validateEmail'
-import request_validateEmail from '../../controllers/auth/request_validateEmail'
-import { updatePassword } from '../../controllers/auth'
-import getAPI_Configurations from '~/controllers/auth/api_configurations '
+import login from '../../controllers/v1/auth/login'
+import feedback from '../../controllers/v1/profile/feedback'
+import register from '../../controllers/v1/auth/register'
+import verifyToken from '../../controllers/v1/auth/verifyToken'
+import validateEmail from '../../controllers/v1/auth/validateEmail'
+import getAPI_Configurations from '~/controllers/v1/auth/api_configurations '
+import requestVerification from '../../controllers/v1/auth/requestVerification'
 
 router.post('/login', trimRequest.all, validateLogin, login)
 router.post('/register', trimRequest.all, validateRegister, register)
-router.post('/feedback', requireAuth, trimRequest.all, feedback)
-router.get('/verifyEmail', trimRequest.all, validateEmail)
-router.get('/request_verifyEmail', trimRequest.all, validateVerifyEmail, request_validateEmail)
-router.post('/updatePassword', trimRequest.all, validateForgotPassword, updatePassword)
-router.get('/captcha_token', trimRequest.all, getAPI_Configurations)
+
+router.get('/captcha', trimRequest.all, getAPI_Configurations)
+router.post('/verify-token', trimRequest.all, verifyToken)
+
+router.get('/email/verify', trimRequest.all, validateEmail)
+router.get('/email/request-verification', trimRequest.all, validateVerifyEmail, requestVerification)
+
+router.post('/feedback', requireAuth, trimRequest.all, feedback) // NEED CHANGE
+// router.post('/updatePassword', trimRequest.all, validateForgotPassword, updatePassword) // NEED TO CHANGE
 
 module.exports = router

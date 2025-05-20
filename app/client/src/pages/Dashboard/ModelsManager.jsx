@@ -9,8 +9,9 @@ import Grid from '@mui/material/Grid2'
 import CloudUploadOutlinedIcon from '@mui/icons-material/CloudUploadOutlined'
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined'
-import { getParams, postParams } from '~/apis/KHTN_Chatbot/params';
+// import { getParams, postParams } from '~/apis/KHTN_Chatbot/params';
 import { useSelector } from 'react-redux';
+import { useApi } from '~/apis/apiRoute';
 const TEXTFIELD_STYLE = {
   '--mui-palette-text-secondary': '#6d6d6d',
   '& .MuiInputBase-root':{
@@ -74,7 +75,7 @@ function ModelsManager() {
 
   const getParamsAPI = async () => {
     const getPramsEvent = processHandler.add('#getPrams')
-    return getParams(token)
+    return await useApi.getParams(token)
       .then((data) => { processHandler.remove('#getPrams', getPramsEvent); return data['data'] })
       .catch((err) => { 
         processHandler.remove('#getPrams', getPramsEvent)
@@ -88,13 +89,13 @@ function ModelsManager() {
 
   const saveParamsAPI = async () => {
     const updateParamsEvent = processHandler.add('#updateParamsEvent')
-    const res = await postParams(token, {
-      'use_history': isHitoryInExtract,
-      'max_tokens': max_token_output,
-      'filter_bias': filter_bias,
-      'threshold': threshold,
-      'k': k_document,
-    }).then(() => {
+    const res = await useApi.postParams(token,
+      use_history =  isHitoryInExtract,
+      max_tokens =  max_token_output,
+      filter_bias =  filter_bias,
+      threshold =  threshold,
+      k =  k_document,
+    ).then(() => {
       processHandler.remove('#updateParamsEvent', updateParamsEvent)
       noticeHandler.add({
         status: 'success',

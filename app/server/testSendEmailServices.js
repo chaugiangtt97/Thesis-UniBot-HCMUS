@@ -393,7 +393,7 @@ var transporter = createTransport({
   service: 'gmail',
   auth: {
     user: '',
-    pass: 'uboy zuwd vpjf cyjl'
+    pass: ''
   }
 })
 const subject = 'Dự án Chatbot tư vấn FIT-HCMUS'

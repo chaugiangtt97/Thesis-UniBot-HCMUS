@@ -21,8 +21,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { useConservation } from '~/apis/Conservation';
 import { useOutletContext } from "react-router-dom";
+import { useApi } from '~/apis/apiRoute';
 
 function NewChatModal({ modalHandler = null }) {
 
@@ -250,7 +250,7 @@ export function ChatGenerator() {
 
   const loadChatSessionFromDB = async () => {
     setApiHandler(prev => ({...prev, session: true}))
-    return useConservation.get(token).then((chatSessionFromDB) => {
+    return useApi.get_chat_session(token).then((chatSessionFromDB) => {
       setApiHandler(prev => ({...prev, session: false}))
       return chatSessionFromDB
     }).catch((err) => {
@@ -265,7 +265,7 @@ export function ChatGenerator() {
 
   const loadHistoryBySession = async (session) => {
     setApiHandler(prev => ({...prev, history: true}))
-    return useConservation.getHistory({ session: session?._id }, token).then((sessionWithHistory) => {{
+    return useApi.get_history_in_chat_session( token, session?._id ).then((sessionWithHistory) => {{
       setApiHandler(prev => ({...prev, history: false}))
       return sessionWithHistory
     }}).catch(() => {
@@ -296,7 +296,7 @@ export function ChatGenerator() {
 
     try {
       if(currentChatSession == null) {
-        session = await newChatAction({ name: message?.question || message })
+        session = await newChatAction({ name: message?.question || message, description: new Date() })
       } else {
         session = currentChatSession
       }
@@ -348,7 +348,7 @@ export function ChatGenerator() {
   }
 
   const newChatAction = async (data) => {
-    return useConservation.create(data, token).then(async (session) => {
+    return useApi.create_chat_session(token, data.chat_session_name, data.chat_session_description).then(async (session) => {
       setSessions(prev => ([session, ...prev]))
       setCurrentChatSession(session)
       const sessionWithHistory = await loadHistoryBySession(session)
@@ -401,7 +401,7 @@ export function ChatGenerator() {
     event.stopPropagation()
     if(!messageHandler.isProcess) {
       setRemoveSessionEvent(prev => [...prev, session?._id])
-      useConservation.remove({session: session?._id}, token).then((removed_session) => {
+      useApi.delete_chat_session(token, session?._id).then((removed_session) => {
         setSessions(prev => prev.filter((session) => session?._id != removed_session?._id))
         noticeHandler.add({
           status: 'success',
@@ -433,9 +433,9 @@ export function ChatGenerator() {
     }
   }
 
-  const feedback = async (value) => {
+  const rating = async (id, value) => {
     const sendFeedbackEvent = processHandler.add('#sendFeedback')
-    await useConservation.update(value, token)
+    await useApi.update_chat_session(token, id, value )
     .then((data) => { setConservations(prev => {
       prev.forEach((prev_consv) => {
         if(prev_consv?._id == data?._id){
@@ -478,7 +478,7 @@ export function ChatGenerator() {
               return <div key={conservation?._id}>
                 <ChatDisplay  loading={!isRcmt || sessions == null} conservation = {conservation} user={user} action = {{ 
                   re_prompt: ChatAction,
-                  addFeedback: feedback,
+                  addFeedback: rating,
                   chatWithColllection: ChatAction_with_collection
                 }} />
               </div>

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid2';
-import { Avatar, Box, Chip, FormControl, FormLabel, Typography, TextField, Select, MenuItem, Backdrop, CircularProgress, Skeleton, Button } from '@mui/material';
+import { Box, Chip, FormControl, FormLabel, Typography, TextField, Select, MenuItem, Backdrop, CircularProgress, Skeleton, Button } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { useProfile } from '~/apis/Profile';
 import { useOutletContext } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import MaleIcon from '@mui/icons-material/Male';
@@ -19,6 +18,8 @@ import { useCode } from '~/hooks/useMessage';
 import Block from '~/components/Mui/Block';
 import { getDate } from '~/utils/GetDate';
 import { refresh } from '~/store/actions/authActions';
+import AvatarUserDefault from '~/components/Avatar/AvatarUserDefault';
+import { useApi } from '~/apis/apiRoute';
 
 const Container_Style = { height: 'fit-content', paddingX:1, paddingY: 4,
   background: theme => theme.palette.mode == 'dark' ? '#3e436b' : '#7474742b'
@@ -47,7 +48,7 @@ export function Profile() {
 
   const getUser = async (token) => {
     const eventID = processHandler.add('#GetUser')
-    return useProfile.get(token).then(async(user) => {
+    return useApi.get_profile(token).then(async(user) => {
       processHandler.remove('#GetUser', eventID); return user
     })
   }
@@ -55,7 +56,7 @@ export function Profile() {
   const updateClick = async (e) => {
     e.preventDefault()
     const updateUserEvent = processHandler.add('#UpdateUser')
-    useProfile.update(user, token)
+    useApi.update_profile(token, user)
     .then(async (user) => {
       setUser(user)
       dispatch(refresh(token, {
@@ -86,11 +87,12 @@ export function Profile() {
         { user && <>
         <Box sx = {{ width: '100%', height: '175px', display: 'flex', gap: 6, paddingX: 5 }}>
           <Box>
-            <Avatar sx={{ background: '#eaeff1', height: '140px', width: '140px' }} 
+            {/* <Avatar sx={{ background: '#eaeff1', height: '140px', width: '140px' }} 
             src={`/studentAvatar_${user.generalInformation?.sex}.png`} 
               // src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"
-              />
-            
+              /> */}
+            <AvatarUserDefault sx = {{ width: '140px', height: '140px', display: { xs: 'none', md: 'block' } }} />
+
             <Chip label={user?.role ? user?.role.replace(/\b\w/g, char => char.toUpperCase()) : '#undefine'}  
               sx = {{ background: '#4d6b38', fontWeight: '600', cursor: 'pointer' }}/>
           </Box>

@@ -13,7 +13,7 @@ import {
   removeConservationInDB,
   updateConservationInDB,
   getRecommendedQuestions
-} from '../../controllers/conservation'
+} from '../../controllers/v1/conservation'
 
 router.post('/newChat', requireAuth, trimRequest.all, newChat)
 router.get('/chatSession', requireAuth, trimRequest.all, loadConservationList)

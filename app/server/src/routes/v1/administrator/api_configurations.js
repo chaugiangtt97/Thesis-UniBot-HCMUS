@@ -4,9 +4,9 @@ const trimRequest = require('trim-request')
 const passport = require('passport')
 const requireAuth = passport.authenticate('jwt', { session: false })
 
-import roleAuthorization from '../../../controllers/auth/roleAuthorization'
-import getAPI_Configurations from '../../../controllers/config/api_configurations '
-import validateAPI_Configurations from '../../../controllers/config/validators/validateUpdateProfile'
+import roleAuthorization from '../../../controllers/v1/auth/roleAuthorization'
+import getAPI_Configurations from '../../../controllers/v1/config/api_configurations '
+import validateAPI_Configurations from '../../../controllers/v1/config/validators/validateUpdateProfile'
 
 router.get(
   '/',

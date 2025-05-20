@@ -4,10 +4,10 @@ import Link from '@mui/material/Link';
 import React, { useRef, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { login } from '~/store/actions/authActions';
-import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
+import { useApi } from '~/apis/apiRoute';
 
 const SignInCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column', 
@@ -81,9 +81,8 @@ function SignIn() {
     const logInEvent = processHandler.add('#login')
 
     const data = new FormData(event.currentTarget)
-    const userData = { email: data.get('email'), password: data.get('password'), captchaToken: captchaToken };
 
-    await useAuth.login(userData)
+    await useApi.login( data.get('email'),  data.get('password'), captchaToken )
       .then((userData) => {
         processHandler.remove('#login', logInEvent)
         dispatch(login(userData))
@@ -141,7 +140,8 @@ function SignIn() {
           <FormControl  sx={{gap: 1}}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
               <FormLabel htmlFor="password" sx = {{ color: 'inherit' }}>Mật khẩu</FormLabel>
-              <Link variant="body2" href="/forgotPassword/email"
+              <Link variant="body2" 
+                onClick = {() => navigate(`/email/request-verification`)} // href={import.meta.env.VITE_ENVIRONMENT ? `/${import.meta.env.VITE_ENVIRONMENT}/forgotPassword/request-verification` : `/forgotPassword/request-verification`}
                 sx={{ alignSelf: 'baseline', color: 'inherit' }}>
                 Quên mật khẩu ? </Link>
             </Box>
@@ -162,7 +162,8 @@ function SignIn() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/"
+                // href="/"
+                onClick = {() => navigate(`/`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >

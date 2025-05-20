@@ -78,7 +78,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
   const [hover, setHover] = React.useState(-1);
 
   const feedback = async (value) => {
-    await action.addFeedback({rating: value, _id: conservation._id})
+    await action.addFeedback( conservation._id, { rating: value })
     setValue(value)
   }
 
@@ -101,10 +101,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
     <Box sx = {ChatBlock_Style}>
       <FadeIn>
         <Box sx = { ChatDisplay_Style }>
-          {/* <Avatar alt="User" sx = {{ background: '#eaeff1', display: { xs: 'none', md: 'block' } }} 
-                src={`/studentAvatar_${user.generalInformation?.sex}.png`}
-             /> */}
-          <AvatarUserDefault user_profile = {user} sx = {{ display: { xs: 'none', md: 'block' } }} />
+          <AvatarUserDefault sx = {{ display: { xs: 'none', md: 'block' } }} />
           <ChatMessage sx = {{   
               background: 'linear-gradient(45deg, rgba(73,124,246,1) 47%, rgba(144,95,247,1) 100%)',
               marginRight: {md: '20px', xs: 0},

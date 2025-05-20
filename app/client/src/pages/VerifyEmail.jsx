@@ -2,8 +2,8 @@ import styled from '@emotion/styled';
 import { Card, FormControl, FormLabel, TextField, Typography, Box, FormControlLabel, Button, CircularProgress } from '@mui/material';
 import Link from '@mui/material/Link';
 import React, { useState } from 'react'
-import { useNavigate, useOutletContext } from 'react-router-dom';
-import { useAuth } from '~/apis/Auth';
+import { Navigate, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { useApi } from '~/apis/apiRoute';
 import { useErrorMessage } from '~/hooks/useMessage';
 
 const SignInCard = styled(Card)(({ theme }) => ({
@@ -29,11 +29,16 @@ function VerifyEmail() {
   const [notificationSuccess, setNotificationSuccess] = useState(null)
 
   const navigate = useNavigate();
-  const { processHandler } = useOutletContext();   
+  const { processHandler } = useOutletContext(); 
+  const location = useLocation();  
+  const email = location.state?.email;
 
+  if (!email) {
+    return <Navigate to="/singin" replace />;
+  }
   const validateInputs = () => {
 
-    if (!code) {
+    if (!verificationCode) {
       setNotificationSuccess(null)
       setNotification('Mã Không Được Bỏ Trống !')
       return false;
@@ -46,21 +51,20 @@ function VerifyEmail() {
   const handleSubmit = async (event) => {
     event.preventDefault()
 
-    const logInEvent = processHandler.add('#login')
+    const verifyEmail = processHandler.add('#verifyEmail')
 
-    await useAuth.validateEmail(code)
+    await useApi.email_verify( email, verificationCode)
       .then(() => {
-          processHandler.remove('#login', logInEvent)
+          processHandler.remove('#verifyEmail', verifyEmail)
           navigate('/signin')
         })
       .catch((err) => {
-        processHandler.remove('#login', logInEvent)
-        console.log(err)
+        processHandler.remove('#verifyEmail', verifyEmail)
         setNotification(useErrorMessage(err))
       })
   };
 
-  const [code, setCode] = useState(null)
+  const [verificationCode, setCode] = useState(null)
 
   return (
     <>
@@ -74,7 +78,7 @@ function VerifyEmail() {
          
           <FormControl sx={{gap: 1}}>
             <FormLabel htmlFor="_id" sx = {{ color: 'inherit' }}>Mã Xác Thực</FormLabel>
-            <TextInput onChange={(e) => setCode(e.target.value)} id="_id" type="_id" name="_id" placeholder="xxx-xxx-xxxxx" value={code || ''}
+            <TextInput onChange={(e) => setCode(e.target.value)} id="_id" type="_id" name="_id" placeholder="xxx-xxx-xxxxx" value={verificationCode || ''}
               inputProps={{ maxLength: 40 }}
               autoComplete="_id" autoFocus required fullWidth variant="outlined" />
           </FormControl>
@@ -87,7 +91,8 @@ function VerifyEmail() {
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                href="/signin"
+                // href="/signin"
+                onClick = {() => navigate(`/signin`)}
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
                 >
@@ -99,10 +104,10 @@ function VerifyEmail() {
 
           <Box sx={{ display: 'flex', justifyContent: 'start', flexDirection: 'column', width: '100%' }}>
             <Typography sx={{ textAlign: 'start', color: '#0bac07' }}>
-              Lưu ý: Mỗi code chỉ ứng với một tài khoản định danh. Chỉ khi xác thực, tài khoản của bạn mới được kích hoạt
+              Mã xác thực sẽ được gởi đến email của bạn!
             </Typography>
             <Typography sx={{ textAlign: 'start', color: '#0bac07' }}>
-              Hãy kiểm tra email của bạn !
+              Lưu ý: Mỗi code chỉ ứng với một tài khoản định danh. Chỉ khi xác thực, tài khoản của bạn mới được kích hoạt
             </Typography>
           </Box>
 

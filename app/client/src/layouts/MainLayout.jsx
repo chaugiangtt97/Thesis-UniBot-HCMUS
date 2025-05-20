@@ -16,6 +16,7 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { deepOrange } from '@mui/material/colors';
 import ReplyAllIcon from '@mui/icons-material/ReplyAll';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AvatarUserDefault from '~/components/Avatar/AvatarUserDefault';
 
 const MuiListItemButton = styled(ListItemButton) (({theme}) => ({
   borderRadius: '12px',
@@ -328,10 +329,11 @@ function MainLayout() {
                 <Button className="menu-button" sx = {{ paddingX: 2, fontSize: {xs: '1rem', xl: '1.575rem'}, fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}
                   startIcon={
                   <Box sx ={{ width: '50px', height: '50px',  borderRadius: '50%', marginRight: 1 }}>
-                    <Avatar sx = {{ background: '#eaeff1', width: '100%', height: '100%', display: { xs: 'none', md: 'flex', width: '100%', height: '100%' } }} 
+                    {/* <Avatar sx = {{ background: '#eaeff1', width: '100%', height: '100%', display: { xs: 'none', md: 'flex', width: '100%', height: '100%' } }} 
                       src={`/studentAvatar_${user_profile.generalInformation?.sex}.png`}
                       //src="https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"
-                    />
+                    /> */}
+                    <AvatarUserDefault sx = {{ display: { xs: 'none', md: 'block' } }} />
                   </Box>}
                   endIcon={<ExpandMoreIcon sx = {{ fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}/>}
                   onClick={() => setOpenNavigateList((prev) => !prev)}

@@ -5,22 +5,16 @@
  */
 export const handleError = (res = {}, err = {}) => {
 
-  if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line no-console
-    console.log(err)
-  }
+  // if (process.env.NODE_ENV === 'development') {
+  //   // eslint-disable-next-line no-console
+  //   console.log(err)
+  // }
+  // eslint-disable-next-line no-console
+  console.log(err)
 
-  console.log('ERROR: ', err)
-
-  if (err?.notice && err.notice != null) {
-    // eslint-disable-next-line no-console
-    console.log ('Notification Errors:', err.notice)
-  }
 
   res.status(err?.code || 404).json({
-    errors: {
-      msg: err?.message
-    }
+    errors: err
   })
 }
 

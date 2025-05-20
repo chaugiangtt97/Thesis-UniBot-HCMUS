@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Box, Skeleton, Typography } from '@mui/material';
 import TipsAndUpdatesOutlinedIcon from '@mui/icons-material/TipsAndUpdatesOutlined';
 import { useSelector } from 'react-redux';
-import { useConservation } from '~/apis/Conservation';
+import { useApi } from '~/apis/apiRoute';
 
 const Container_Style = {
     display: "flex",
@@ -39,7 +39,7 @@ export function RecommendChatPage({
 
   useEffect(() => {
     if(token && recommendedQuestions == null) {
-      useConservation.getRecommendedQuestions(token).then((_data) => {
+      useApi.get_recommended_questions_from_db(token).then((_data) => {
         setRecommendedQuestions(_data)
       })
     }
