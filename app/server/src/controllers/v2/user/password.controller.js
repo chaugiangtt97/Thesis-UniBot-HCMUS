@@ -41,11 +41,6 @@ export const reset_by_verfication_code = async (req, res) => {
     if ( user.verification != data.verificationCode )
       throw buildErrObject(409, 'USER.WRONG_VERIFICATION_CODE', 'verificationCode does not match')
 
-    const isPasswordMatch = await checkPassword(data.password, user)
-
-    if (!isPasswordMatch)
-      throw buildErrObject(409, 'USER.WRONG_PASSWORD', 'password does not match')
-
     await save_new_password(user._id, data.newPassword)
 
     return res.status(200).json({ message: 'PASSWORD_UPDATED_SUCCESSFULLY' })

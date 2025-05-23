@@ -135,7 +135,7 @@ function DashboardLayout() {
             {/* <Avatar src={`/studentAvatar_${user_profile.generalInformation?.sex}.png`} 
             // src = "https://w7.pngwing.com/pngs/340/946/png-transparent-avatar-user-computer-icons-software-developer-avatar-child-face-heroes.png"
               sx={{ width: {xs: 32, xl: 54 }, height: {xs: 32, xl: 54 }, background: '#eaeff1', color: '#000' }}></Avatar> */}
-              <AvatarUserDefault sx = {{ display: { xs: 'none', md: 'block' } }} />
+              <AvatarUserDefault sx = {{ display: { xs: 'none', md: 'block' }, width: {xs: 32, xl: 54 }, height: {xs: 32, xl: 54 } }} />
             <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems:'center', height: '100%', py: 0, '&:last-child' : {py: 0}, position: 'relation', paddingLeft: 1}}>
               <Typography component="div" variant="p"
                 sx = {{ width: { xl: '180px', xs: '144px'}, textAlign: 'center', overflow: 'hidden', fontSize:{ xs: '0.725rem', xl: '1.225rem'}, color :theme => theme.palette.mode == 'light' ? '#000' : '#fff',

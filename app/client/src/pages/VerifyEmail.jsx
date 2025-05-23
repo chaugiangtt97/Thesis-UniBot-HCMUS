@@ -34,7 +34,7 @@ function VerifyEmail() {
   const email = location.state?.email;
 
   if (!email) {
-    return <Navigate to="/singin" replace />;
+    return <Navigate to="/signin" replace />;
   }
   const validateInputs = () => {
 

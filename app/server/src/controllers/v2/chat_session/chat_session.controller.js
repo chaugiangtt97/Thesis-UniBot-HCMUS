@@ -16,7 +16,7 @@ export const get_chat_session = async (req, res) => {
 
 export const update_chat_session = async (req, res) => {
   try {
-    checkRequiredData(req.body, ['chat_session_id', 'dataUpdate'])
+    checkRequiredData(req.body, ['chat_session_id', 'dataUpdate'], 'CHAT_SESSSION.MISSING_FIELD')
 
     const chat_session_onwer_id = await isIDGood(req.user._id)
     const chat_session_id = await isIDGood(req.body?.chat_session_id)
@@ -33,7 +33,7 @@ export const update_chat_session = async (req, res) => {
 
 export const create_chat_session = async (req, res) => {
   try {
-    checkRequiredData(req.body, ['chat_session_name', 'chat_session_description'])
+    checkRequiredData(req.body, ['chat_session_name', 'chat_session_description'], 'CHAT_SESSSION.MISSING_FIELD')
 
     const chat_session_onwer_id = await isIDGood(req.user._id)
     const chat_session_name = req.body?.chat_session_name
@@ -48,7 +48,7 @@ export const create_chat_session = async (req, res) => {
 export const delete_chat_session = async (req, res) => {
   try {
     const user_id = await isIDGood(req.user._id)
-    checkRequiredData(req.body, ['chat_session_id'])
+    checkRequiredData(req.body, ['chat_session_id'], 'CHAT_SESSSION.MISSING_FIELD')
     const chat_session_id = req.body?.chat_session_id
 
     res.status(200).json(await delete_chat_session_from_db(user_id, chat_session_id))

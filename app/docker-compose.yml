@@ -5,7 +5,7 @@ services:
     image: mongo:latest
     container_name: mongo-container
     ports:
-      - "27017:27017"  # Expose MongoDB cổng 27017
+      - "27017:27017" # Expose MongoDB cổng 27017
     env_file:
       - .env
     volumes:
@@ -14,7 +14,7 @@ services:
     networks:
       - chatbot-network
     restart: "unless-stopped"
-  
+
   # # Service cho Milvus
   etcd:
     container_name: milvus-etcd
@@ -32,7 +32,7 @@ services:
       - "host.docker.internal:host-gateway"
     command: etcd -advertise-client-urls=http://127.0.0.1:2379 -listen-client-urls http://0.0.0.0:2379 --data-dir /etcd
     healthcheck:
-      test: ["CMD", "etcdctl", "endpoint", "health"]
+      test: [ "CMD", "etcdctl", "endpoint", "health" ]
       interval: 30s
       timeout: 20s
       retries: 3
@@ -54,7 +54,7 @@ services:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/milvus/volumes/minio:/minio_data
     command: minio server /minio_data --console-address ":9001"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
       interval: 30s
       timeout: 20s
       retries: 3
@@ -62,9 +62,9 @@ services:
   standalone:
     container_name: milvus-standalone
     image: milvusdb/milvus:v2.5.5
-    command: ["milvus", "run", "standalone"]
+    command: [ "milvus", "run", "standalone" ]
     security_opt:
-    - seccomp:unconfined
+      - seccomp:unconfined
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
@@ -75,7 +75,7 @@ services:
     volumes:
       - ${DOCKER_VOLUME_DIRECTORY:-.}/milvus/volumes/milvus:/var/lib/milvus
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:9091/healthz"]
+      test: [ "CMD", "curl", "-f", "http://localhost:9091/healthz" ]
       interval: 30s
       start_period: 90s
       timeout: 20s
@@ -87,19 +87,19 @@ services:
       - "etcd"
       - "minio"
 
-  milvus-ingestor:
-    build:
-      context: ./milvus/scripts
-    container_name: milvus-ingestor
-    depends_on:
-      standalone:
-        condition: service_healthy
-    networks:
-      - chatbot-network
-    volumes:
-      - ./milvus/scripts:/app
-    working_dir: /app
-    restart: "no"  # Chạy 1 lần, không cần restart
+  # milvus-ingestor:
+  #   build:
+  #     context: ./milvus/scripts
+  #   container_name: milvus-ingestor
+  #   depends_on:
+  #     standalone:
+  #       condition: service_healthy
+  #   networks:
+  #     - chatbot-network
+  #   volumes:
+  #     - ./milvus/scripts:/app
+  #   working_dir: /app
+  #   restart: "no"  # Chạy 1 lần, không cần restart
 
   python_service:
     build:
@@ -111,21 +111,18 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - MILVUS_HOST=${MILVUS_HOST}
-      - MILVUS_PORT=${MILVUS_PORT}  
+      - MILVUS_PORT=${MILVUS_PORT}
       - AIRFLOW_HOST=${AIRFLOW_HOST}
       - AIRFLOW_PORT=${AIRFLOW_PORT}
       - AIRFLOW_USERNAME=${AIRFLOW_USERNAME}
       - AIRFLOW_PASSWORD=${AIRFLOW_PASSWORD}
       - AIRFLOW_TEMP_FOLDER=${AIRFLOW_TEMP_FOLDER}
       - AIRFLOW_DAGID_INSERT=${AIRFLOW_DAGID_INSERT}
-      - PROVIDER=${PROVIDER}
-      - CHAT_MODEL_ID=${CHAT_MODEL_ID}
-      - QUERYROUTER_PROVIDER=${QUERYROUTER_PROVIDER}
       - MONGO_CONNECTION_STRING=${MONGODB_URI}
       - MONGODB=${MONGO_INITDB_DATABASE}
     depends_on:
-      milvus-ingestor:
-        condition: service_completed_successfully
+      # milvus-ingestor:
+      #   condition: service_completed_successfully
       standalone:
         condition: service_started
       minio:
@@ -133,13 +130,13 @@ services:
       etcd:
         condition: service_started
     volumes:
-      - ./python_service/utils/SentenceTransformer:/SentenceTransformer  # Gắn volume để cache mô hình
+      - ./python_service/utils/SentenceTransformer:/SentenceTransformer # Gắn volume để cache mô hình
     ports:
-      - "5000:5000"  # Chạy https nginx trên cổng 80
+      - "5000:5000" # Chạy https nginx trên cổng 80
     networks:
       - chatbot-network
-    stdin_open: true  # Để tương thích với '-it', cho phép tương tác
-    tty: true         # Để tương thích với '-it', giữ terminal mở
+    stdin_open: true # Để tương thích với '-it', cho phép tương tác
+    tty: true # Để tương thích với '-it', giữ terminal mở
 
   server:
     build:
@@ -148,8 +145,8 @@ services:
       args:
         NODE_PORT: ${NODE_PORT}
     container_name: ${NODE_HOST}
-    ports:
-      - ${NODE_PORT}:${NODE_PORT}
+    # ports:
+    #   - ${NODE_PORT}:${NODE_PORT}
     networks:
       - chatbot-network
     extra_hosts:
@@ -157,7 +154,7 @@ services:
     environment:
       - NODE_ENV=${NODE_ENV}
       - SUBDIR=${SUBDIR}
-      - MONGODB_URI=${MONGODB_URI}  
+      - MONGODB_URI=${MONGODB_URI}
       - PYTHON_URI=${PYTHON_URI}
       - AIRFLOW_URI=${AIRFLOW_URI}
       - AIRFLOW_USERNAME=${AIRFLOW_USERNAME}
@@ -168,9 +165,9 @@ services:
     volumes:
       - ./server/public/storage:/app/public/storage
     depends_on:
-      - mongo  # Đảm bảo MongoDB đã sẵn sàng trước khi chạy Express
-    stdin_open: true  # Để tương thích với '-it', cho phép tương tác
-    tty: true         # Để tương thích với '-it', giữ terminal mở
+      - mongo # Đảm bảo MongoDB đã sẵn sàng trước khi chạy Express
+    stdin_open: true # Để tương thích với '-it', cho phép tương tác
+    tty: true # Để tương thích với '-it', giữ terminal mở
     # restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
 
   client:
@@ -180,22 +177,22 @@ services:
       args:
         CLIENT_PORT: ${CLIENT_PORT}
     container_name: ${CLIENT_HOST}
-    ports:
-      - ${CLIENT_PORT}:${CLIENT_PORT}
+    # ports:
+    #   - ${CLIENT_PORT}:${CLIENT_PORT}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
       - VITE_SUBDIR=${SUBDIR}
       - VITE_SERVER=${VITE_SERVER}
-      - VITE_SOCKET=${VITE_SOCKET}  
+      - VITE_SOCKET=${VITE_SOCKET}
       - VITE_ENVIRONMENT=${NODE_ENV}
       - VITE_CHATGPT_KEY=${VITE_CHATGPT_KEY}
       - VITE_RESCAPTCHA_SITE_KEY=${VITE_RESCAPTCHA_SITE_KEY}
-    depends_on:
-      - server  # Đảm bảo server đã sẵn sàng trước khi chạy client
-    stdin_open: true  # Tương thích với '-it', cho phép tương tác với container
-    tty: true         # Tương thích với '-it', giữ terminal mở
-    restart: always  # Tự động khởi động lại container nếu nó dừng bất ngờ
+      # depends_on:
+      # - server  # Đảm bảo server đã sẵn sàng trước khi chạy client
+    stdin_open: true # Tương thích với '-it', cho phép tương tác với container
+    tty: true # Tương thích với '-it', giữ terminal mở
+    restart: always # Tự động khởi động lại container nếu nó dừng bất ngờ
     networks:
       - chatbot-network
 
@@ -205,8 +202,8 @@ services:
       context: ./nginx
       dockerfile: Dockerfile
     ports:
-      - "80:80"  # Chạy https nginx trên cổng 80
-      - "443:443"  # Chạy http nginx trên cổng 80
+      - "80:80" # Chạy https nginx trên cổng 80
+      - "443:443" # Chạy http nginx trên cổng 80
     environment:
       NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
       SERVER_NAME: ${SERVER_NAME}
@@ -219,7 +216,7 @@ services:
       PYTHON_PORT: ${PYTHON_PORT}
     # restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ
     volumes:
-      - ./client:/usr/share/nginx/html  # Mount mã nguồn client
+      - ./client:/usr/share/nginx/html # Mount mã nguồn client
       - ./nginx/ssl/:/etc/nginx/ssl/
     depends_on:
       - client
@@ -227,8 +224,7 @@ services:
     networks:
       - chatbot-network
     extra_hosts:
-    - "host.docker.internal:host-gateway"
-
+      - "host.docker.internal:host-gateway"
 
 networks:
   chatbot-network:

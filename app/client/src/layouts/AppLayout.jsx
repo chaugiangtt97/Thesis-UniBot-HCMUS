@@ -6,7 +6,7 @@ import { connectSocket } from '~/socket'
 import { refresh } from '~/store/actions/authActions'
 import NotifycationModal from '~/components/Mui/NotifycationModal'
 
-const demo  = [{
+const demo = [{
   id: '#542',
   status: 'success',
   message: 'Cập nhật thành công',
@@ -38,11 +38,11 @@ function AppLayout() {
   const noticeHandler = {
     add: (noti_json) => {
       const id = '#' + generateRandomId()
-      const notice = {...noti_json, id }
+      const notice = { ...noti_json, id }
       setNotification(prev => [notice, ...prev])
     },
     remove: (id) => {
-      setNotification(prev => prev.filter((prev) => (prev.id != id) ))
+      setNotification(prev => prev.filter((prev) => (prev.id != id)))
     }
   }
 
@@ -58,36 +58,37 @@ function AppLayout() {
 
 
   const processHandler = {
-    add : (eventCode) => {
+    add: (eventCode) => {
       const id = generateRandomId()
       setIsProcess(prev => ([...prev, eventCode + '_' + id]))
       return id
     },
     remove: (eventCode, eventID) => setIsProcess(prev => {
-      return prev.filter((event) => event != eventCode + '_' + eventID )
+      return prev.filter((event) => event != eventCode + '_' + eventID)
     }),
-    list: () => setIsProcess( prev => {
+    list: () => setIsProcess(prev => {
       return prev
     })
   }
 
   useEffect(() => {
-    if(isFirstRendering) {
+    if (isFirstRendering) {
       changeFavicon('/chatbot.svg')
 
-      if(token) {
+      if (token) {
         const eventID = processHandler.add('#verifyToken')
         useApi.login_by_token(token).then((usr_profile) => {
-            dispatch(refresh(token, usr_profile))
-          }).finally(() => processHandler.remove('#verifyToken', eventID))
+          dispatch(refresh(token, usr_profile))
+        }).finally(() => processHandler.remove('#verifyToken', eventID))
           .catch(() => {
             noticeHandler.add({
               status: 'error',
               message: 'Tự động đăng nhập thất bại !'
-          })})
+            })
+          })
       }
 
-      if( !reducers_data?.captcha_token) {
+      if (!reducers_data?.captcha_token) {
         const eventID = processHandler.add('#verifyToken')
         useApi.get_captcha_token()
           .then((token) => {
@@ -107,28 +108,28 @@ function AppLayout() {
     action: null
   })
 
-  const getModal = (title = '',content = null, actionName = '', action = null, propsContent = { content : null, props: null } ) => {
+  const getModal = (title = '', content = null, actionName = '', action = null, propsContent = { content: null, props: null }) => {
     setIsOpenModel(true)
     setModalObject({ title, content, actionName, action, propsContent })
   }
 
   return <>
-  <Box sx = {{ height: '100vh', width: '100vw', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', alignItems: 'center' }}>
-    {isProcess.length !== 0 && <Box sx = {{ width: '100%', height: '100%', position: 'absolute', background: theme =>theme.palette.mode == 'dark' ? '#414040bf' : '#000000b5', zIndex: '10000', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <CircularProgress color="inherit" />
-    </Box>}
-    <Box className = "Main_container" sx = {{ overflow: 'auto', width: '100vw', maxWidth: '2560px', height: '100%' }}>
-      <Outlet context={{ processHandler, noticeHandler, getModal }} />
-    </Box>
-    <BasicAlerts noticeHandler = {noticeHandler} notifications = {notifications}/>
+    <Box sx={{ height: '100vh', width: '100vw', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', alignItems: 'center' }}>
+      {isProcess.length !== 0 && <Box sx={{ width: '100%', height: '100%', position: 'absolute', background: theme => theme.palette.mode == 'dark' ? '#414040bf' : '#000000b5', zIndex: '10000', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CircularProgress color="inherit" />
+      </Box>}
+      <Box className="Main_container" sx={{ overflow: 'hidden', width: '100vw', maxWidth: '2560px', height: '100%' }}>
+        <Outlet context={{ processHandler, noticeHandler, getModal }} />
+      </Box>
+      <BasicAlerts noticeHandler={noticeHandler} notifications={notifications} />
 
-    <NotifycationModal modalHandler = {{
+      <NotifycationModal modalHandler={{
         state: isOpenModel,
         close: () => setIsOpenModel(false),
         action: modalObject?.action,
         actionName: modalObject?.actionName
-      }} title={modalObject?.title} content={modalObject?.content} propsContent = {modalObject?.propsContent}/>
-  </Box> 
+      }} title={modalObject?.title} content={modalObject?.content} propsContent={modalObject?.propsContent} />
+    </Box>
   </>
 
 }
@@ -137,28 +138,28 @@ export default AppLayout
 
 import Alert from '@mui/material/Alert'
 
-const BasicAlerts = ({noticeHandler, notifications}) => {
-  return <Box sx = {{ zIndex: 6, position: 'absolute', top: '24px', right: '16px', display: 'flex', gap: 1, flexDirection: 'column' }}>
-      {
-        notifications.reverse().map((noti, zIndex) => ( 
-          <AlertComponent onClose={() => {noticeHandler.remove(noti?.id)}} autoHidden = {noti?.auto}
-            key = {noti?.id} id = {noti?.id} zIndex = {zIndex} severity= {noti.status} message={noti.message} duration = {(zIndex + 1) * 1000}/>
-        ))
-      }
+const BasicAlerts = ({ noticeHandler, notifications }) => {
+  return <Box sx={{ zIndex: 6, position: 'absolute', top: '24px', right: '16px', display: 'flex', gap: 1, flexDirection: 'column' }}>
+    {
+      notifications.reverse().map((noti, zIndex) => (
+        <AlertComponent onClose={() => { noticeHandler.remove(noti?.id) }} autoHidden={noti?.auto}
+          key={noti?.id} id={noti?.id} zIndex={zIndex} severity={noti.status} message={noti.message} duration={(zIndex + 1) * 1000} />
+      ))
+    }
   </Box>
 }
 import FadeIn from 'react-fade-in';
 import { useAuth } from '~/apis/Auth'
 import { captcha_token } from '~/store/actions/actions'
 import { useApi } from '~/apis/apiRoute'
-const AlertComponent = ({ id , zIndex, onClose, severity, message, duration, autoHidden }) => {
+const AlertComponent = ({ id, zIndex, onClose, severity, message, duration, autoHidden }) => {
   useEffect(() => {
-    if(autoHidden != false){
+    if (autoHidden != false) {
       const AutoClose = setTimeout(() => onClose(), duration)
       return () => clearTimeout(AutoClose)
     }
   })
 
-  return zIndex < 5 && <FadeIn ><Alert  severity= {severity} variant = "filled" onClose={onClose} >
+  return zIndex < 5 && <FadeIn ><Alert severity={severity} variant="filled" onClose={onClose} >
     {message} - {id}</Alert> </FadeIn>
 }

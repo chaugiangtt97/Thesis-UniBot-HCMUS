@@ -15,7 +15,9 @@ console.log(`SubDir Route is:  ${subdir}/api/`)
 router.use(`${subdir}/api/auth`, require('./auth'))
 router.use(`${subdir}/api/config`, require('./config'))
 router.use(`${subdir}/api/chat-session`, require('./chat_session'))
+router.use(`${subdir}/api/chat-collection`, require('./chat_collection'))
 router.use(`${subdir}/api/user`, require('./user'))
+router.use(`${subdir}/api/document`, require('./document'))
 
 router.get(`${subdir}/api/admin`, (req, res) => {
   res.render('index')

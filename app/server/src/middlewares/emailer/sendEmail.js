@@ -1,4 +1,5 @@
 import getKeyAPI_Service from '../../controllers/v1/config/helper/getKeyAPI_Service'
+import { buildErrObject } from '../utils'
 
 const nodemailer = require('nodemailer')
 
@@ -12,9 +13,8 @@ export const sendEmail = async (data = {}, callback) => {
     const email_config = (await getKeyAPI_Service('SMTP_EMAIL')).configs
 
     if (!email_config) {
-      // eslint-disable-next-line no-console
-      console.log('Email config is empty!')
-      return callback(false)
+      callback(false)
+      throw buildErrObject(404, 'MIDDLEWARE.EMAILER.CONFIGS_NOT_FOUND', 'Configs cannot be found')
     }
 
     const transporter = nodemailer.createTransport({
@@ -25,7 +25,7 @@ export const sendEmail = async (data = {}, callback) => {
       }
     })
     const mailOptions = {
-      from: `UniBot-KHTN (2024) <${email_config.email_address}>`,
+      from: `Dự án UniBot tư vấn <${email_config.email_address}>`,
       to: `${data.user.name} <${data.user.email}>`,
       subject: data.subject,
       html: data.htmlMessage
@@ -37,8 +37,8 @@ export const sendEmail = async (data = {}, callback) => {
       return callback(true)
     })
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.log('STMP ERR: ', e)
+    callback(false)
+    throw buildErrObject(404, 'MIDDLEWARE.EMAILER.CONFIGS_NOT_FOUND', 'Configs cannot be found')
   }
 
 }

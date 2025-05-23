@@ -6,17 +6,13 @@ const CollectionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    name: {
+    long_name: {
       type: String,
       required: true
     },
-    collection_description: {
+    description: {
       type: String,
       default: '0'
-    },
-    amount_document: {
-      type: Number,
-      default: 0
     },
     type: {
       type: String,
@@ -35,4 +31,4 @@ CollectionSchema.pre('save', function (next) {
   this.updatedAt = Date.now()
   next()
 })
-module.exports = mongoose.model('topics', CollectionSchema)
+module.exports = mongoose.model('collections', CollectionSchema)

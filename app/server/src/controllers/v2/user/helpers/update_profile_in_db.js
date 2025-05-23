@@ -11,7 +11,7 @@ export const update_profile_from_db = async (user_id = null, dataUpdate = null )
       throw 'Cannot update password!'
     }
 
-    ['password', 'blockExpires', 'verified', 'verification', '_id', 'createdAt', 'updatedAt'].map((key) => {
+    ['password', 'blockExpires', 'verified', 'verification', '_id', 'createdAt'].map((key) => {
       if (dataUpdate?.[key]) throw `Field ${key} invalid!`
     })
 

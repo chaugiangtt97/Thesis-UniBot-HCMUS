@@ -19,7 +19,7 @@ const { default: validateResetPassword } = require('~/controllers/v2/user/valida
 
 
 router.get('/profile', requireAuth, trimRequest.all, get_profile)
-router.post('/profile', requireAuth, trimRequest.all, update_profile)
+router.put('/profile', requireAuth, trimRequest.all, update_profile)
 
 router.post('/reset-password', requireAuth, trimRequest.all, validateResetPassword, reset_by_current_password)
 router.post('/forgot-password', trimRequest.all, validateForgotPassword, reset_by_verfication_code)

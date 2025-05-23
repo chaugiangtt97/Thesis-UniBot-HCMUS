@@ -14,8 +14,12 @@ function convertToString(a) {
   return String(a) // Trong trường hợp khác, chuyển thành chuỗi
 }
 
-export const chatbotService = async (http_method = 'GET', params = '', get_value = [], post_value = {}, api_key = null) => {
-  const query = get_value.reduce((accumulator, currentValue) => `${accumulator}&${currentValue[0]}=${currentValue[1]}`, 'index=0')
+//
+
+export const chatbotService = async (http_method = 'GET', params = null, get_value = [], post_value = {}, api_key = null) => {
+  // const query = get_value.reduce((accumulator, currentValue) => `${accumulator}&${currentValue[0]}=${currentValue[1]}`, 'index=0')
+
+  const queryString = get_value ? new URLSearchParams(get_value).toString() : ''
 
   const formData = new FormData()
 
@@ -32,7 +36,7 @@ export const chatbotService = async (http_method = 'GET', params = '', get_value
     formData.append(data[0], convertToString(value))
   })
 
-  const url = `${domain}/${params}?${query}`
+  const url = `${domain}${params}?${queryString}`
 
   let structure = {
     method: http_method

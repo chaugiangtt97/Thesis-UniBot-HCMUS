@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Backdrop, Box, CircularProgress,Button,IconButton ,  Typography, TextField, Skeleton } from '@mui/material';
+import { Box, CircularProgress,Button,IconButton ,  Typography, TextField, Skeleton } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react'
 import Grid from '@mui/material/Grid2'
 import ChatInput from '~/components/Chatbots/ChatInput';
@@ -347,8 +347,8 @@ export function ChatGenerator() {
     }
   }
 
-  const newChatAction = async (data) => {
-    return useApi.create_chat_session(token, data.chat_session_name, data.chat_session_description).then(async (session) => {
+  const newChatAction = async (data_chat_session) => {
+    return useApi.create_chat_session(token, data_chat_session.name, data_chat_session.description).then(async (session) => {
       setSessions(prev => ([session, ...prev]))
       setCurrentChatSession(session)
       const sessionWithHistory = await loadHistoryBySession(session)
