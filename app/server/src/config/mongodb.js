@@ -22,7 +22,7 @@ export const initMongo = async () => {
         loadModels()
         console.log('\x1b[32m%s\x1b[0m', '*    MongoDB database connection established successfully')
         console.log('\x1b[32m%s\x1b[0m', `*    NODE_ENV: ${process.env.NODE_ENV || 'development'}`)
-        console.log('\x1b[32m%s\x1b[0m', `*    NODE_ENV: ${process.env.MONGODB_URI || 'http://localhost:27017'}`)
+        console.log('\x1b[32m%s\x1b[0m', `*    CONNECTION: ${process.env.MONGODB_URI || 'http://localhost:27017'}`)
       })
       .catch((err) => {
         console.error('\x1b[31m%s\x1b[0m', '[Error] Cannot connect to MongoDB:', err.message)

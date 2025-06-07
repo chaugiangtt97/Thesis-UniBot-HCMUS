@@ -36,5 +36,9 @@ export const useKHTN_Chatbot = {
   // -----------------------------------------------------------------------
 
   get_documents_in_collection: async (collection_name = null) =>
-    await getRequest(python_domain + doucumentRequest, '/', { collection_name })
+    await getRequest(python_domain + doucumentRequest, '/', { collection_name }),
+
+
+  chunk_file: async (text = null) =>
+    await postRequest(python_domain + doucumentRequest, '/chunk', { text })
 }

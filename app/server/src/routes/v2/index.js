@@ -50,7 +50,8 @@ router.get(`${subdir}/api/proxy`, async (req, res) => {
         const originalUrl = $(element).attr(attr)
         if (originalUrl) {
           const absoluteUrl = new URL(decodeURI(originalUrl), decodeURI(targetUrl)).href // Xử lý URL tương đối thành tuyệt đối
-          const proxiedUrl = `/api/proxy?url=${absoluteUrl}`
+          const proxiedUrl = `${subdir}/api/proxy?url=${absoluteUrl}`
+
           $(element).attr(attr, proxiedUrl)
         }
       })

@@ -74,23 +74,47 @@ function DatasetDetail() {
 
   const dispatch = useDispatch()
   const list_documents_in_store = useSelector(state => state.reducers.list_documents)
+  const list_collections_in_store = useSelector(state => state.reducers.list_collections)
+
   const collection_name = collection
   const document_id = id
   useEffect(() => {
     if (list_documents_in_store && list_documents_in_store[collection_name]) {
       list_documents_in_store[collection_name].documents.forEach((document) => {
         if (document.document_id == document_id) {
-          console.log(document.chunks)
           setDocumentWithChunk(document)
         }
       })
-    } else if (token) {
+    } else if (token && !list_documents_in_store) {
       const loadCollectionWithDocument = processHandler.add('#loadCollectionWithDocument')
       useApi.get_document_in_collection(token, collection_name)
         .then((document) => { dispatch(list_documents_action(collection_name, document)) })
         .catch((error) => { console.error('Lấy Dữ Liệu Files Trong Collection Thất Bại', error) })
         .finally(() => processHandler.remove('#loadCollectionWithDocument', loadCollectionWithDocument))
     }
+
+
+    if (list_documents_in_store && !list_documents_in_store[collection_name]?.schema && token) {
+      const getCollectionEvent = processHandler.add('#getCollection')
+      useApi.get_chat_collection(token).then((collections) => {
+        processHandler.remove('#getCollection', getCollectionEvent)
+        dispatch(list_documents_action(collection_name, {
+          ...list_documents_in_store[collection_name],
+          schema: collections.filter((collection) => collection.collection_name == collection_name)[0]?.schema
+        }))
+        setSchema(collections.filter((collection) => collection.collection_name == collection_name)[0]?.schema)
+        return collections
+      }).catch((error) => {
+        processHandler.remove('#getCollection', getCollectionEvent)
+        noticeHandler.add({
+          status: 'error',
+          message: error
+        })
+      })
+    }
+
+
+
     // if (token) {
     //   const event = processHandler.add('#loadDocumentWithChunk')
     //   loadDocumentWithChunk(id, token).then((documentWithChunk) => { setDocumentWithChunk(documentWithChunk) })
@@ -102,7 +126,8 @@ function DatasetDetail() {
     //     .catch((err) => { console.error("Tải Thông Tin Collections Schema Thất Bại !"); setSchema(null) })
     //     .finally(() => processHandler.remove('#loadCollectionSchema', loadCollectionSchemaEvent))
     // }
-  }, [token, list_documents_in_store])
+
+  }, [token, list_documents_in_store, list_collections_in_store])
 
   const loadCollectionSchema = async (collection_id, token) => {
     return useApi.get_collection_schema(token, collection_id).then((document) => { console.log('collection schema: ', document); return document })
@@ -112,7 +137,7 @@ function DatasetDetail() {
     return useDocument.getDocumentWithChunk(document_id, token).then((document) => document)
   }
 
-  const DocumentUpdate = async (new_data) => {
+  const DocumentUpdate = async (new_data) => {  // document schema
     if (documentWithChunk?.state == 'processed' || documentWithChunk?.state == 'success') {
       noticeHandler.add({
         status: 'error',
@@ -121,20 +146,21 @@ function DatasetDetail() {
       return
     }
     const UpdateDocumentEvent = processHandler.add('#UpdateDocument')
-    await useDocument.update(new_data, token).then((document) => {
-      setDocumentWithChunk(prev => ({ ...document, chunks: prev.chunks, amount_chunking: prev.chunks.length }))
-      noticeHandler.add({
-        status: 'success',
-        message: 'Cập Nhật Dữ Liệu Thành Công'
-      })
-    })
-      .catch((err) => {
-        noticeHandler.add({
-          status: 'error',
-          message: err
-        })
-      })
-      .finally(() => processHandler.remove('#UpdateDocument', UpdateDocumentEvent))
+    // await 
+    // await useDocument.update(new_data, token).then((document) => {
+    //   setDocumentWithChunk(prev => ({ ...document, chunks: prev.chunks, amount_chunking: prev.chunks.length }))
+    //   noticeHandler.add({
+    //     status: 'success',
+    //     message: 'Cập Nhật Dữ Liệu Thành Công'
+    //   })
+    // })
+    //   .catch((err) => {
+    //     noticeHandler.add({
+    //       status: 'error',
+    //       message: err
+    //     })
+    //   })
+    //   .finally(() => processHandler.remove('#UpdateDocument', UpdateDocumentEvent))
   }
 
   const ProcessButton = async () => {
@@ -206,27 +232,6 @@ function DatasetDetail() {
             }
           }
         }
-
-        // noticeHandler.add({
-        //   status: 'success',
-        //   message: 'Tạo Dữ Liệu Tự Động Thành Công!'
-        // })
-
-        // setDocumentWithChunk({...documentWithChunk, metadata: data.metadata, chunks: data.chunks.map((chunk) => {
-        //   return {
-        //     id: CreateID(),
-        //     chunk: chunk
-        //   }
-        // })})
-
-        // DocumentUpdate({
-        //   id: id,
-        //   update: {
-        //     chunks: documentWithChunk?.chunks,
-        //     metadata: documentWithChunk?.metadata
-        //   }
-        // })
-
       }
     )
       .catch(() => {
@@ -320,7 +325,7 @@ function DatasetDetail() {
       {openModalUpload && <SettingDocumentModal
         document={{
           id: id,
-          getMetadata: () => documentWithChunk?.metadata,
+          getMetadata: () => documentWithChunk?.metadata[0],
           state: documentWithChunk?.state,
           setMetadata: (value) => {
             if (documentWithChunk?.state != 'pending') return false
@@ -434,13 +439,8 @@ function SettingDocumentModal({ document, modalHandler = null }) {
       return
     }
 
-    await modalHandler.submit({
-      id: document.id,
-      update: {
-        document_name: document_name,
-        metadata: metadata
-      }
-    })
+    await modalHandler.submit(metadata)
+    console.log(metadata)
 
     modalHandler.close()
   }
@@ -523,7 +523,7 @@ function SettingDocumentModal({ document, modalHandler = null }) {
                                 <InputLabel sx={{ color: 'inherit !important' }}>{useCode(data?.key)}</InputLabel>
                                 <Input endAdornment={data.value.description && icon} startAdornment={dataList?.[name] && dataList?.[name] != [] && ChipList}
                                   id="Description"
-                                  // value={document.getMetadata()?.[data.key]} 
+                                  value={console.log(document.getMetadata(), data, data.key) || document.getMetadata()?.[data.key]}
                                   onKeyDown={(e) => {
                                     if (e.key === 'Enter') {
                                       setDataList(prev => {

@@ -4,12 +4,13 @@ import Document from '~/models/document'
 
 /**
  * Gets document from database by id
- * @param _id document id. If _if == null, get all documents in db
+ * @param collection_name collection_name. If collection_name == null, get all documents in db
  */
 
 export const get_document_from_db = async (collection_name = null) => {
   try {
     const get_document_result = await useKHTN_Chatbot.get_documents_in_collection(collection_name)
+      .catch(() => { throw buildErrObject(404, 'CAN_NOT_GET_DOCUMENT') })
 
     let list_documents = await Document.aggregate([
       {
@@ -26,6 +27,7 @@ export const get_document_from_db = async (collection_name = null) => {
       {
         $match: {
           'collection_info.collection_name': collection_name // Lọc theo tên collection
+          // 'document_id': { $in: Object.keys(get_document_result) } // Lọc theo tên collection
         }
       }
     ])
@@ -45,6 +47,7 @@ export const get_document_from_db = async (collection_name = null) => {
         state: document.state,
         isactive: get_document_result[document._id][0].is_active,
         created_at: document.created_at,
+        metadata: document?.metadata || get_document_result[document._id],
         updated_at: document.updated_at,
         chunks: get_document_result[document._id]
       }

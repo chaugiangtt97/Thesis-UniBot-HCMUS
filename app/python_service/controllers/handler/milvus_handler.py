@@ -543,9 +543,7 @@ class Milvus_Handler:
         try:
             list_collections = self._handler.list_collections()
             collection_detail = {}
-            print(list_collections)
             for collection_name in list_collections:
-                print(collection_name)
                 colection_object = Collection(collection_name)
                 fields = [field.name for field in colection_object.schema.fields]
                 collection_detail[collection_name] = {
@@ -553,7 +551,7 @@ class Milvus_Handler:
                     "description": colection_object.description,
                     "num_entities": colection_object.num_entities,
                     "fields": fields,
-                    "schema": self.get_collection_schema(collection_name),
+                    "schema": self.get_collection_schema(collection_name, True),
                 }
 
             return {"list_collections": list_collections, "details": collection_detail}
@@ -571,19 +569,24 @@ class Milvus_Handler:
 
             grouped = defaultdict(list)
             last_id = 0  # id cuối cùng đã lấy
+            schema = collection.describe()["fields"]
+            print(schema)
+            schema_query = [x["name"] for x in schema if x["name"] != "embedding"]
+            print(schema_query)
             while True:
                 results = collection.query(
                     expr=f"id > {last_id}",
-                    output_fields=[
-                        "document_id",
-                        "title",
-                        "article",
-                        "created_at",
-                        "updated_at",
-                        "is_active",
-                        "url",
-                        "chunk_id",
-                    ],
+                    output_fields=schema_query,
+                    # output_fields=[
+                    #     "document_id",
+                    #     "title",
+                    #     "article",
+                    #     "created_at",
+                    #     "updated_at",
+                    #     "is_active",
+                    #     "url",
+                    #     "chunk_id",
+                    # ],
                     limit=batch_size,
                 )
 

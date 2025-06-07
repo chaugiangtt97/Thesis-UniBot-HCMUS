@@ -139,5 +139,9 @@ export const useApi = {
   get_document_in_collection: (token, collection_name) =>
     getRequest(server_domain + documentRequest, `/`, { collection_name }, token),
 
+
+  upload_file: (token, formData) =>
+    postRequest(server_domain + documentRequest, `/upload`, formData, token),
+
 }
 

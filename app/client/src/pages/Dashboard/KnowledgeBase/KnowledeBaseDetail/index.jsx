@@ -194,9 +194,9 @@ function Datasets() {
     formData.append('file', e.target.files[0]);
     formData.append('collection', id)
     formData.append('filename', encodeURI((e.target.files[0].name)))
-
+    console.log(e.target.files)
     const uploadFileEvent = processHandler.add('#uploadFile')
-    useDocument.uploadFile(formData, token).then((newDocument) => {
+    useApi.upload_file(token, formData).then((newDocument) => {
       setCollectionWithDocuments(prev => ({ ...prev, documents: [newDocument.document, ...prev.documents] }))
       noticeHandler.add({ status: 'success', message: 'Thêm tài liệu thành công' })
     }).catch((err) => noticeHandler.add({ status: 'error', message: err }))

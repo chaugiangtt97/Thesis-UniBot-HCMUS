@@ -1,13 +1,12 @@
-export const postRequest = async (domain = '', route = '/', formData = null, token = null) => {
+export const postRequest = async (domain = '', route = '/', formData = null, token = null, type = null) => {
 	const url = `${domain}${route}`;
 
 	const structure = {
 		method: 'POST',
 		headers: {
-		  'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+			'Authorization': `Bearer ${token}`
 		},
-    body: JSON.stringify(formData)
+		body: formData
 	}
 	const res = await fetch(url, structure)
 		.then(async (response) => {
@@ -24,8 +23,8 @@ export const postRequest = async (domain = '', route = '/', formData = null, tok
 		})
 		.catch((err) => {
 			if (err?.message) throw err?.message
-			else throw'ERR_CONNECTION_REFUSED'
-		}) 
+			else throw 'ERR_CONNECTION_REFUSED'
+		})
 
 	return res
 }
