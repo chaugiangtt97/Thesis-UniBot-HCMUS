@@ -14,10 +14,9 @@ export const login_controller = async (req, res) => {
   try {
     const data = matchedData(req)
     const node_env = process.env?.NODE_ENV || 'development'
-
     if (node_env == 'production') {
-      if (!data.captchaToken) {
-        throw buildErrObject(422, 'AUTH.CAPTCHA_REQUIRED', 'captchaToken variable is required.')
+      if (!data?.captchaToken) {
+        throw buildErrObject(422, 'AUTH.LOGIN.CAPTCHA_REQUIRED', 'captchaToken variable is required.')
       }
       await reCAPTCHA(data.captchaToken)
     }
@@ -30,7 +29,7 @@ export const login_controller = async (req, res) => {
 
     const isPasswordMatch = checkPassword(data.password, user)
 
-    if (!isPasswordMatch ) {
+    if (!isPasswordMatch) {
       throw buildErrObject(409, 'AUTH.INVALID_PASSWORD', 'Password is incorrect.')
     }
 

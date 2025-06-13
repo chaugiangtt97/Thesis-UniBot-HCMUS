@@ -21,4 +21,4 @@ ENV PORT=$CLIENT_PORT
 
 EXPOSE $PORT
 
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "production"]

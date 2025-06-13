@@ -1,5 +1,6 @@
 import { handleError, buildErrObject } from '../../../../middlewares/utils'
-import { check, validationResult } from 'express-validator'
+import { check } from 'express-validator'
+import { validateResult } from '../../../../middlewares/utils'
 
 export const validateVerifyEmail = [
   check('email')
@@ -19,11 +20,9 @@ export const validateVerifyEmail = [
   check('captchaToken'),
   (req, res, next) => {
     try {
-      validationResult(req).throw()
-      if (req.body.email) req.body.email = req.body.email.toLowerCase()
-      return next()
+      validateResult(req, res, next)
     } catch (err) {
-      return handleError(res, buildErrObject(422, 'AUTH.EMAIL.INVALID_VERIFY_VALIDATION', err.array()))
+      return handleError(res, buildErrObject(422, 'AUTH.EMAIL.INVALID_VERIFY_VALIDATION', err))
     }
   }
 ]

@@ -24,8 +24,8 @@ export const request_verification = async (req, res) => {
       await reCAPTCHA(captchaToken)
     }
 
-    if ( email ) {
-      return res.status(200).json( await send_request_verification(email, code) )
+    if (email) {
+      return res.status(200).json(await send_request_verification(email, code))
     }
     return res.status(200).json({
       message: 'Xác Thực ID hoặc Email Không tồn tại'

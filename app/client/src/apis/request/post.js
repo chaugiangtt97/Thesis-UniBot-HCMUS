@@ -4,9 +4,10 @@ export const postRequest = async (domain = '', route = '/', formData = null, tok
 	const structure = {
 		method: 'POST',
 		headers: {
-			'Authorization': `Bearer ${token}`
+			'Authorization': `Bearer ${token}`,
+			'Content-Type': 'application/json',
 		},
-		body: formData
+		body: JSON.stringify(formData)
 	}
 	const res = await fetch(url, structure)
 		.then(async (response) => {

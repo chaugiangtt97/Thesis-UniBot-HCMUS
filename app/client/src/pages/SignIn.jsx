@@ -10,7 +10,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import { useApi } from '~/apis/apiRoute';
 
 const SignInCard = styled(Card)(({ theme }) => ({
-  display: 'flex', flexDirection: 'column', 
+  display: 'flex', flexDirection: 'column',
   minWidth: '500px',
   [theme.breakpoints.up('xl')]: {
     minWidth: '550px',
@@ -24,10 +24,11 @@ const SignInCard = styled(Card)(({ theme }) => ({
   paddingBottom: theme.spacing(1),
   margin: 'auto', background: '#fff', borderRadius: '20px',
   [theme.breakpoints.up('sm')]: { maxWidth: '420px' },
-  boxShadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px' }));
+  boxShadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px'
+}));
 
-const TextInput = styled(TextField) (({ theme }) => ({
-  '& input': { color: '#000' }, WebkitTextFillColor: '#000', 
+const TextInput = styled(TextField)(({ theme }) => ({
+  '& input': { color: '#000' }, WebkitTextFillColor: '#000',
   '&:hover fieldset': { borderColor: `${theme.palette.primary.main} !important` }
 }));
 
@@ -44,7 +45,7 @@ function SignIn() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { processHandler } = useOutletContext();   
+  const { processHandler } = useOutletContext();
 
   const validateInputs = () => {
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
@@ -57,7 +58,7 @@ function SignIn() {
     const password = document.getElementById('password');
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
- 
+
       setNotification('Vui lòng nhập email hợp lệ !')
       setNotificationSuccess(null)
       return false;
@@ -82,12 +83,12 @@ function SignIn() {
 
     const data = new FormData(event.currentTarget)
 
-    await useApi.login( data.get('email'),  data.get('password'), captchaToken )
+    await useApi.login(data.get('email'), data.get('password'), captchaToken)
       .then((userData) => {
         processHandler.remove('#login', logInEvent)
         dispatch(login(userData))
         navigate('/')
-      }) 
+      })
       .catch((err) => {
         processHandler.remove('#login', logInEvent)
         setNotification(useErrorMessage(err))
@@ -99,7 +100,7 @@ function SignIn() {
     const email = document.getElementById('email');
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
- 
+
       setNotification('Vui lòng nhập email hợp lệ !')
       setNotificationSuccess(null)
       return false;
@@ -108,19 +109,19 @@ function SignIn() {
 
     await useAuth.send_verifyEmail(email.value)
       .then(() => {
-          processHandler.remove('#verifyEmail', logInEvent)
-          setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
-          setNotification()
-          navigate('/validateEmail')
-        }) 
+        processHandler.remove('#verifyEmail', logInEvent)
+        setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
+        setNotification()
+        navigate('/validateEmail')
+      })
       .catch((err) => {
         processHandler.remove('#verifyEmail', logInEvent)
         setNotification(useErrorMessage(err))
         setNotificationSuccess(null)
       })
-    
+
   };
-    const reducers_data = useSelector(state => state.reducers)
+  const reducers_data = useSelector(state => state.reducers)
 
   return (
     <>
@@ -131,60 +132,60 @@ function SignIn() {
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
-          <FormControl sx={{gap: 1}}>
-            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập</FormLabel>
+          <FormControl sx={{ gap: 1 }}>
+            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>Tên đăng nhập</FormLabel>
             <TextInput id="email" type="username" name="email" placeholder="mssv@email.com" inputProps={{ maxLength: 40 }}
               autoComplete="email" autoFocus required fullWidth variant="outlined" />
           </FormControl>
-          
-          <FormControl  sx={{gap: 1}}>
+
+          <FormControl sx={{ gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx = {{ color: 'inherit' }}>Mật khẩu</FormLabel>
-              <Link variant="body2" 
-                onClick = {() => navigate(`/email/request-verification`)} // href={import.meta.env.VITE_ENVIRONMENT ? `/${import.meta.env.VITE_ENVIRONMENT}/forgotPassword/request-verification` : `/forgotPassword/request-verification`}
+              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>Mật khẩu</FormLabel>
+              <Link variant="body2"
+                onClick={() => navigate(`/email/request-verification`)} // href={import.meta.env.VITE_ENVIRONMENT ? `/${import.meta.env.VITE_ENVIRONMENT}/forgotPassword/request-verification` : `/forgotPassword/request-verification`}
                 sx={{ alignSelf: 'baseline', color: 'inherit' }}>
                 Quên mật khẩu ? </Link>
             </Box>
             <TextInput name="password" placeholder="••••••" type="password" id="password"
               autoComplete="current-password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
-              sx = {{ color: '#000' }} />
-          </FormControl>      
+              sx={{ color: '#000' }} />
+          </FormControl>
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
-            sx = {{ background: theme => theme.palette.primary.main, '&:hover' : { boxShadow: 'var(--mui-shadows-4)' } }} >
+            sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
             Đăng nhập </Button>
 
           <Button type="submit" fullWidth variant="outlined" onClick={() => navigate('/register')}
-            sx = {{ '&:hover' : { boxShadow: 'var(--mui-shadows-4)' } }} >
+            sx={{ '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
             Đăng Kí Tài Khoản</Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                // href="/"
-                onClick = {() => navigate(`/`)}
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
+                  // href="/"
+                  onClick={() => navigate(`/`)}
+                  variant="body2"
+                  sx={{ alignSelf: 'center' }}
                 >
-                Trở về trang chủ
+                  Trở về trang chủ
                 </Link>
               </span>
             </Typography>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                onClick = {handleVerifyEmail}
-                variant="body2"
-                sx={{ alignSelf: 'center', cursor: 'pointer' }}
+                  onClick={handleVerifyEmail}
+                  variant="body2"
+                  sx={{ alignSelf: 'center', cursor: 'pointer' }}
                 >
-                Yêu Cầu Xác Minh Tài Khoản !
+                  Yêu Cầu Xác Minh Tài Khoản !
                 </Link>
               </span>
             </Typography>
           </Box>
 
-           {reducers_data?.captchaToken &&<Box sx = {{ display: 'flex', justifyContent: 'end'}}>
+          {reducers_data?.captchaToken && <Box sx={{ display: 'flex', justifyContent: 'end' }}>
             <ReCAPTCHA
               sitekey={reducers_data?.captchaToken} // {import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
               data-theme="dark"
@@ -194,13 +195,13 @@ function SignIn() {
             />
           </Box>}
 
-          <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'red' }}>
+          <Typography sx={{ width: '100%', textAlign: 'end', color: 'red' }}>
             {notificationError}
           </Typography>
-          <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'green' }}>
+          <Typography sx={{ width: '100%', textAlign: 'end', color: 'green' }}>
             {notificationSuccess}
           </Typography>
-          
+
         </Box>
 
       </SignInCard>

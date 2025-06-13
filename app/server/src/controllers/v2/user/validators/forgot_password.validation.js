@@ -31,8 +31,6 @@ export const validateForgotPassword = [
     }),
   (req, res, next) => {
     try {
-      validationResult(req).throw()
-      if (req.body.email) req.body.email = req.body.email.toLowerCase()
       return next()
     } catch (err) {
       return handleError(res, buildErrObject(422, 'USER.INVALID_FORGOT_PASSWORD_VALIDATION', err.array()))

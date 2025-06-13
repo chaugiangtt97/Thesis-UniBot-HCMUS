@@ -1,5 +1,6 @@
 import { handleError, buildErrObject } from '../../../../middlewares/utils'
-import { check, validationResult } from 'express-validator'
+import { check } from 'express-validator'
+import { validateResult } from '../../../../middlewares/utils'
 /**
  * Validates register request
  */
@@ -28,13 +29,10 @@ export const validateLogin = [
     .withMessage('PASSWORD_TOO_SHORT_MIN_5'),
   (req, res, next) => {
     try {
-      validationResult(req).throw()
-      if (req.body.email) req.body.email = req.body.email.toLowerCase()
-      return next()
+      validateResult(req, res, next)
     } catch (err) {
-      return handleError(res, buildErrObject(422, 'AUTH.INVALID_LOGIN_VALIDATION', err.array()))
+      throw handleError(res, buildErrObject(422, 'AUTH.INVALID_LOGIN_VALIDATION', err))
     }
-    // validateResult(req, res, next)
   }
 ]
 
