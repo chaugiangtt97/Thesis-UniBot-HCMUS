@@ -1,15 +1,14 @@
 import { server_domain as SERVER_DOMAIN } from '../apiRoute'
 
 export const get_captcha_token = async (api_key = null) => {
-	console.log(SERVER_DOMAIN)
 	const url = `${SERVER_DOMAIN}/captcha_token?code=RECAPTCHA`;
-    
+
 	const structure = {
 		method: 'GET',
 		headers: {
-		  'Content-Type': 'application/json'
+			'Content-Type': 'application/json'
 		},
-	  }
+	}
 	const res = await fetch(url, structure)
 		.then(async (response) => {
 			if (!response.ok) {
@@ -23,11 +22,11 @@ export const get_captcha_token = async (api_key = null) => {
 			return data
 		})
 		.catch((err) => {
-			if(typeof(err) == "object"){
+			if (typeof (err) == "object") {
 				throw 'ERR_CONNECTION_REFUSED'
 			}
 			throw err
-		}) 
+		})
 
 	return res
 }

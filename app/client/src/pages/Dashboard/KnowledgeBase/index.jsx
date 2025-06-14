@@ -357,7 +357,6 @@ export const NewCollection_Modal = ({ onClose, parent }) => {
         }
       })
       .catch((e) => {
-        console.log(e)
         parent.noticeHandler.add({
           status: 'error',
           message: 'Có lỗi xảy ra khi lấy collection!'

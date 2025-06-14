@@ -205,3 +205,5 @@ student_handbook_path = sys.argv[1]
 fit_news_path = sys.argv[2]
 
 ingest_pipeline(student_handbook_path, fit_news_path)
+
+print('Chạy xong!')

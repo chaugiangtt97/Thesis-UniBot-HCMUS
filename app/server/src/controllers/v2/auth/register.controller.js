@@ -32,10 +32,9 @@ export const register_controller = async (req, res) => {
   try {
     // Extract and sanitize request data
     const requestData = matchedData(req)
-
     // Check if the email already exists
     const emailExists = await checkEmailExists(requestData.email)
-
+    const NODE_ENV = process.env?.NODE_ENV || 'development'
     if (!emailExists) {
       // Register the user
       const newUser = await registerUser(requestData)
@@ -45,14 +44,14 @@ export const register_controller = async (req, res) => {
       const response = returnRegisterToken(newUser._id, userInfo)
 
       // Send registration email
-      prepareToSendEmail(newUser)
+      NODE_ENV == 'production' && prepareToSendEmail(newUser)
 
       // Respond with success
       return res.status(201).json(response)
     }
 
     // Handle case where email already exists
-    handleError(res, buildErrObject(400, 'AUTH.EMAIL.EMAIL_ALREADY_EXIST', 'Email already exists') )
+    handleError(res, buildErrObject(400, 'AUTH.EMAIL.EMAIL_ALREADY_EXIST', 'Email already exists'))
   } catch (error) {
     // Handle unexpected errors
     handleError(res, error)

@@ -14,14 +14,14 @@ export default ({ mode }) => {
   return defineConfig({
     // base: `/${loadedEnv.VITE_SUBDIR}/`,
     base: '/unibot/',
-    plugins: [react(), svgr() ],
+    plugins: [react(), svgr()],
     // base: './',
     __VALUE__: `"${process.env.VALUE}"`,
     resolve: {
       alias: [{ find: "~", replacement: "/src" }],
     },
     build: {
-      chunkSizeWarningLimit: 1600,
+      chunkSizeWarningLimit: 3600
     },
     server: {
       https: false,
@@ -53,7 +53,7 @@ export default ({ mode }) => {
       },
       host: '0.0.0.0',
     },
-    
+
     //change port for production
     preview: {
       watch: {

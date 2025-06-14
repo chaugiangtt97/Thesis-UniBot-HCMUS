@@ -5,11 +5,11 @@ export const createCollection = async (token = null, formData = null) => {
 	const structure = {
 		method: 'POST',
 		headers: {
-		    'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
 		},
-        body: JSON.stringify(formData)
-	  }
+		body: JSON.stringify(formData)
+	}
 
 	const res = await fetch(url, structure)
 		.then(async (response) => {
@@ -24,13 +24,12 @@ export const createCollection = async (token = null, formData = null) => {
 			return data
 		})
 		.catch((err) => {
-            console.log(err)
 			console.error('Tạo chủ đề mới thất bại ! ', err)
-			if(typeof(err) == "object"){
+			if (typeof (err) == "object") {
 				throw 'ERR_CONNECTION_REFUSED'
 			}
 			throw err
-		}) 
+		})
 
 	return res
 }

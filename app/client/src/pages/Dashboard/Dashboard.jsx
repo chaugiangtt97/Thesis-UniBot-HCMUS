@@ -85,7 +85,6 @@ export function Dashboard() {
               setDataChatGPT(dataChatGPT_format(chatGPTDataResponse))
             })
             .catch((e) => {
-              console.log(e)
               chatGPTDataResponse = { ...chatGPTDataResponse, has_more: false }
               throw e
             })

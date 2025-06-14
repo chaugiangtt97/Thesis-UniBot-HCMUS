@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
-    "types": ["babel__generator"],
-    "typeRoots": ["node_modules/@types", "path/to/your/custom/types"],
+    "types": [
+      "babel__generator"
+    ],
+    "typeRoots": [
+      "node_modules/@types",
+      "path/to/your/custom/types"
+    ],
     "paths": {
-      "~/*": ["./src/*"],
+      "~/*": [
+        "./src/*"
+      ],
     },
   },
-    //Other configurations...
+  //Other configurations...
 }

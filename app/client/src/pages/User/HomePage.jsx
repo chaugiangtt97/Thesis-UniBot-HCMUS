@@ -16,15 +16,14 @@ const HomePage = () => {
     mainLayout.navigate(120);
 
     // isLogin && navigate('/chat');
-    if (isLogin){
-      console.log(user.role)
+    if (isLogin) {
       if (user?.role === 'administrator') {
         navigate('/chat_generator');
       } else if (user?.role === 'student') {
         navigate('/chat');
       }
     }
-    
+
     return () => {
       mainLayout.navigate(0);
     };
@@ -89,10 +88,10 @@ const HomePage = () => {
             textAlign: 'center',
             fontSize: { xs: '1rem', xl: '1.425rem' },
             maxWidth: { xs: '480px', xl: '670px' },
-            paddingBottom: {xs: 0.5, xl: 1}
+            paddingBottom: { xs: 0.5, xl: 1 }
           }}
         >
-        Trợ lý ảo giúp bạn giải đáp thắc mắc, thông tin một cách nhanh chóng và chính xác nhất. Bạn cần đăng nhập để sử dụng!
+          Trợ lý ảo giúp bạn giải đáp thắc mắc, thông tin một cách nhanh chóng và chính xác nhất. Bạn cần đăng nhập để sử dụng!
         </Typography>
 
         <Button
@@ -108,7 +107,7 @@ const HomePage = () => {
           Đăng Nhập Ngay
         </Button>
       </Box>
-      </Box>
+    </Box>
   );
 };
 

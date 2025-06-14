@@ -13,20 +13,21 @@ const prepareToSendEmail = (user = {}, code = 'VERIFY_EMAIL') => {
   try {
     let resource = null
     switch (code) {
-    case 'FORGOT_PASSWORD':
-      resource = './template/verification_email.html'
-      break
-    case 'VERIFY_EMAIL':
-      resource = './template/verification_to_reset_password.html'
-      break
-    default:
-      throw buildErrObject(404, 'MIDDLEWARE.EMAILER.INVALID_CODE', 'Invalid code')
+      case 'FORGOT_PASSWORD':
+        resource = './template/verification_email.html'
+        break
+      case 'VERIFY_EMAIL':
+        resource = './template/verification_to_reset_password.html'
+        break
+      default:
+        throw buildErrObject(404, 'MIDDLEWARE.EMAILER.INVALID_CODE', 'Invalid code')
     }
 
     let htmlTemplate = fs.readFileSync(path.join(__dirname, resource), 'utf-8')
-    const cssStyles = fs.readFileSync(path.join(__dirname, 'email_styles.css'), 'utf-8')
+    const cssStyles = fs.readFileSync(path.join(__dirname, './template/email_styles.css'), 'utf-8')
 
-    if ( !user?.name || !user?.verification || !user?.user?.email) {
+    console.log(user)
+    if (!user?.name || !user?.verification || !user?.email) {
       throw buildErrObject(404, 'MIDDLEWARE.EMAILER.DATA_USER_NOT_FOUND', '')
     }
     htmlTemplate = htmlTemplate
@@ -37,7 +38,7 @@ const prepareToSendEmail = (user = {}, code = 'VERIFY_EMAIL') => {
     const data = {
       user,
       subject: 'Dự án Chatbot tư vấn FIT-HCMUS',
-      htmlMessage : htmlTemplate
+      htmlMessage: htmlTemplate
     }
 
     sendEmail(data, (messageSent) =>

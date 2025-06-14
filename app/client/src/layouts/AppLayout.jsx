@@ -73,7 +73,7 @@ function AppLayout() {
 
   useEffect(() => {
     if (isFirstRendering) {
-      changeFavicon('/chatbot.svg')
+      changeFavicon('/unibot/chatbot.svg')
 
       if (token) {
         const eventID = processHandler.add('#verifyToken')
@@ -114,11 +114,11 @@ function AppLayout() {
   }
 
   return <>
-    <Box sx={{ height: '100vh', width: '100vw', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', alignItems: 'center' }}>
+    <Box sx={{ width: '100vw', position: 'relative', display: 'flex', flexDirection: 'column', overflow: 'hidden', alignItems: 'center' }}>
       {isProcess.length !== 0 && <Box sx={{ width: '100%', height: '100%', position: 'absolute', background: theme => theme.palette.mode == 'dark' ? '#414040bf' : '#000000b5', zIndex: '10000', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <CircularProgress color="inherit" />
       </Box>}
-      <Box className="Main_container" sx={{ overflow: 'hidden', width: '100vw', maxWidth: '2560px', height: '100%' }}>
+      <Box className="Main_container" sx={{ overflow: 'hidden', width: '100vw', maxWidth: '2560px', height: '100vh' }}>
         <Outlet context={{ processHandler, noticeHandler, getModal }} />
       </Box>
       <BasicAlerts noticeHandler={noticeHandler} notifications={notifications} />

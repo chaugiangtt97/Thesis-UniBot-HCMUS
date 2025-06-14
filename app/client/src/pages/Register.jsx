@@ -11,38 +11,38 @@ import { useApi } from '~/apis/apiRoute';
 
 const RegisterCard = styled(Card)(({ theme }) => ({
   width: '90vw',
-  margin: 'auto', 
-  display: 'flex', 
+  margin: 'auto',
+  display: 'flex',
   minWidth: '500px',
-  background: '#fff', 
-  alignSelf: 'center', 
+  background: '#fff',
+  alignSelf: 'center',
   borderRadius: '20px',
   gap: theme.spacing(2),
   flexDirection: 'column',
-  padding: theme.spacing(4), 
+  padding: theme.spacing(4),
   boxShadow: 'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
 
-  [theme.breakpoints.up('sm')]: { 
-    maxWidth: '420px' 
+  [theme.breakpoints.up('sm')]: {
+    maxWidth: '420px'
   },
-  
+
   [theme.breakpoints.up('xl')]: {
     minWidth: '550px',
-    minHeight: '500px' 
+    minHeight: '500px'
   }
 }))
 
-const TextInput = styled(TextField) (({ theme }) => ({
-  [theme.breakpoints.up('xl')]: { 
-    fontSize: '2.225rem' 
+const TextInput = styled(TextField)(({ theme }) => ({
+  [theme.breakpoints.up('xl')]: {
+    fontSize: '2.225rem'
   },
 
-  WebkitTextFillColor: '#000', 
-  '& input': { 
-    color: '#000' 
-  }, 
-  '&:hover fieldset': { 
-    borderColor: `${theme.palette.primary.main} !important` 
+  WebkitTextFillColor: '#000',
+  '& input': {
+    color: '#000'
+  },
+  '&:hover fieldset': {
+    borderColor: `${theme.palette.primary.main} !important`
   }
 }));
 
@@ -51,7 +51,7 @@ function Register() {
   const [userRecord, setUserRecord] = useState(null)
 
   const navigate = useNavigate();
-  const { processHandler, noticeHandler } = useOutletContext();   
+  const { processHandler, noticeHandler } = useOutletContext();
   const [captchaToken, setCaptchaToken] = useState(null);
 
   const recaptchaRef = useRef();
@@ -74,7 +74,7 @@ function Register() {
     const trainingBatch = userRecord?.trainingBatch
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
- 
+
       setNotification('Vui lòng nhập email hợp lệ !')
       return false
     }
@@ -84,17 +84,17 @@ function Register() {
       return false
     }
 
-    if (!selectedMajor || selectedMajor == ' ' ) {
+    if (!selectedMajor || selectedMajor == ' ') {
       setNotification('Thông tin chuyên ngành không được để trống !')
       return false
     }
 
-    if (!trainingBatch || trainingBatch == ' ' ) {
+    if (!trainingBatch || trainingBatch == ' ') {
       setNotification('Khóa đào tạo không được để trống !')
       return false
     }
 
-    if (!trainingProgram || trainingProgram == ' ' ) {
+    if (!trainingProgram || trainingProgram == ' ') {
       setNotification('Chương trình đào tạo không được để trống !')
       return false
     }
@@ -114,30 +114,30 @@ function Register() {
     const registerEvent = processHandler.add('#register')
 
     await useApi.register(
-      formData.get('email'), 
-      formData.get('password'),  
+      formData.get('email'),
+      formData.get('password'),
       formData.get('name'),
       'student',
-      captchaToken, {
+      {
         trainingProgram: userRecord?.trainingProgram,
         trainingBatch: userRecord?.trainingBatch,
         selectedMajor: userRecord?.selectedMajor
       }, captchaToken)
       .then((userData) => {
-          processHandler.remove('#register', registerEvent)
-          noticeHandler.add({
-            id: '#542',
-            status: 'success',
-            message: 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
-          })
-          navigate('/email/verify-email', { state: { email: formData.get('email') } })
-        }) 
+        processHandler.remove('#register', registerEvent)
+        noticeHandler.add({
+          id: '#542',
+          status: 'success',
+          message: 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
+        })
+        navigate('/email/verify-email', { state: { email: formData.get('email') } })
+      })
       .catch((err) => {
         processHandler.remove('#register', registerEvent)
         setNotification(useErrorMessage(err))
       })
   };
-    const reducers_data = useSelector(state => state.reducers)
+  const reducers_data = useSelector(state => state.reducers)
 
   return (
     <>
@@ -148,37 +148,37 @@ function Register() {
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
-          <FormControl sx={{gap: 1}}>
-            <FormLabel htmlFor="name" sx = {{ color: 'inherit' }}>Tên tài khoản</FormLabel>
+          <FormControl sx={{ gap: 1 }}>
+            <FormLabel htmlFor="name" sx={{ color: 'inherit' }}>Tên tài khoản</FormLabel>
             <TextInput id="name" type="name" name="name" placeholder="Nguyen Van A" inputProps={{ maxLength: 25 }}
-               required fullWidth autoFocus variant="outlined" />
+              required fullWidth autoFocus variant="outlined" />
           </FormControl>
 
-          <FormControl sx={{gap: 1}}>
-            <FormLabel htmlFor="email" sx = {{ color: 'inherit' }}>Tên đăng nhập (Gmail cá nhân)</FormLabel>
+          <FormControl sx={{ gap: 1 }}>
+            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>Tên đăng nhập (Gmail cá nhân)</FormLabel>
             <TextInput id="email" type="username" name="email" placeholder="name@gmail.com" inputProps={{ maxLength: 40 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
-          <FormControl  sx={{gap: 1}}>
+          <FormControl sx={{ gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx = {{ color: 'inherit' }}>Mật khẩu</FormLabel>
+              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>Mật khẩu</FormLabel>
             </Box>
             <TextInput name="password" placeholder="••••••" type="password" id="password" inputProps={{ maxLength: 25 }}
               autoComplete="current-password" required fullWidth variant="outlined"
-              sx = {{ color: '#000' }} />
+              sx={{ color: '#000' }} />
           </FormControl>
 
-          <Box sx = {{ display: {xs: 'block', md: 'flex' }, gap: 2 }}>
-            <FormControl  sx={{gap: 1, width: '100%', flex: { xs: '100%', md: '0 0 65%' }}}>
-              <FormLabel htmlFor="trainingProgram" sx = {{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chương trnh đào tạo</FormLabel>
+          <Box sx={{ display: { xs: 'block', md: 'flex' }, gap: 2 }}>
+            <FormControl sx={{ gap: 1, width: '100%', flex: { xs: '100%', md: '0 0 65%' } }}>
+              <FormLabel htmlFor="trainingProgram" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chương trnh đào tạo</FormLabel>
               <Select
                 id="trainingProgram"
-                name= 'trainingProgram'
+                name='trainingProgram'
                 value={userRecord?.trainingProgram || ' '}
                 onChange={(e) => setUserRecord({ ...userRecord, trainingProgram: e.target.value })}
                 defaultValue={'trainingProgram_Viet-Phap'}
-                sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
+                sx={{ width: '100%', color: '#000', '& .MuiSelect-icon': { color: '#000' } }}
               >
                 <MenuItem key={'trainingProgram_Dai-Tra'} value={'trainingProgram_Dai-Tra'}>Chương trình Đại Trà</MenuItem>
                 <MenuItem key={'trainingProgram_Chat-Luong-Cao'} value={'trainingProgram_Chat-Luong-Cao'}>Chương trình Chất Lượng Cao</MenuItem>
@@ -188,15 +188,15 @@ function Register() {
               </Select>
             </FormControl>
 
-            <FormControl  sx={{gap: 1, width: '100%', flex: { xs: '100%', md: '1 1 100%' }}}>
-              <FormLabel htmlFor="trainingBatch" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Khóa đào tạo</FormLabel>
+            <FormControl sx={{ gap: 1, width: '100%', flex: { xs: '100%', md: '1 1 100%' } }}>
+              <FormLabel htmlFor="trainingBatch" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Khóa đào tạo</FormLabel>
               <Select
                 id="trainingBatch"
-                name= "trainingBatch"
+                name="trainingBatch"
                 value={userRecord?.trainingBatch || ' '}
                 onChange={(e) => setUserRecord({ ...userRecord, trainingBatch: e.target.value })}
                 defaultValue={'trainingBatch_K25'}
-                sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
+                sx={{ width: '100%', color: '#000', '& .MuiSelect-icon': { color: '#000' } }}
               >
                 <MenuItem value={'trainingBatch_K19'} key={'trainingBatch_K19'}>Khóa trước 2020</MenuItem>
                 <MenuItem value={'trainingBatch_K20'} key={'trainingBatch_K20'}>Khóa K2020</MenuItem>
@@ -210,62 +210,62 @@ function Register() {
             </FormControl>
           </Box>
 
-        
-          <FormControl  sx={{gap: 1}}>
-            <FormLabel htmlFor="selectedMajor" sx = {{ color: 'inherit', display: 'block' , textAlign: 'start' }}>Chuyên ngành trực thuộc</FormLabel>
-              <Select
-                id="selectedMajor"
-                name= "selectedMajor"
-                value={userRecord?.selectedMajor || ' '}
-                onChange={(e) => setUserRecord({ ...userRecord, selectedMajor: e.target.value })}
-                defaultValue={'selectedMajor_Khong-co'}
-                sx = {{ width: '100%', color: '#000', '& .MuiSelect-icon': { color:'#000' }}}
-              >
-                <MenuItem key={'selectedMajor_Cong-nghe-phan-mem'} value={'selectedMajor_Cong-nghe-phan-mem'}>Công Nghệ Phần Mềm</MenuItem>
-                <MenuItem key={'selectedMajor_He-thong-thong-tin'} value={'selectedMajor_He-thong-thong-tin'}>Hệ Thống Thông Tin</MenuItem>
-                <MenuItem key={'selectedMajor_Khoa-hoc-may-tinh'} value={'selectedMajor_Khoa-hoc-may-tinh'}>Khoa Học Máy Tính</MenuItem>
-                <MenuItem key={'selectedMajor_Thi-giac-may-tinh'} value={'selectedMajor_Thi-giac-may-tinh'}>Thị Giác Máy Tính</MenuItem>
-                <MenuItem key={'selectedMajor_Cong-nghe-tri-thuc'} value={'selectedMajor_Cong-nghe-tri-thuc'}>Công Nghệ Tri Thức</MenuItem>
-                <MenuItem key={'selectedMajor_Cong-nghe-thong-tin'} value={'selectedMajor_Cong-nghe-thong-tin'}>Công Nghệ Thông Tin </MenuItem>
-                <MenuItem key={'selectedMajor_Khong-co'} value={'selectedMajor_Khong-co'}>Không có - chưa xét chuyên ngành</MenuItem>
-                <MenuItem value=" "></MenuItem>
+
+          <FormControl sx={{ gap: 1 }}>
+            <FormLabel htmlFor="selectedMajor" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chuyên ngành trực thuộc</FormLabel>
+            <Select
+              id="selectedMajor"
+              name="selectedMajor"
+              value={userRecord?.selectedMajor || ' '}
+              onChange={(e) => setUserRecord({ ...userRecord, selectedMajor: e.target.value })}
+              defaultValue={'selectedMajor_Khong-co'}
+              sx={{ width: '100%', color: '#000', '& .MuiSelect-icon': { color: '#000' } }}
+            >
+              <MenuItem key={'selectedMajor_Cong-nghe-phan-mem'} value={'selectedMajor_Cong-nghe-phan-mem'}>Công Nghệ Phần Mềm</MenuItem>
+              <MenuItem key={'selectedMajor_He-thong-thong-tin'} value={'selectedMajor_He-thong-thong-tin'}>Hệ Thống Thông Tin</MenuItem>
+              <MenuItem key={'selectedMajor_Khoa-hoc-may-tinh'} value={'selectedMajor_Khoa-hoc-may-tinh'}>Khoa Học Máy Tính</MenuItem>
+              <MenuItem key={'selectedMajor_Thi-giac-may-tinh'} value={'selectedMajor_Thi-giac-may-tinh'}>Thị Giác Máy Tính</MenuItem>
+              <MenuItem key={'selectedMajor_Cong-nghe-tri-thuc'} value={'selectedMajor_Cong-nghe-tri-thuc'}>Công Nghệ Tri Thức</MenuItem>
+              <MenuItem key={'selectedMajor_Cong-nghe-thong-tin'} value={'selectedMajor_Cong-nghe-thong-tin'}>Công Nghệ Thông Tin </MenuItem>
+              <MenuItem key={'selectedMajor_Khong-co'} value={'selectedMajor_Khong-co'}>Không có - chưa xét chuyên ngành</MenuItem>
+              <MenuItem value=" "></MenuItem>
             </Select>
           </FormControl>
 
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
-            sx = {{ background: theme => theme.palette.primary.main, '&:hover' : { boxShadow: 'var(--mui-shadows-4)' } }} >
+            sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
             Tạo tài khoản </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                // href="/signin"
-                onClick = {() => navigate(`/signin`)}
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
+                  // href="/signin"
+                  onClick={() => navigate(`/signin`)}
+                  variant="body2"
+                  sx={{ alignSelf: 'center' }}
                 >
-                Trở về đăng nhập
+                  Trở về đăng nhập
                 </Link>
               </span>
             </Typography>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
-                // href="/register/lecturer"
-                onClick = {() => navigate(`/register/lecturer`)}
-                variant="body2"
-                sx={{ alignSelf: 'center' }}
+                  // href="/register/lecturer"
+                  onClick={() => navigate(`/register/lecturer`)}
+                  variant="body2"
+                  sx={{ alignSelf: 'center' }}
                 >
-                Bạn là giảng viên FIT-HCMUS?
+                  Bạn là giảng viên FIT-HCMUS?
                 </Link>
               </span>
             </Typography>
           </Box>
 
 
-           {reducers_data?.captchaToken &&<Box sx = {{ display: 'flex', justifyContent: 'end'}}>
+          {reducers_data?.captchaToken && <Box sx={{ display: 'flex', justifyContent: 'end' }}>
             <ReCAPTCHA
               sitekey={reducers_data?.captchaToken} // {import.meta.env.VITE_RESCAPTCHA_SITE_KEY}
               data-theme="dark"
@@ -275,7 +275,7 @@ function Register() {
             />
           </Box>}
 
-          <Typography sx = {{ width: '100%' , textAlign: 'end', color: 'red' }}>
+          <Typography sx={{ width: '100%', textAlign: 'end', color: 'red' }}>
             {notificationError}
           </Typography>
         </Box>

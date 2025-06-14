@@ -27,7 +27,7 @@ export const registerUser = async (req = {}) => {
     name: req.name,
     email: req.email,
     password: req.password,
-    academicInformation : req?.academicInformation,
+    academicInformation: req?.academicInformation,
     generalInformation: req?.generalInformation,
     verification: Math.floor(100000 + Math.random() * 900000),
     verified: process.env.NODE_ENV !== 'production'
@@ -38,11 +38,11 @@ export const registerUser = async (req = {}) => {
   }
 
   if (req.educationRole === 'lecturer') {
-    const emailRegex = /^[a-zA-Z][a-zA-Z0-9]*@clc\.fitus\.edu\.vn$/
+    // const emailRegex = /^[a-zA-Z][a-zA-Z0-9]*@clc\.fitus\.edu\.vn$/
 
-    if (!emailRegex.test(req.email)) {
-      handleError(res, 'Email must be in the format of @clc.fitus.edu.vn for lecturers')
-    }
+    // if (!emailRegex.test(req.email)) {
+    //   handleError(res, 'Email must be in the format of @clc.fitus.edu.vn for lecturers')
+    // }
 
     userRecord = new User({ ...userRecord, educationRole: 'lecturer' })
   }

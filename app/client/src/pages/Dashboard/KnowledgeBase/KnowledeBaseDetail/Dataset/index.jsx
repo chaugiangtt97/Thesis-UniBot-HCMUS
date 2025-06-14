@@ -440,7 +440,6 @@ function SettingDocumentModal({ document, modalHandler = null }) {
     }
 
     await modalHandler.submit(metadata)
-    console.log(metadata)
 
     modalHandler.close()
   }

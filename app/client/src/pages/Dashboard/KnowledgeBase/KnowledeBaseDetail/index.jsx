@@ -213,7 +213,6 @@ function Datasets() {
   }
 
   const deleteDocument = async (data) => {
-    console.log(data)
     if (data?.id) {
       const deleteEvent = processHandler.add('#deleteDocument')
       await useDocument.deleteDocument({ id: data.id }, token)

@@ -1,12 +1,12 @@
 export const getRequest = async (domain = '', route = '/', params = null, token = null) => {
-  
-	const queryString = params ? new URLSearchParams(params).toString() : '' ;
+
+	const queryString = params ? new URLSearchParams(params).toString() : '';
 	const url = `${domain}${route}?${queryString}`;
 	const structure = {
 		method: 'GET',
 		headers: {
-		  'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+			'Content-Type': 'application/json',
+			'Authorization': `Bearer ${token}`
 		},
 	}
 
@@ -23,12 +23,8 @@ export const getRequest = async (domain = '', route = '/', params = null, token 
 			return data
 		})
 		.catch((err) => {
-			console.log(err)
-			if(typeof(err) == "object"){
-				throw 'ERR_CONNECTION_REFUSED'
-			}
-			throw err
-		}) 
+			throw typeof err == "object" ? "ERR_CONNECTION_REFUSED" : err
+		})
 
 	return res
 }
