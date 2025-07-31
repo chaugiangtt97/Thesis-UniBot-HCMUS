@@ -33,7 +33,7 @@ class QueryRouter_v2:
                 collections = database._handler.list_collections()
                 
                 # Remove student_handbook from collections
-                collections.remove('student_handbook')
+                # collections.remove('student_handbook') #LEGACY
                 descriptions = [database.describe_collection(col)['description'] for col in collections]
                 describe_collections_prompt = "".join([f"{col}: {desc}\n" for col, desc in zip(collections, descriptions)])
                 
