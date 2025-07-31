@@ -192,7 +192,7 @@ class Generate_Controller:
 
   def generate(self, query, context, streaming, theme, user_profile, history = []):
     try:
-      if theme not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+      if theme not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment', 'Chapter_0_and_1', 'Chapter_2', 'Chapter_3']: #LEGACY
         theme = "_" + theme
         
       model_configs = get_llm_configs('ACTIVE')
@@ -212,4 +212,4 @@ class Generate_Controller:
                             themes_descriptions = database.themes_descriptions)
       
     except Exception as e:
-      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/determine_collection', e))
+      raise Exception(buildErrorObject('Lỗi ở Generate_Controller/generate', e))
