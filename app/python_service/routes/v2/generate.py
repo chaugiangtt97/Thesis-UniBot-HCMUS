@@ -79,7 +79,7 @@ def search_route():
         chosen_collection = request.form.get('chosen_collection')
         if not chosen_collection:
             return handleError(400, "Missing required parameter 'chosen_collection'")
-        if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment']:
+        if chosen_collection not in ['events', 'academic_affairs', 'scholarship', 'timetable', 'recruitment', 'Chapter_0_and_1', 'Chapter_2', 'Chapter_3']: #LEGACY
             chosen_collection = f"_{chosen_collection}"
 
         filter_expressions_raw = request.form.get('filter_expressions', None)
