@@ -13,9 +13,8 @@ export default ({ mode }) => {
   loadedEnv.ENV_PORT;
   return defineConfig({
     // base: `/${loadedEnv.VITE_SUBDIR}/`,
-    base: '/unibot/',
     plugins: [react(), svgr()],
-    // base: './',
+    base: './',
     __VALUE__: `"${process.env.VALUE}"`,
     resolve: {
       alias: [{ find: "~", replacement: "/src" }],
@@ -27,7 +26,7 @@ export default ({ mode }) => {
       https: false,
       port: 3000,
       proxy: {
-        [`/api`]: {
+        [`/unibot/api`]: {
           target: `http://localhost:8017/`,
           secure: false,
           ws: true,

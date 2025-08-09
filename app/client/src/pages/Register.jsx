@@ -8,6 +8,7 @@ import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useApi } from '~/apis/apiRoute';
+import { useTranslation } from 'react-i18next';
 
 const RegisterCard = styled(Card)(({ theme }) => ({
   width: '90vw',
@@ -63,41 +64,42 @@ function Register() {
   const validateInputs = () => {
 
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha !')
+      setNotification(t("students_register_page.notice.captcha_required"))
+
       return false;
     }
 
     const email = document.getElementById('email')
     const password = document.getElementById('password')
-    const selectedMajor = userRecord?.selectedMajor
-    const trainingProgram = userRecord?.trainingProgram
-    const trainingBatch = userRecord?.trainingBatch
+
+    // const selectedMajor = userRecord?.selectedMajor
+    // const trainingProgram = userRecord?.trainingProgram
+    // const trainingBatch = userRecord?.trainingBatch
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("students_register_page.notice.email_invalid"))
       return false
     }
 
     if (!password.value || password.value.length < 6) {
-      setNotification('Password phải tối thiểu có 6 kí tự !')
+      setNotification(t("students_register_page.notice.password_min_length"))
       return false
     }
 
-    if (!selectedMajor || selectedMajor == ' ') {
-      setNotification('Thông tin chuyên ngành không được để trống !')
-      return false
-    }
+    // if (!selectedMajor || selectedMajor == ' ') {
+    //   setNotification('Thông tin chuyên ngành không được để trống !')
+    //   return false
+    // }
 
-    if (!trainingBatch || trainingBatch == ' ') {
-      setNotification('Khóa đào tạo không được để trống !')
-      return false
-    }
+    // if (!trainingBatch || trainingBatch == ' ') {
+    //   setNotification('Khóa đào tạo không được để trống !')
+    //   return false
+    // }
 
-    if (!trainingProgram || trainingProgram == ' ') {
-      setNotification('Chương trình đào tạo không được để trống !')
-      return false
-    }
+    // if (!trainingProgram || trainingProgram == ' ') {
+    //   setNotification('Chương trình đào tạo không được để trống !')
+    //   return false
+    // }
 
     setNotification(null)
     return true
@@ -123,12 +125,12 @@ function Register() {
         trainingBatch: userRecord?.trainingBatch,
         selectedMajor: userRecord?.selectedMajor
       }, captchaToken)
-      .then((userData) => {
+      .then(() => {
         processHandler.remove('#register', registerEvent)
         noticeHandler.add({
           id: '#542',
           status: 'success',
-          message: 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
+          message: t('students_register_page.notice.register_success')   // 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
         })
         navigate('/email/verify-email', { state: { email: formData.get('email') } })
       })
@@ -138,38 +140,38 @@ function Register() {
       })
   };
   const reducers_data = useSelector(state => state.reducers)
-
+  const { t, i18n } = useTranslation();
   return (
     <>
       <RegisterCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Tài Khoản Sinh Viên </Typography>
+          {t("students_register_page.heading")} </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="name" sx={{ color: 'inherit' }}>Tên tài khoản</FormLabel>
-            <TextInput id="name" type="name" name="name" placeholder="Nguyen Van A" inputProps={{ maxLength: 25 }}
+            <FormLabel htmlFor="name" sx={{ color: 'inherit' }}>{t("students_register_page.name_label")}</FormLabel>
+            <TextInput id="name" type="name" name="name" placeholder={t("students_register_page.name_placeholder")} inputProps={{ maxLength: 25 }}
               required fullWidth autoFocus variant="outlined" />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>Tên đăng nhập (Gmail cá nhân)</FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder="name@gmail.com" inputProps={{ maxLength: 40 }}
+            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>{t("students_register_page.student_register_email_label")}</FormLabel>
+            <TextInput id="email" type="username" name="email" placeholder={t("students_register_page.student_register_password_label")} inputProps={{ maxLength: 40 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>Mật khẩu</FormLabel>
+              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>{t("students_register_page.student_register_password_label")}</FormLabel>
             </Box>
             <TextInput name="password" placeholder="••••••" type="password" id="password" inputProps={{ maxLength: 25 }}
               autoComplete="current-password" required fullWidth variant="outlined"
               sx={{ color: '#000' }} />
           </FormControl>
 
-          <Box sx={{ display: { xs: 'block', md: 'flex' }, gap: 2 }}>
+          {/* <Box sx={{ display: { xs: 'block', md: 'flex' }, gap: 2 }}>
             <FormControl sx={{ gap: 1, width: '100%', flex: { xs: '100%', md: '0 0 65%' } }}>
               <FormLabel htmlFor="trainingProgram" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chương trnh đào tạo</FormLabel>
               <Select
@@ -208,10 +210,10 @@ function Register() {
                 <MenuItem value=" "></MenuItem>
               </Select>
             </FormControl>
-          </Box>
+          </Box> */}
 
 
-          <FormControl sx={{ gap: 1 }}>
+          {/* <FormControl sx={{ gap: 1 }}>
             <FormLabel htmlFor="selectedMajor" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Chuyên ngành trực thuộc</FormLabel>
             <Select
               id="selectedMajor"
@@ -230,23 +232,23 @@ function Register() {
               <MenuItem key={'selectedMajor_Khong-co'} value={'selectedMajor_Khong-co'}>Không có - chưa xét chuyên ngành</MenuItem>
               <MenuItem value=" "></MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
 
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
             sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Tạo tài khoản </Button>
+            {t("students_register_page.create_account_button")} </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
               <span>
                 <Link
                   // href="/signin"
-                  onClick={() => navigate(`/signin`)}
+                  onClick={() => navigate(`/unibot/signin`)}
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
-                  Trở về đăng nhập
+                  {t("students_register_page.back_to_home")}{/* Trở về đăng nhập */}
                 </Link>
               </span>
             </Typography>
@@ -258,7 +260,8 @@ function Register() {
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
-                  Bạn là giảng viên FIT-HCMUS?
+                  {t("students_register_page.lecturer_register_prompt")}
+                  {/* Bạn là giảng viên FIT-HCMUS? */}
                 </Link>
               </span>
             </Typography>

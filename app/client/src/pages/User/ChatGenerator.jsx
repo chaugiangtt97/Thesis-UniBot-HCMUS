@@ -123,6 +123,8 @@ import StarIcon from '@mui/icons-material/Star';
 
 export function ChatGenerator() {
 
+  const { t } = useTranslation();
+
   const bottomRef = useRef(null);
   const socket = getSocket();
   const user = useSelector((state) => state.auth.user)
@@ -232,7 +234,7 @@ export function ChatGenerator() {
         backgroundImage: theme => theme.palette.mode == 'dark' ? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
       }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
-          <Typography component='p' sx={{ fontWeight: '800' }}>Cuộc Trò Chuyện</Typography>
+          <Typography component='p' sx={{ fontWeight: '800' }}>{t('chat_list')}</Typography>
         </Box>
 
         {!apiHandler.session && sessions && <Box sx={{ height: '100%', maxHeight: 'calc(100vh - 152px)', overflow: 'auto', padding: 1 }}> {
@@ -499,7 +501,7 @@ export function ChatGenerator() {
 
     <Box sx={{ position: 'relative', width: '100%', height: '100%', paddingTop: { xs: 6, md: 3 }, paddingBottom: { xs: 1.5, md: 2 }, paddingX: { xs: 1.5, md: 2 } }}>
       <Box sx={{ display: { xs: 'flex', md: 'none' }, width: 'fit-content', position: 'absolute', right: '16px', top: '6px' }}>
-        <Button onClick={() => menu.handle(true)} sx={{ zIndex: 3, color: theme => theme.palette.text.secondary }} startIcon={<VoicemailOutlinedIcon />}>Cuộc Hội Thoại</Button>
+        <Button onClick={() => menu.handle(true)} sx={{ zIndex: 3, color: theme => theme.palette.text.secondary }} startIcon={<VoicemailOutlinedIcon />}>{t('chat_list')}</Button>
       </Box>
       <Grid container spacing={2} sx={{ height: '100%', '--Grid-rowSpacing': { md: 'calc(2 * var(--mui-spacing))', xs: 1 } }}>
 
@@ -516,15 +518,15 @@ export function ChatGenerator() {
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2, paddingBottom: 0.3 }}>
                 <StarIcon sx={{ fontSize: { xs: '28px !important', xl: '42px !important' }, color: '#e7e74e' }} />
-                <Typography sx={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>Chủ Đề Bạn Quan Tâm</Typography>
+                <Typography sx={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>{t('topics_of_interest')}</Typography>
               </Box>
               {[
-                'Thông tin trường học',
-                'Thông tin học bổng',
-                'Thông Tin Sự Kiện',
-                'Thông Tin Tuyển Dụng',
-                'Tra cứu thời khóa biểu',
-                'Thông báo giáo vụ',
+                'academic_affairs_info',
+                'school_info',
+                'scholarship_info',
+                'event_info',
+                'recruitment_info',
+                'timetable_lookup_info',
               ].map((data, zIndex) => (
                 <>
                   <Button
@@ -533,7 +535,7 @@ export function ChatGenerator() {
                     startIcon={ICON_LIST[zIndex]}
                     endIcon={<ExpandMoreOutlinedIcon sx={{ fontSize: { xs: '20px', xl: '32px' } }} />}
                     sx={{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: { xs: '0.725rem', md: '0.775rem', xl: '1.115rem' }, textAlign: 'start', color: 'inherit' }}>
-                    {data}
+                    {t(data)}
                   </Button>
 
                   {zIndex === recommendQuestionPage && <Box sx={{ maxHeight: zIndex === recommendQuestionPage ? 'auto' : '0px', overflow: 'hidden', borderRadius: '10px', padding: '5px' }}>
@@ -614,7 +616,7 @@ export function ChatGenerator() {
                 </Box>
               </Box>
 
-              <Typography sx={{ fontSize: { xs: '10px !important', xl: '16px !important' }, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', marginTop: '10px' }}>Lưu ý: Mô hình có thể đưa ra câu trả lời không chính xác ở một số trường hợp, vì vậy hãy luôn kiểm chứng thông tin bạn nhé!</Typography>
+              <Typography sx={{ fontSize: { xs: '10px !important', xl: '16px !important' }, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#000', marginTop: '10px' }}>{t('model_accuracy_notice')}</Typography>
             </ChatWindow>
           </Block>
         </Grid>
@@ -629,7 +631,7 @@ export function ChatGenerator() {
             }
           }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: 1 }}>
-              <Typography component='p' sx={{ fontWeight: '800', fontSize: { xl: '1.625rem' } }}>Cuộc Trò Chuyện</Typography>
+              <Typography component='p' sx={{ fontWeight: '800', fontSize: { xl: '1.625rem' } }}>{t('chat_list')}</Typography>
             </Box>
 
             {!apiHandler.session && sessions && <Box sx={{ height: '100%', maxHeight: { xs: 'calc(100vh - 280px)', xl: 'calc(100vh - 359px)' }, overflow: 'auto', padding: 1 }}> {
@@ -691,7 +693,7 @@ export function ChatGenerator() {
               <Button
                 variant='contained' sx={{ fontSize: { xl: '1.225rem' }, background: theme => theme.palette.primary.main }}
                 startIcon={<OpenInNewIcon />}
-                onClick={() => setOpenCreateChat(true)}>Tạo Mới Trò Chuyện</Button>
+                onClick={() => setOpenCreateChat(true)}>{t('start_new_chat')}</Button>
             </Box>
           </Block>
         </Grid>
@@ -724,6 +726,7 @@ import Filter7OutlinedIcon from '@mui/icons-material/Filter7Outlined';
 
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { useApi } from '~/apis/apiRoute';
+import { useTranslation } from 'react-i18next';
 
 const ICON_LIST = [<Filter1OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
 <Filter2OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,

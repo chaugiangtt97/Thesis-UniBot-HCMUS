@@ -8,6 +8,7 @@ import { useErrorMessage } from '~/hooks/useMessage';
 
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useApi } from '~/apis/apiRoute';
+import { useTranslation } from 'react-i18next';
 
 const RegisterCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column',
@@ -48,7 +49,7 @@ function RegisterAA() {
   const validateInputs = () => {
 
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha !')
+      setNotification(t("lecturer_register_page.notice.captcha_required"))
       return false;
     }
 
@@ -56,13 +57,12 @@ function RegisterAA() {
     const password = document.getElementById('password');
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("lecturer_register_page.notice.email_invalid"))
       return false;
     }
 
     if (!password.value || password.value.length < 6) {
-      setNotification('Password phải tối thiểu có 6 kí tự !')
+      setNotification(t("lecturer_register_page.notice.password_min_length"))
       return false;
     }
 
@@ -95,7 +95,7 @@ function RegisterAA() {
         noticeHandler.add({
           id: '#542',
           status: 'success',
-          message: 'Tạo tài khoản thành công, hãy kiểm tra email để xác thực tài khoản bạn nhé !',
+          message: t('lecturer_register_page.notice.register_success')   // 'Dang ky thanh cong, vui long kiem tra email de xac thuc tai khoan !',
         })
 
         navigate('/email/verify-email', { state: { email: document.getElementById('email').value } })
@@ -108,38 +108,39 @@ function RegisterAA() {
       })
   };
   const reducers_data = useSelector(state => state.reducers)
+  const { t, i18n } = useTranslation();
 
   return (
     <>
       <RegisterCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Tài Khoản Giảng Viên </Typography>
+          {t("lecturer_register_page.heading")} </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="name" sx={{ color: 'inherit' }}>Tên tài khoản</FormLabel>
-            <TextInput id="name" type="name" name="name" placeholder="Nguyen Van A" inputProps={{ maxLength: 25 }}
+            <FormLabel htmlFor="name" sx={{ color: 'inherit' }}>{t("lecturer_register_page.name_label")} </FormLabel>
+            <TextInput id="name" type="name" name="name" placeholder={t("lecturer_register_page.name_placeholder")} inputProps={{ maxLength: 25 }}
               required fullWidth autoFocus variant="outlined" />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>Tên đăng nhập (Gmail giảng viên trường học)</FormLabel>
+            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>{t("lecturer_register_page.student_register_email_label")} </FormLabel>
             <TextInput id="email" type="username" name="email" placeholder="name@fit.hcmus.edu.vn" inputProps={{ maxLength: 50 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>Mật khẩu</FormLabel>
+              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>{t("lecturer_register_page.student_register_password_label")}</FormLabel>
             </Box>
             <TextInput name="password" placeholder="••••••" type="password" id="password" inputProps={{ maxLength: 25 }}
               autoComplete="current-password" required fullWidth variant="outlined"
               sx={{ color: '#000' }} />
           </FormControl>
 
-          <Box sx={{ display: { xs: 'block', md: 'flex' }, gap: 2 }}>
+          {/* <Box sx={{ display: { xs: 'block', md: 'flex' }, gap: 2 }}>
             <FormControl sx={{ gap: 1, width: '100%', flex: { xs: '100%', md: '0 0 65%' } }}>
               <FormLabel htmlFor="administrativeUnit" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Đơn vị trực thuộc</FormLabel>
               <Select
@@ -174,7 +175,6 @@ function RegisterAA() {
             </FormControl>
           </Box>
 
-
           <FormControl sx={{ gap: 1 }}>
             <FormLabel htmlFor="teachingDepartment" sx={{ color: 'inherit', display: 'block', textAlign: 'start' }}>Bộ môn công tác (nếu có)</FormLabel>
             <Select
@@ -194,12 +194,12 @@ function RegisterAA() {
               <MenuItem key={'teachingDepartment_Cong-nghe-thong-tin'} value={'teachingDepartment'}>Công Nghệ Thông Tin </MenuItem>
               <MenuItem key={'teachingDepartment_Khong-co'} value={'teachingDepartment_Khong-co'}>Không có</MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
 
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
             sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Tạo tài khoản </Button>
+            {t("lecturer_register_page.create_account_button")} </Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
@@ -210,7 +210,7 @@ function RegisterAA() {
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
-                  Trở về đăng nhập
+                  {t("lecturer_register_page.back_to_home")}
                 </Link>
               </span>
             </Typography>
@@ -222,7 +222,7 @@ function RegisterAA() {
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
-                  Bạn là sinh viên FIT-HCMUS?
+                  {t("lecturer_register_page.students_register_prompt")}
                 </Link>
               </span>
             </Typography>

@@ -73,7 +73,7 @@ function AppLayout() {
 
   useEffect(() => {
     if (isFirstRendering) {
-      changeFavicon('/unibot/chatbot.svg')
+      changeFavicon('/chatbot.svg')
 
       if (token) {
         const eventID = processHandler.add('#verifyToken')
