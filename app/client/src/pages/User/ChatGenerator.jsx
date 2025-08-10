@@ -503,7 +503,7 @@ export function ChatGenerator() {
       </Box>
       <Grid container spacing={2} sx={{ height: '100%', '--Grid-rowSpacing': { md: 'calc(2 * var(--mui-spacing))', xs: 1 } }}>
 
-        <Grid size={{ xs: 0, md: 2.3 }} sx={{ height: '100%' }}>
+        <Grid size={{ xs: 0, md: 2.5 }} sx={{ height: '100%' }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh' }}>
             <Block sx={{
               padding: '16px !important',
@@ -556,7 +556,7 @@ export function ChatGenerator() {
           </Box>
         </Grid>
 
-        <Grid offset={{ xs: 0, md: 0 }} size={{ xs: 12, md: 7 }} sx={{ height: '100%' }} >
+        <Grid offset={{ xs: 0, md: 0 }} size={{ xs: 12, md: 6.8 }} sx={{ height: '100%' }} >
           <Block sx={{
             paddingBottom: { xl: '130px !important', md: '95px !important', xs: '95px !important' },
             width: '100%',

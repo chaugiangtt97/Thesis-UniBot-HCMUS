@@ -24,21 +24,86 @@ def read_news_csv(path):
     df = pd.read_csv(path)
 
     #remove null
-    df = df[~df['chunks'].isna()]
+    df = df[~df['article'].isna()]
     #chunk id to integer
     df['chunk_id'] = df['chunk_id'].astype(int)
     #location to integer
     #df['location'] = df['location'].astype(int)
+    df['in_effect'] = "" #Legacy field, not used anymore
     #in_effect to str type
-    df['in_effect'] = df['in_effect'].astype(str)
+    # df['in_effect'] = df['in_effect'].astype(str)
     # Dummy updated at
     df['updated_at'] = df['created_at']
     #Rename columns
-    df.rename(columns={'article': 'article_FULL', 'chunks': 'article'}, inplace=True)
-    df = df.loc[:, df.columns != 'article_FULL']
+    # df.rename(columns={'article': 'article_FULL', 'chunks': 'article'}, inplace=True)
+    # df = df.loc[:, df.columns != 'article_FULL']
     return df
 
-def ingest_pipeline(student_path, news_path):
+def convert_type_string_to_datatype(type_string):
+    """
+    Convert a string representation of a data type to the corresponding Milvus DataType enum.
+    
+    Args:
+        type_string (str): String representation of the data type
+        
+    Returns:
+        DataType: Corresponding Milvus DataType enum value
+        
+    Raises:
+        ValueError: If the type string is not recognized
+    """
+    type_mapping = {
+        # Integer types
+        "INT8": DataType.INT8,
+        "INT16": DataType.INT16,
+        "INT32": DataType.INT32,
+        "INT64": DataType.INT64,
+        "int8": DataType.INT8,
+        "int16": DataType.INT16,
+        "int32": DataType.INT32,
+        "int64": DataType.INT64,
+        "int": DataType.INT64,  # Default to INT64 for 'int'
+        
+        # Float types
+        "FLOAT": DataType.FLOAT,
+        "DOUBLE": DataType.FLOAT,
+        "float": DataType.FLOAT,
+        "double": DataType.FLOAT,
+        
+        # Boolean type
+        "BOOL": DataType.BOOL,
+        "bool": DataType.BOOL,
+        "boolean": DataType.BOOL,
+        
+        # String types
+        "VARCHAR": DataType.VARCHAR,
+        "STRING": DataType.VARCHAR,
+        "varchar": DataType.VARCHAR,
+        "string": DataType.VARCHAR,
+        "str": DataType.VARCHAR,
+        
+        # Vector types
+        "FLOAT_VECTOR": DataType.FLOAT_VECTOR,
+        "BINARY_VECTOR": DataType.BINARY_VECTOR,
+        "float_vector": DataType.FLOAT_VECTOR,
+        "binary_vector": DataType.BINARY_VECTOR,
+        
+        # JSON type (if supported)
+        "JSON": DataType.JSON,
+        "json": DataType.JSON,
+    }
+    
+    # Normalize the input string
+    normalized_type = type_string.strip()
+    
+    if normalized_type in type_mapping:
+        return type_mapping[normalized_type]
+    else:
+        # Provide helpful error message with available types
+        available_types = list(type_mapping.keys())
+        raise ValueError(f"Unsupported data type: '{type_string}'. Available types: {available_types}")
+
+def ingest_pipeline(data_path, collection_path):
     ## Techzone's Standalone Milvus instance
     # host = '161.156.196.183'
     # port = '8080'
@@ -56,14 +121,6 @@ def ingest_pipeline(student_path, news_path):
     # server_name = 'watsonxdata'
     host = 'standalone'
     port = '19530'
-    #Prod Server (e5-large embeds)
-    # uri = 'https://in05-89bc8f2593a1710.serverless.gcp-us-west1.cloud.zilliz.com'
-    # token = "c8e544eef2382fdc48c3829f3fb94a8d09451ed84a6183774894e097ab0da83356204032bad89fc68271027bec24806c1c52e0d6"
-    #uri = "https://in01-4c6a7381b7913fa.gcp-asia-southeast1.vectordb.zillizcloud.com:443"
-    #token = "db_admin:Jn1<BnK>]sj8V8&N"
-    #Experimental Server (OpenAI Embeds)
-    # uri = 'https://in05-bfb1fbc5a8d82f9.serverless.gcp-us-west1.cloud.zilliz.com'
-    # token = 'ed5dd7599d02904ce373bae55db5645a041435621e1c14a0ffcd81275b5f6d349b1e5d24b3766d140943399440f347783bdb5c0d'
 
     # connections.connect(alias = 'default',
     #                 host = host,
@@ -80,50 +137,32 @@ def ingest_pipeline(student_path, news_path):
     # connections.connect(alias='default', uri=uri, token=token)
     handler = connections._fetch_handler('default')
     existing_collections = []
-    # News Collections ingestion
-    fields = [
-        FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
-        FieldSchema(name="document_id", dtype=DataType.VARCHAR, max_length=50),
-        FieldSchema(name="title", dtype=DataType.VARCHAR, max_length=750,),
-        FieldSchema(name="article", dtype=DataType.VARCHAR, max_length=3500,),
-        FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=3072,), #1024
-        FieldSchema(name="chunk_id", dtype=DataType.INT32),
-        FieldSchema(name="school_year", dtype=DataType.INT32),
-        FieldSchema(name="in_effect", dtype=DataType.VARCHAR, max_length=100,),
-        FieldSchema(name="file_links", dtype=DataType.VARCHAR, max_length=750),
-        FieldSchema(name="created_at", dtype=DataType.VARCHAR, max_length=50,),
-        FieldSchema(name="created_at_unix", dtype=DataType.INT64, nullable=True),
-        FieldSchema(name="updated_at", dtype=DataType.VARCHAR, max_length=50,),
-        FieldSchema(name="url", dtype=DataType.VARCHAR, max_length=300),
-        FieldSchema(name="is_active", dtype=DataType.BOOL),
-    ]
-    collection_names = ['recruitment', 'timetable', 'scholarship', 'academic_affairs', 'events']
+    #Collections ingestion
+    with open(collection_path, 'r') as rstream:
+        collection_data = json.load(rstream)
+
+    collection_names = list(collection_data.keys())
     for col in collection_names:
-        schema = CollectionSchema(fields, description=collection_descriptions[col])
-        if col in ['recruitment', 'scholarship']:
-            schema.add_field("keywords", datatype=DataType.ARRAY, element_type=DataType.VARCHAR,max_length=100, max_capacity=8,
-                             description="IT technological skills related to the article. Output in a list of strings."
-                             )
-            schema.add_field("majors", datatype=DataType.ARRAY, element_type=DataType.VARCHAR,max_length=100, max_capacity=8,
-                             description="""Majors mentioned in the article. Valid majors are 'công nghệ phần mềm','khoa học dữ liệu','khoa học máy tính','hệ thống thông tin','kỹ thuật phần mềm','công nghệ thông tin','mạng máy tính','thị giác máy tính','công nghệ tri thức'. Output in a list of strings."""
-                             )
-        elif col == 'events':
-            schema.add_field("location", datatype=DataType.INT16,
-                             description="""Location of the event. Valid values are 0,1,2.
-The school has two locations, with a few details about each location provided below:
-Location 1: Cơ sở 1 - Cơ sở quận 5 - 227 Nguyễn Văn Cừ, Phường 4, Quận 5.
-Location 2: Cơ sở 2 - Cơ sở Thủ Đức/Linh Trung - Làng Đại học, Phường Linh Trung, Thành phố Thủ Đức.
-If no location of the two provided or both locations is mentioned, return 0. Note that the location may not be explicitly mentioned in full in the article."""
-                             )
-        elif col == 'timetable':
-            schema.add_field("subjects_name", datatype=DataType.ARRAY, element_type=DataType.VARCHAR, max_length=100, max_capacity=8,
-                             description="""Name of the subjects mentioned in the article. Output in a list of strings. If none is found, output an empty list.
-Some examples of subjects are 'Cấu trúc dữ liệu và giải thuật','Lập trình hướng đối tượng','Cơ sở dữ liệu','Toán rời rạc','Lập trình web','Hệ điều hành','Mạng máy tính'.
-Note that values may not be explicitly mentioned, but derived or written in acronyms."""
-                             )
-            schema.add_field("subjects_code", datatype=DataType.ARRAY, element_type=DataType.VARCHAR, max_length=100, max_capacity=8,
-                             description=""
-                             )
+        fields = [
+            FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
+            FieldSchema(name="document_id", dtype=DataType.VARCHAR, max_length=50),
+            FieldSchema(name="title", dtype=DataType.VARCHAR, max_length=750,),
+            FieldSchema(name="article", dtype=DataType.VARCHAR, max_length=4000,),
+            FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=3072,), #1024
+            FieldSchema(name="chunk_id", dtype=DataType.INT32),
+            FieldSchema(name="in_effect", dtype=DataType.VARCHAR, max_length=100,),
+            FieldSchema(name="created_at", dtype=DataType.VARCHAR, max_length=50,),
+            FieldSchema(name="created_at_unix", dtype=DataType.INT64, nullable=True),
+            FieldSchema(name="updated_at", dtype=DataType.VARCHAR, max_length=50,),
+            FieldSchema(name="url", dtype=DataType.VARCHAR, max_length=300),
+            FieldSchema(name="is_active", dtype=DataType.BOOL),
+        ]
+        for field in collection_data[col]['fields']:
+            field["dtype"] = convert_type_string_to_datatype(field["dtype"])
+            field_schema = FieldSchema(**field)
+            fields.append(field_schema)
+        schema = CollectionSchema(fields, description=collection_data[col]['description'])
+        
         if handler.has_collection(col):
             collection = Collection(col)
             existing_collections.append(col)
@@ -135,56 +174,20 @@ Note that values may not be explicitly mentioned, but derived or written in acro
                 'params':{"nlist":2048}
             }
             collection.create_index(field_name='embedding', index_params=index_params)
-    # Student handbook collection
-    fields = [
-        FieldSchema(name="id", dtype=DataType.INT64, is_primary=True, auto_id=True), # Primary key
-        FieldSchema(name="document_id", dtype=DataType.VARCHAR, max_length=50),
-        FieldSchema(name="title", dtype=DataType.VARCHAR, max_length=300,),
-        FieldSchema(name="article", dtype=DataType.VARCHAR, max_length=5000,),
-        FieldSchema(name="embedding", dtype=DataType.FLOAT_VECTOR, dim=3072,), #1024
-        FieldSchema(name="page_number", dtype=DataType.INT32),
-        FieldSchema(name="school_year", dtype=DataType.INT32,),
-        FieldSchema(name="in_effect", dtype=DataType.VARCHAR, max_length=100,),
-        FieldSchema(name="created_at", dtype=DataType.VARCHAR, max_length=200,),
-        FieldSchema(name="updated_at", dtype=DataType.VARCHAR, max_length=200,),
-        FieldSchema(name="is_active", dtype=DataType.BOOL),
-        FieldSchema(name="url", dtype=DataType.VARCHAR, max_length=300),
-    ]
-    schema = CollectionSchema(fields, "student handbook schema")
-    if handler.has_collection('student_handbook'):
-        collection = Collection('student_handbook')
-        existing_collections.append('student_handbook')
-    else:
-        collection = Collection('student_handbook', schema)
-        index_params = {
-            'metric_type':'L2',
-            'index_type':"IVF_FLAT",
-            'params':{"nlist":2048}
-        }
-        collection.create_index(field_name='embedding', index_params=index_params)
+    
     #Inserting
-    if 'student_handbook' not in existing_collections: #Check if collection already exists
-        collection = Collection('student_handbook')
-        path = './data/student_handbook_embedded.json'
-        #path = './data/student_handbook_embedded_OpenAI.json'
-        with open(student_path, 'r') as rstream:
-            data = json.load(rstream)
-            for d in data:
-                d['in_effect'] = str(d['in_effect'])
-                d['is_active'] = True
-            collection.insert(data)
 
-    df = read_news_csv(news_path)
+    df = read_news_csv(data_path)
     #df = read_news_csv('./data/FIT_news_combined.csv')
-    for col in df['type'].unique():
+    for col in df['collection'].unique():
         if col in existing_collections: #Check if collection already exists
             continue
-        data = df[df['type'] == col].loc[:, df.columns != 'type'].dropna(axis=1, how='all') #Get by type, remove columns with all NaN
+        data = df[df['collection'] == col].loc[:, df.columns != 'collection'].dropna(axis=1, how='all') #Get by type, remove columns with all NaN
         data = data.to_dict('records')
         for d in data:
-            # d['embedding'] = ast.literal_eval(d['embedding']) #Revert string representation to float array
-            d['embedding'] = ast.literal_eval(d['embedding_OpenAI'])
-            d.pop('embedding_OpenAI')
+            d['embedding'] = ast.literal_eval(d['embedding']) #Revert string representation to float array
+            #d['embedding'] = ast.literal_eval(d['embedding_OpenAI'])
+            #d.pop('embedding_OpenAI')
             if col == "events":
                 d['location'] = int(d['location'])
             elif col in ['recruitment', 'scholarship']:
@@ -201,9 +204,9 @@ Note that values may not be explicitly mentioned, but derived or written in acro
 
 import sys
 
-student_handbook_path = sys.argv[1]
-fit_news_path = sys.argv[2]
+data_path = sys.argv[1]
+collection_path = sys.argv[2]
 
-ingest_pipeline(student_handbook_path, fit_news_path)
+ingest_pipeline(data_path, collection_path)
 
 print('Chạy xong!')

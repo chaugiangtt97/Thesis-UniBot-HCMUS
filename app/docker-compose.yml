@@ -88,18 +88,18 @@ services:
       - "minio"
 
   milvus-ingestor:
-    build:
-      context: ./milvus/scripts
-    container_name: milvus-ingestor
-    depends_on:
-      standalone:
-        condition: service_healthy
-    networks:
-      - chatbot-network
-    volumes:
-      - ./milvus/scripts:/app
-    working_dir: /app
-    restart: "no"  # Chạy 1 lần, không cần restart
+     build:
+       context: ./milvus/scripts
+     container_name: milvus-ingestor
+     depends_on:
+       standalone:
+         condition: service_healthy
+     networks:
+       - chatbot-network
+     volumes:
+       - ./milvus/scripts:/app
+     working_dir: /app
+     restart: "no"  # Chạy 1 lần, không cần restart
 
   python_service:
     build:
