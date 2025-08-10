@@ -60,6 +60,8 @@ export const useApi = {
   get_captcha_token: () =>
     getRequest(server_domain + configRequest, `/captcha`, null, null),
 
+  get_collections: () =>
+    getRequest(server_domain + configRequest, `/collections`, null, null),
 
   // -------------------------------------------------------------------------
   // --------------------- Chat Session Request ------------------------------

@@ -497,6 +497,15 @@ export function ChatGenerator() {
   const [recommendQuestion, setRecommendQuestion] = useState(null)
   const [recommendQuestionPage, setRecommendQuestionPage] = useState(0)
 
+  const [topics, setTopics] = useState(null)
+
+  useEffect(() => {
+    !topics && useApi.get_collections().then((data) => {
+      const sortedByTimestamp = data.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+      setTopics(sortedByTimestamp)
+    })
+  }, [topics])
+
   return (
 
     <Box sx={{ position: 'relative', width: '100%', height: '100%', paddingTop: { xs: 6, md: 3 }, paddingBottom: { xs: 1.5, md: 2 }, paddingX: { xs: 1.5, md: 2 } }}>
@@ -520,25 +529,27 @@ export function ChatGenerator() {
                 <StarIcon sx={{ fontSize: { xs: '28px !important', xl: '42px !important' }, color: '#e7e74e' }} />
                 <Typography sx={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>{t('topics_of_interest')}</Typography>
               </Box>
-              {[
-                'academic_affairs_info',
-                'school_info',
-                'scholarship_info',
-                'event_info',
-                'recruitment_info',
-                'timetable_lookup_info',
-              ].map((data, zIndex) => (
-                <>
-                  <Button
-                    disabled={zIndex === recommendQuestionPage}
-                    onClick={() => setRecommendQuestionPage(zIndex)}
-                    startIcon={ICON_LIST[zIndex]}
-                    endIcon={<ExpandMoreOutlinedIcon sx={{ fontSize: { xs: '20px', xl: '32px' } }} />}
-                    sx={{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: { xs: '0.725rem', md: '0.775rem', xl: '1.115rem' }, textAlign: 'start', color: 'inherit' }}>
-                    {t(data)}
-                  </Button>
+              {
+                // [
+                //   'academic_affairs_info',
+                //   'school_info',
+                //   'scholarship_info',
+                //   'event_info',
+                //   'recruitment_info',
+                //   'timetable_lookup_info',
+                // ]
+                topics && topics.map((data, zIndex) => (
+                  <>
+                    <Button
+                      disabled={zIndex === recommendQuestionPage}
+                      onClick={() => setRecommendQuestionPage(zIndex)}
+                      startIcon={ICON_LIST[zIndex]}
+                      endIcon={<ExpandMoreOutlinedIcon sx={{ fontSize: { xs: '20px', xl: '32px' } }} />}
+                      sx={{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: { xs: '0.725rem', md: '0.775rem', xl: '1.115rem' }, textAlign: 'start', color: 'inherit' }}>
+                      {t(data.name)}
+                    </Button>
 
-                  {zIndex === recommendQuestionPage && <Box sx={{ maxHeight: zIndex === recommendQuestionPage ? 'auto' : '0px', overflow: 'hidden', borderRadius: '10px', padding: '5px' }}>
+                    {/* {zIndex === recommendQuestionPage && <Box sx={{ maxHeight: zIndex === recommendQuestionPage ? 'auto' : '0px', overflow: 'hidden', borderRadius: '10px', padding: '5px' }}>
                     {
                       RECOMMENDATION_QUESTION[zIndex].map((data, zIndex) => (
                         <Button onClick={() => setRecommendQuestion(data)}
@@ -551,9 +562,9 @@ export function ChatGenerator() {
                         </Button>
                       ))
                     }
-                  </Box>}
-                </>
-              ))}
+                  </Box>} */}
+                  </>
+                ))}
             </Block>
           </Box>
         </Grid>

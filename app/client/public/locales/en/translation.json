@@ -91,8 +91,34 @@
     }
   },
 
+  "topics_of_interest": "Topics of Interest",
+  "school_info": "School Information",
+  "scholarship_info": "Scholarship Information",
+  "event_info": "Event Information",
+  "recruitment_info": "Recruitment Information",
+  "timetable_lookup_info": "Class Schedule Lookup",
+  "academic_affairs_info": "Academic Regulations",
 
   "system_notice_testing": "The system is currently in the testing phase. For official information, please contact info@fit.hcmus.edu.vn",
+  "model_accuracy_notice": "Note: The model may provide inaccurate answers in some cases, so please always verify the information.",
+  "question_input_hint": "Enter your question – up to 3000 words",
+
+  "greeting_with_username": "Hello, {{name}}!",
+  "assistant_offer_help": "How can I help you today?",
+
+  "chat_list": "Chat List",
+  "start_new_chat": "Start New Chat",
+
+  "faq_title": "Frequently Asked Questions (FAQs)",
+  "faq_chatbot_how_it_works": "How does the chatbot work?",
+  "faq_how_to_use_chatbot": "How do I use the chatbot to find information?",
+  "faq_chatbot_trustworthy": "Is the information from the chatbot reliable?",
+  "faq_how_to_contact_support": "How can I contact support?",
+
+  "faq_how_chatbot_works_answer": "The chatbot works by taking the user's question and applying text similarity techniques to search for relevant content in a pre-vectorized dataset stored in a vector database. It then retrieves related text chunks and uses a large language model (LLM) to generate an appropriate response.",
+  "faq_how_to_use_chatbot_answer": "To use the chatbot effectively, you should ask clear and complete questions so the model can generate accurate answers. However, in some cases, the responses may be inaccurate, so it is important to verify the information or contact support if necessary.",
+  "faq_chatbot_trustworthy_answer": "As the chatbot is based on probabilistic models, the information it provides may not always be accurate. Therefore, you should verify the content or contact support when needed.",
+  "faq_contact_support_answer": "You can go to the Feedback/Error Reporting section or contact the Student Affairs Office of the university.",
 
   "forgot_password_title": "Forgot Password",
   "email_label": "Login email",

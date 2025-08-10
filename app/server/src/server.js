@@ -4,6 +4,7 @@
  */
 
 import initMongo from './config/mongodb.js'
+
 const app = require('./app.js')
 const https = require('http')
 const io = require('./socket')
@@ -16,9 +17,10 @@ var options = {
   key: fs.readFileSync(keyPath),
   cert: fs.readFileSync(certPath)
 }
-async function bootstrap () {
+async function bootstrap() {
 
   await initMongo()
+
   return https.createServer(options, app).listen(process.env.APP_PORT || 8017)
 }
 

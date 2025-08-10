@@ -12,9 +12,9 @@ export default ({ mode }) => {
   const loadedEnv = loadEnv(mode, process.cwd(), '');
   loadedEnv.ENV_PORT;
   return defineConfig({
-    // base: `/${loadedEnv.VITE_SUBDIR}/`,
+    base: `/${loadedEnv.VITE_SUBDIR}/`,
     plugins: [react(), svgr()],
-    base: './',
+    // base: './',
     __VALUE__: `"${process.env.VALUE}"`,
     resolve: {
       alias: [{ find: "~", replacement: "/src" }],
@@ -45,6 +45,13 @@ export default ({ mode }) => {
 
         '/socket.io': {
           target: 'http://localhost:8017', // Địa chỉ của API server
+          secure: false,
+          changeOrigin: true,
+          ws: true,
+        },
+
+        '/locales': {
+          target: 'http://localhost:3000/unibot/locales', // Địa chỉ của API server
           secure: false,
           changeOrigin: true,
           ws: true,
