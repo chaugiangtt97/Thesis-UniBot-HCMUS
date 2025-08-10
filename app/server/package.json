@@ -22,6 +22,7 @@
   "dependencies": {
     "@babel/runtime": "^7.22.10",
     "@jridgewell/gen-mapping": "^0.3.5",
+    "@zilliz/milvus2-sdk-node": "^2.5.10",
     "bcrypt": "^5.1.1",
     "cheerio": "^1.0.0",
     "cors": "^2.8.5",
@@ -31,7 +32,7 @@
     "ejs": "^3.1.10",
     "esm": "^3.2.25",
     "express": "^4.18.2",
-    "express-form-data": "^2.0.23",
+    "express-form-data": "^3.0.1",
     "express-validator": "^7.2.0",
     "fs": "^0.0.1-security",
     "https": "^1.0.0",

@@ -1,5 +1,5 @@
 const ErrorMessage = {
-    'WRONG_PASSWORD' : 'Tài Khoản hoặc mật khẩu không hợp lệ',
+    'WRONG_PASSWORD': 'Tài Khoản hoặc mật khẩu không hợp lệ',
     'USER_DOES_NOT_EXIST': 'Tài Khoản hoặc mật khẩu không hợp lệ',
     'ERR_CONNECTION_REFUSED': 'Server Không Hoạt Động',
     'EMAIL_ALREADY_EXISTS': 'Email đã tồn tại. Vui lòng nhập tài khoản khác !',
@@ -7,7 +7,7 @@ const ErrorMessage = {
 }
 
 const Code = {
-    'DEPT-GV' : 'Ban Giáo Vụ',
+    'DEPT-GV': 'Ban Giáo Vụ',
     'female': 'Nữ',
     'male': 'Nam',
     'school_year': 'Năm Học',
@@ -32,7 +32,7 @@ const Code = {
     'CNTT': 'Công Nghệ Thông Tin',
     'NONE': 'Không có ( Chưa xét chuyên ngành )',
     'male': 'Nam',
-    
+
     'student_handbook': 'Sổ tay sinh viên',
     'events': 'Thông tin sự kiện',
     'academic_affairs': 'Nội quy trường',
@@ -44,7 +44,9 @@ const Code = {
 }
 
 export const useErrorMessage = (code) => {
-    return ErrorMessage[code] ? ErrorMessage[code] : code
+    const messageKey = code.split(".");
+    return ErrorMessage[toString(messageKey[messageKey.length - 1])] ?
+        ErrorMessage[messageKey[messageKey.length - 1]] : messageKey[messageKey.length - 1]
 }
 
 export const useCode = (code) => {

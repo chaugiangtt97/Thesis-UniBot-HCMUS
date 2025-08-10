@@ -23,7 +23,7 @@ export const useApi = {
   // -----------------------------------------------------------------------
 
   login: async (email = null, password = null, captchaToken = null) =>
-    console.log({ email, password, captchaToken }) || await postRequest(server_domain + authRequest, `/login`, { email, password, captchaToken }),
+    await postRequest(server_domain + authRequest, `/login`, { email, password, captchaToken }),
 
   register: (email = null, password = null, name = null, educationRole = null,
     academicInformation = null, captchaToken = null) =>
@@ -60,6 +60,8 @@ export const useApi = {
   get_captcha_token: () =>
     getRequest(server_domain + configRequest, `/captcha`, null, null),
 
+  get_collections: () =>
+    getRequest(server_domain + configRequest, `/collections`, null, null),
 
   // -------------------------------------------------------------------------
   // --------------------- Chat Session Request ------------------------------

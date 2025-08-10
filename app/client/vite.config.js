@@ -12,8 +12,7 @@ export default ({ mode }) => {
   const loadedEnv = loadEnv(mode, process.cwd(), '');
   loadedEnv.ENV_PORT;
   return defineConfig({
-    // base: `/${loadedEnv.VITE_SUBDIR}/`,
-    base: '/unibot/',
+    base: `/${loadedEnv.VITE_SUBDIR}/`,
     plugins: [react(), svgr()],
     // base: './',
     __VALUE__: `"${process.env.VALUE}"`,
@@ -27,7 +26,7 @@ export default ({ mode }) => {
       https: false,
       port: 3000,
       proxy: {
-        [`/api`]: {
+        [`/unibot/api`]: {
           target: `http://localhost:8017/`,
           secure: false,
           ws: true,
@@ -46,6 +45,13 @@ export default ({ mode }) => {
 
         '/socket.io': {
           target: 'http://localhost:8017', // Địa chỉ của API server
+          secure: false,
+          changeOrigin: true,
+          ws: true,
+        },
+
+        '/locales': {
+          target: 'http://localhost:3000/unibot/locales', // Địa chỉ của API server
           secure: false,
           changeOrigin: true,
           ws: true,

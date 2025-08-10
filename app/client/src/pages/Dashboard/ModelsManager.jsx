@@ -92,8 +92,8 @@ function ModelsManager() {
     const res = await useApi.postParams(token,
       use_history = isHitoryInExtract,
       max_tokens = max_token_output,
-      filter_bias = filter_bias,
-      threshold = threshold,
+      filter_bias,
+      threshold,
       k = k_document,
     ).then(() => {
       processHandler.remove('#updateParamsEvent', updateParamsEvent)

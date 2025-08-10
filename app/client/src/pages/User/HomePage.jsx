@@ -4,12 +4,15 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import { TypeAnimation } from 'react-type-animation';
 import avatar from '~/assets/10665849.png';
+import { useTranslation } from "react-i18next";
 
 const HomePage = () => {
   const { mainLayout } = useOutletContext();
   const navigate = useNavigate();
   const isLogin = useSelector((state) => state.auth.user ? state.auth.loggedIn : null);
   const user = useSelector((state) => state.auth.user);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     document.title = 'Chatbot - Trang Chủ';
@@ -53,7 +56,7 @@ const HomePage = () => {
           flexDirection: 'column',
           alignItems: 'center',
           gap: { xs: 1, md: 2 },
-          maxWidth: { xs: '95vw', md: '480px', xl: '540rem' },
+          maxWidth: { xs: '95vw', md: '520px', xl: '580rem' },
         }}
       >
         <Box sx={{ width: { xs: '295px', xl: '445px' }, height: { xs: '200px', xl: '285px' } }}>
@@ -75,11 +78,12 @@ const HomePage = () => {
             WebkitBackgroundClip: 'text',
           }}
         >
-          <TypeAnimation
-            sequence={['Xin chào,', 'Xin chào, Mình là UniBot!']}
+          {/* <TypeAnimation
+            sequence={[t("homepage.greeting_with_name", { name: "Unibot" })]}
             speed={40}
             cursor
-          />
+          /> */}
+          {t("homepage.greeting_with_name", { name: "Unibot" })}
         </Typography>
 
         <Typography
@@ -91,7 +95,8 @@ const HomePage = () => {
             paddingBottom: { xs: 0.5, xl: 1 }
           }}
         >
-          Trợ lý ảo giúp bạn giải đáp thắc mắc, thông tin một cách nhanh chóng và chính xác nhất. Bạn cần đăng nhập để sử dụng!
+          {/* Trợ lý ảo giúp bạn giải đáp thắc mắc, thông tin một cách nhanh chóng và chính xác nhất. Bạn cần đăng nhập để sử dụng! */}
+          {t('homepage.assistant_description')} {t('homepage.login_prompt')}
         </Typography>
 
         <Button
@@ -104,7 +109,7 @@ const HomePage = () => {
           }}
           onClick={handleStart}
         >
-          Đăng Nhập Ngay
+          {t('homepage.login_now')}
         </Button>
       </Box>
     </Box>

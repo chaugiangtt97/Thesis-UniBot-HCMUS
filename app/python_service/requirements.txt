@@ -92,7 +92,6 @@ lomond==0.3.3
 MarkupSafe==3.0.2
 marshmallow==3.23.0
 matplotlib-inline==0.1.7
-milvus-lite==2.4.10
 milvus-model==0.2.10
 mistune==3.0.2
 mpmath==1.3.0

@@ -8,6 +8,7 @@ import { useErrorMessage } from '~/hooks/useMessage';
 import { useDispatch, useSelector } from 'react-redux';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useApi } from '~/apis/apiRoute';
+import { useTranslation } from 'react-i18next';
 
 const SignInCard = styled(Card)(({ theme }) => ({
   display: 'flex', flexDirection: 'column',
@@ -39,6 +40,8 @@ function SignIn() {
 
   const recaptchaRef = useRef();
 
+  const { t, i18n } = useTranslation();
+
   const handleCaptchaChange = (token) => {
     setCaptchaToken(token);
   };
@@ -49,7 +52,7 @@ function SignIn() {
 
   const validateInputs = () => {
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha !')
+      setNotification('Vui lòng xác minh captcha!')
       setNotificationSuccess(null)
       return false;
     }
@@ -128,36 +131,36 @@ function SignIn() {
       <SignInCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Đăng Nhập Tài Khoản </Typography>
+          {t("lecturer_register_page.heading")} </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>Tên đăng nhập</FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder="mssv@email.com" inputProps={{ maxLength: 40 }}
+            <FormLabel htmlFor="email" sx={{ color: 'inherit' }}> {t("login_page.email_label")}</FormLabel>
+            <TextInput id="email" type="username" name="email" placeholder={t("login_page.placeholder_username")} inputProps={{ maxLength: 40 }}
               autoComplete="email" autoFocus required fullWidth variant="outlined" />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>Mật khẩu</FormLabel>
+              <FormLabel htmlFor="password" sx={{ color: 'inherit' }}>{t("login_page.password_label")}</FormLabel>
               <Link variant="body2"
                 onClick={() => navigate(`/email/request-verification`)} // href={import.meta.env.VITE_ENVIRONMENT ? `/${import.meta.env.VITE_ENVIRONMENT}/forgotPassword/request-verification` : `/forgotPassword/request-verification`}
                 sx={{ alignSelf: 'baseline', color: 'inherit' }}>
-                Quên mật khẩu ? </Link>
+                {t("login_page.forgot_password_title")} </Link>
             </Box>
-            <TextInput name="password" placeholder="••••••" type="password" id="password"
+            <TextInput name="password" placeholder={t("login_page.placeholder_password")} type="password" id="password"
               autoComplete="current-password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
               sx={{ color: '#000' }} />
           </FormControl>
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
             sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Đăng nhập </Button>
+            {t("login_page.continue_button")} </Button>
 
           <Button type="submit" fullWidth variant="outlined" onClick={() => navigate('/register')}
             sx={{ '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Đăng Kí Tài Khoản</Button>
+            {t("login_page.register_account")}</Button>
 
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography sx={{ textAlign: 'center' }}>
@@ -168,7 +171,7 @@ function SignIn() {
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >
-                  Trở về trang chủ
+                  {t('login_page.back_to_home')}
                 </Link>
               </span>
             </Typography>
@@ -179,7 +182,7 @@ function SignIn() {
                   variant="body2"
                   sx={{ alignSelf: 'center', cursor: 'pointer' }}
                 >
-                  Yêu Cầu Xác Minh Tài Khoản !
+                  {t("login_page.request_verification")}{/* Yêu Cầu Xác Minh Tài Khoản ! */}
                 </Link>
               </span>
             </Typography>

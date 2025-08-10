@@ -1,0 +1,72 @@
+{
+  "nav_home": "Trang Chủ",
+  "nav_fags": "Báo lỗi/Góp ý",
+  "nav_conservation": "Trò Chuyện",
+  "nav_feedback": "Báo lỗi/Góp ý",
+  "nav_profile_page_edit": "Thông Tin Cá Nhân",
+
+  "light_mode": "Chế Độ Sáng",
+  "dark_mode": "Chế Độ Tối",
+  "auto_mode": "Chế Độ Mặc Định",
+
+  "#login": "Đăng Nhập",
+  "#logout": "Đăng Xuất",
+
+  "cancel": "Hủy",
+  "continue": "Tiếp tục",
+  
+  "homepage": {
+    "login_now": "Đăng nhập ngay",
+    "greeting_with_name": "Xin chào, chúng tôi là {{name}}.",
+    "assistant_description": "Trợ lý ảo giúp bạn giải đáp thắc mắc, thông tin một cách nhanh chóng và chính xác nhất.",
+    "login_prompt": "Bạn cần đăng nhập để sử dụng!"
+  },
+  
+
+  "login_page": {
+    "heading": "Đăng Nhập",
+    "email_label": "Tài Khoản",
+    "password_label": "Mật Khẩu",
+    "placeholder_username": "abcd@email.com",
+    "forgot_password_title": "Quên tài khoản?",
+    "continue_button": "Tiếp Tục",
+
+    "placeholder_password": "••••••",
+    "register_account": "Đăng kí tài khoản",
+    "back_to_home": "Trở về trang đăng nhập",
+    "request_verification": "Request Account Verification!",
+    "error_enter_valid_email": "Please enter a valid email!",
+    "error_password_minimum": "Password must be at least 6 characters!",
+    "error_verify_captcha": "Please verify the captcha!",
+    "success_verification_sent": "Request sent. Please check your email!"
+  },
+
+  "topics_of_interest": "Chủ Đề Quan Tâm",
+  "school_info": "Thông tin trường học",
+  "scholarship_info": "Thông tin học bổng",
+  "event_info": "Thông tin sự kiện",
+  "recruitment_info": "Tin tuyển dụng",
+  "timetable_lookup_info": "Tra cứu lịch học",
+  "academic_affairs_info": "Nội quy trường học",
+
+  "system_notice_testing": "Hệ thống đang trong giai đoạn thử nghiệm, mọi thông tin chính thức vui lòng liên hệ info@fit.hcmus.edu.vn",
+  "model_accuracy_notice": "Lưu ý: Mô hình có thể đưa ra câu trả lời không chính xác ở một số trường hợp, vì vậy hãy luôn kiểm chứng thông tin bạn nhé!",
+  "question_input_hint": "Nhập câu hỏi - tối đa 3000 từ",
+
+  "greeting_with_username": "Xin Chào Bạn, {{name}}!",
+  "assistant_offer_help": "Tôi có thể giúp gì hôm nay?",
+
+  "chat_list": "Danh sách trò chuyện",
+  "start_new_chat": "Tạo mới trò chuyện",
+
+  "faq_title": "Những câu hỏi thường gặp (FAQs)",
+  "faq_chatbot_how_it_works": "Chatbot hoạt động như thế nào?",
+  "faq_how_to_use_chatbot": "Cách sử dụng chatbot để tra cứu thông tin",
+  "faq_chatbot_trustworthy": "Thông tin từ chatbot có đáng tin cậy không?",
+  "faq_how_to_contact_support": "Tôi có thể liên hệ hỗ trợ như thế nào?",
+
+  "faq_how_chatbot_works_answer": "Chatbot hoạt động bằng cách từ câu hỏi của người dùng, sử dụng kỹ thuật tìm văn bản liên quan đến câu hỏi trong bộ dữ liệu đã được vector hóa (text similarity) và lưu trữ thông qua vector database. Giúp lấy ra những đoạn văn bản có liên quan sau đó dùng mô hình ngôn ngữ lớn (LLM) để sinh câu trả lời.",
+  "faq_how_to_use_chatbot_answer": "Để sử dụng chatbot một cách hiệu quả nhất bạn nên đặt câu hỏi một cách rõ ràng đầy đủ để mô hình có thể đưa ra câu trả lời chính xác. Tuy nhiên, ở một số trường hợp câu trả lời có thể không chính xác nên bạn phải kiểm chứng thông tin hoặc liên hệ hỗ trợ nếu cần thiết nhé.",
+  "faq_chatbot_trustworthy_answer": "Vì là một mô hình xác suất nên thông tin chatbot đưa ra có thể không chính xác ở một số trường hợp, bạn nên kiểm chứng thông tin hoặc liên hệ hỗ trợ nếu cần thiết nhé.",
+  "faq_contact_support_answer": "Vào phần Góp ý/báo lỗi hoặc phòng công tác sinh viên của trường."
+}
