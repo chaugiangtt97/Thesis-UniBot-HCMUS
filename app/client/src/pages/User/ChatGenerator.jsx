@@ -20,14 +20,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';;
 import { useOutletContext } from 'react-router-dom';
-
+import { useTranslation } from 'react-i18next';
 function NewChatModal({ modalHandler = null }) {
 
   const [name, setName] = useState('')
   const [description, setDescription] = useState('')
   const [notice, setNotice] = useState(null)
   const { processHandler } = useOutletContext();
-
+  const { t } = useTranslation();
   useEffect(() => {
     setName('')
     setDescription('')
@@ -37,7 +37,7 @@ function NewChatModal({ modalHandler = null }) {
   const newChat = async (e) => {
     e.preventDefault()
     if (name == '') {
-      setNotice('Vui lòng nhập tên cuộc trò chuyện !')
+      setNotice(t('enter_conversation_name'))
     } else {
       const sendFeedbackEvent = processHandler.add('#sendFeedback')
       await modalHandler.submit({
@@ -58,7 +58,7 @@ function NewChatModal({ modalHandler = null }) {
         onClose={modalHandler?.close}>
         <DialogTitle sx={{ display: 'flex', gap: 1.5, alignItems: 'center' }}>
           <Box sx={{ width: '50vw', maxWidth: '450px' }}>
-            <OpenInNewIcon /> Tạo Cuộc Trò Chuyện
+            <OpenInNewIcon /> {t('create_session_title')}
           </Box>
         </DialogTitle>
         <DialogContent >
@@ -261,7 +261,7 @@ export function ChatGenerator() {
 
         }
 
-          {sessions.length == 0 && <> Không có cuộc trò chuyện </>}
+          {sessions.length == 0 && <> {t('no_conversations')} </>}
         </Box>}
 
         {(apiHandler.session || !sessions) && <Box sx={{ height: '100%', maxHeight: 'calc(100vh - 280px)', overflow: 'auto', padding: 1 }}> {
@@ -275,7 +275,7 @@ export function ChatGenerator() {
             variant='contained' color='info'
             startIcon={<OpenInNewIcon />}
             disabled={messageHandler.isProcess}
-            onClick={() => setOpenCreateChat(true)}>Tạo Mới Trò Chuyện</Button>
+            onClick={() => setOpenCreateChat(true)}>{t('start_new_chat')}</Button>
         </Box>
       </Block>)
 
@@ -514,9 +514,11 @@ export function ChatGenerator() {
       </Box>
       <Grid container spacing={2} sx={{ height: '100%', '--Grid-rowSpacing': { md: 'calc(2 * var(--mui-spacing))', xs: 1 } }}>
 
-        <Grid size={{ xs: 0, md: 2.5 }} sx={{ height: '100%' }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh' }}>
+        <Grid size={{ xs: 0, md: 2.3 }} sx={{ height: '100%' }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh', overflow: "auto" }}>
             <Block sx={{
+              maxHeight: "calc(-144px + 100vh)",
+              height: "100vh",
               padding: '16px !important',
               paddingBottom: '32px !important',
               backgroundImage: theme => theme.palette.mode == 'dark' ? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
@@ -537,13 +539,14 @@ export function ChatGenerator() {
                 //   'event_info',
                 //   'recruitment_info',
                 //   'timetable_lookup_info',
+                //   '', 'abd', 'abd', 'ầ', 'ấdf', 'ấd', 'gfasd', 'adgasdg', 'ádgf', 'faddd'
                 // ]
-                topics && topics.map((data, zIndex) => (
+                topics && topics.map((data, zIndex) => ( // topics && topics
                   <>
                     <Button
                       disabled={zIndex === recommendQuestionPage}
                       onClick={() => setRecommendQuestionPage(zIndex)}
-                      startIcon={ICON_LIST[zIndex]}
+                      startIcon={ICON_LIST[zIndex] || zIndex}
                       endIcon={<ExpandMoreOutlinedIcon sx={{ fontSize: { xs: '20px', xl: '32px' } }} />}
                       sx={{ transition: 'none !important', '--mui-palette-action-disabled': '#', width: '100%', justifyContent: 'space-between', fontSize: { xs: '0.725rem', md: '0.775rem', xl: '1.115rem' }, textAlign: 'start', color: 'inherit' }}>
                       {t(data.name)}
@@ -569,7 +572,7 @@ export function ChatGenerator() {
           </Box>
         </Grid>
 
-        <Grid offset={{ xs: 0, md: 0 }} size={{ xs: 12, md: 6.8 }} sx={{ height: '100%' }} >
+        <Grid offset={{ xs: 0, md: 0 }} size={{ xs: 12, md: 6.9 }} sx={{ height: '100%' }} >
           <Block sx={{
             paddingBottom: { xl: '130px !important', md: '95px !important', xs: '95px !important' },
             width: '100%',
@@ -632,7 +635,7 @@ export function ChatGenerator() {
           </Block>
         </Grid>
 
-        <Grid size={{ xs: 0, md: 2.7 }} sx={{ height: '100%' }}>
+        <Grid size={{ xs: 0, md: 2.8 }} sx={{ height: '100%' }}>
           <Block sx={{
             padding: { xs: '8px !important', xl: '24px !important' },
             backgroundImage: theme => theme.palette.mode == 'dark' ? BlockStyle.bgColor_dark : BlockStyle.bgColor_light,
@@ -691,7 +694,8 @@ export function ChatGenerator() {
 
             }
 
-              {sessions.length == 0 && <> Không có cuộc trò chuyện </>}
+              {/* {sessions.length == 0 && <> Không có cuộc trò chuyện </>} */}
+              {sessions.length == 0 && <> {t('no_conversations')} </>}
             </Box>}
 
             {(apiHandler.session || !sessions) && <Box sx={{ height: '100%', maxHeight: 'calc(100vh - 280px)', overflow: 'auto', padding: 1 }}> {
@@ -715,11 +719,11 @@ export function ChatGenerator() {
         modalHandler={{
           state: openCreateChat,
           close: () => setOpenCreateChat(false),
-          submitTitle: 'Tạo Cuộc Trò Chuyện',
+          submitTitle: t('create_session_title'),//'Tạo Cuộc Trò Chuyện',
           submit: (data) => newChatAction(data)
         }} />
 
-    </Box>
+    </Box >
   )
 
 
@@ -737,7 +741,7 @@ import Filter7OutlinedIcon from '@mui/icons-material/Filter7Outlined';
 
 import ExpandMoreOutlinedIcon from '@mui/icons-material/ExpandMoreOutlined';
 import { useApi } from '~/apis/apiRoute';
-import { useTranslation } from 'react-i18next';
+
 
 const ICON_LIST = [<Filter1OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
 <Filter2OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
@@ -745,7 +749,8 @@ const ICON_LIST = [<Filter1OutlinedIcon sx={{ fontSize: { xs: '16px !important',
 <Filter4OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
 <Filter5OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
 <Filter6OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />,
-<Filter7OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />]
+<Filter7OutlinedIcon sx={{ fontSize: { xs: '16px !important', xl: '28px !important' } }} />
+]
 
 const RECOMMENDATION_QUESTION = [
   ['Tôi có thể tra cứu điểm và bảng điểm ở đâu?',

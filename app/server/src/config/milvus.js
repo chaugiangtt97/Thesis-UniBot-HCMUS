@@ -5,7 +5,7 @@ import { MilvusClient } from '@zilliz/milvus2-sdk-node'
 export async function listCollections() {
   try {
     const milvusClient = new MilvusClient({
-      address: 'localhost:19530' // standalone
+      address: 'standalone:19530' // standalone
     })
     const res = await milvusClient.showCollections()
     return res['data'] // res['data]

@@ -14,6 +14,10 @@ i18n
     detection: {
       checkWhitelist: true,
     },
+    backend: {
+      // Đổi tại đây:
+      loadPath: '/unibot/locales/{{lng}}/{{ns}}.json',
+    },
     debug: false,
     interpolation: {
       escapeValue: false, // no need for react. it escapes by default
