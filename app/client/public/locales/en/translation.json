@@ -108,6 +108,9 @@
 
   "chat_list": "Chat List",
   "start_new_chat": "Start New Chat",
+  "no_conversations": "No conversations",
+  "enter_conversation_name": "Please enter the conversation name!",
+  "create_session_title": "Create New Sessions",
 
   "faq_title": "Frequently Asked Questions (FAQs)",
   "faq_chatbot_how_it_works": "How does the chatbot work?",

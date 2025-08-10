@@ -340,7 +340,7 @@ function MainLayout() {
                 <Button className="menu-button" sx={{ paddingX: 2, fontSize: { xs: '1rem', xl: '1.575rem' }, fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }}
                   startIcon={
                     <Box sx={{ width: '50px', height: '50px', borderRadius: '50%', marginRight: 1 }}>
-                      <AvatarUserDefault sx={{ display: { xs: 'none', md: 'block' } }} />
+                      <AvatarUserDefault s_width={'38px'} s_height={'38px'} sx={{ display: { xs: 'none', md: 'block' } }} />
                     </Box>}
                   endIcon={<ExpandMoreIcon sx={{ fontWeight: 500, color: theme => theme.palette.mode == 'dark' ? '#fff' : '#047aff' }} />}
                   onClick={() => setOpenNavigateList((prev) => !prev)}

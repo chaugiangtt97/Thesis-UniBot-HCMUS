@@ -58,6 +58,8 @@
 
   "chat_list": "Danh sách trò chuyện",
   "start_new_chat": "Tạo mới trò chuyện",
+  "no_conversations": "Không có cuộc trò chuyện",
+  "create_session_title": "Tạo mới trò chuyện",
 
   "faq_title": "Những câu hỏi thường gặp (FAQs)",
   "faq_chatbot_how_it_works": "Chatbot hoạt động như thế nào?",
