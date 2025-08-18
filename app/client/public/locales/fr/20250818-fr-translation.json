@@ -682,9 +682,5 @@
   "error_write_new_password": "Les données sont obligatoires et doivent contenir au moins 6 caractères",
   "error_new_password_not_match": "Les mots de passe ne correspondent pas",
   "error_write_new_password_again": "Les données sont obligatoires et doivent contenir au moins 6 caractères",
-  "last_updated": "Dernière mise à jour le",
-
-  "mainlayout": {
-    "logout_noti": "Bạn Thật Sự Muốn Đăng Xuất Sao (Tiếng anh) ☹️"
-  }
+  "last_updated": "Dernière mise à jour le"
 }

@@ -45,7 +45,7 @@ export const ChatWithChatBot = async (socket) => {
         ...objectConservation,
         notification: [{
           step_name: 'chosen_collections',
-          notice: 'Xác định nội dung câu hỏi',
+          notice: 'Identify the content of the question',
           state: false,
           data: null,
           time: null
@@ -53,7 +53,7 @@ export const ChatWithChatBot = async (socket) => {
       })
 
       await updateChatSession(current_session, { in_progress: objectConservation })
-        .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
+        .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
 
       // Step 1
       const start_point_1 = (new Date()).getTime()
@@ -78,13 +78,13 @@ export const ChatWithChatBot = async (socket) => {
         'isProcess': true,
         notification: [{
           step_name: 'chosen_collections',
-          notice: 'Xác định nội dung câu hỏi',
+          notice: 'Identify the content of the question',
           state: true,
           data: chosen_collections,
           duration: end_point_1 - start_point_1
         }, {
           step_name: 'filter_expressions',
-          notice: 'Rút trích dữ liệu trong câu hỏi',
+          notice: 'Extract data from the question',
           state: false,
           data: null,
           time: null
@@ -94,7 +94,7 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
-        .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
+        .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
 
       if (chosen_collections == null || chosen_collections == '' || !!!chosen_collections) {
         socket.emit('/ChatWithChatBot/EndProcess', {
@@ -128,19 +128,19 @@ export const ChatWithChatBot = async (socket) => {
         'isProcess': true,
         notification: [{
           step_name: 'chosen_collections',
-          notice: 'Xác định nội dung câu hỏi',
+          notice: 'Identify the content of the question',
           state: true,
           data: chosen_collections,
           duration: end_point_1 - start_point_1
         }, {
           step_name: 'filter_expressions',
-          notice: 'Rút trích dữ liệu trong câu hỏi',
+          notice: 'Extract data from the question',
           state: true,
           data: filter_expressions,
           duration: end_point_2 - start_point_2
         }, {
           step_name: 'search',
-          notice: 'Tìm kiếm tài liệu trong kho',
+          notice: 'Search for documents in the repository',
           state: false,
           data: null,
           time: null
@@ -150,7 +150,7 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
-        .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
+        .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
 
       const start_point_3 = (new Date()).getTime()
 
@@ -174,25 +174,25 @@ export const ChatWithChatBot = async (socket) => {
         'isProcess': true,
         notification: [{
           step_name: 'chosen_collections',
-          notice: 'Xác định nội dung câu hỏi',
+          notice: 'Identify the content of the question',
           state: true,
           data: chosen_collections,
           duration: end_point_1 - start_point_1
         }, {
           step_name: 'filter_expressions',
-          notice: 'Rút trích dữ liệu trong câu hỏi',
+          notice: 'Extract data from the question',
           state: true,
           data: filter_expressions,
           duration: end_point_2 - start_point_2
         }, {
           step_name: 'search',
-          notice: 'Tìm kiếm tài liệu trong kho',
+          notice: 'Search for documents in the repository',
           state: true,
           data: searchResult.context,
           duration: end_point_3 - start_point_3
         }, {
           step_name: 'generate',
-          notice: 'Tạo văn bản',
+          notice: 'Generate a document',
           state: false,
           data: null,
           time: null
@@ -202,7 +202,7 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
-        .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
+        .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
       const start_point_4 = (new Date()).getTime()
 
       // Step 4
@@ -218,25 +218,25 @@ export const ChatWithChatBot = async (socket) => {
         'isProcess': true,
         notification: [{
           step_name: 'chosen_collections',
-          notice: 'Xác định nội dung câu hỏi',
+          notice: 'Identify the content of the question',
           state: true,
           data: chosen_collections,
           duration: end_point_1 - start_point_1
         }, {
           step_name: 'filter_expressions',
-          notice: 'Rút trích dữ liệu trong câu hỏi',
+          notice: 'Extract data from the question',
           state: true,
           data: filter_expressions,
           duration: end_point_2 - start_point_2
         }, {
           step_name: 'search',
-          notice: 'Tìm kiếm tài liệu trong kho',
+          notice: 'Search for documents in the repository',
           state: true,
           data: searchResult.context,
           duration: end_point_3 - start_point_3
         }, {
           step_name: 'generate',
-          notice: 'Tạo văn bản',
+          notice: 'Generate a document',
           state: true,
           data: null,
           duration: end_point_4 - start_point_4
@@ -252,7 +252,7 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
-        .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
+        .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
 
       socket.emit('/ChatWithChatBot/Processed', {
         ...objectConservation,
@@ -324,11 +324,12 @@ export const ChatWithChatBot = async (socket) => {
       await updateChatSession(current_session, { in_progress: null })
       socket.emit('/ChatWithChatBot/EndProcess', {
         ...objectConservation,
-        'anwser': '### Hệ Thống Hiện Không Hoạt Động !\n Tôi rất tiếc, hệ thống chúng tôi đang gặp sự cố và không thể cung cấp thông tin cho bạn.\n Nếu cần thiết bạn có thể liên hệ với giáo vụ để có thông tin một cách nhanh chóng và chính xác nhất.',
+        //'anwser': '### Hệ Thống Hiện Không Hoạt Động !\n Tôi rất tiếc, hệ thống chúng tôi đang gặp sự cố và không thể cung cấp thông tin cho bạn.\n Nếu cần thiết bạn có thể liên hệ với giáo vụ để có thông tin một cách nhanh chóng và chính xác nhất.',
+        'anwser': '### The System is Currently Unavailable! \n We\'re sorry, our system is experiencing issues and cannot provide you with the requested information at the moment. If necessary, please contact the academic affairs office for the most accurate and timely assistance.',
         'state': 'failed',
         'source': [
           {
-            'collection_name': 'Cổng Thông Tin Chính Thức',
+            'collection_name': 'Official Information Portal',
             'url': 'https://www.fit.hcmus.edu.vn'
           }
         ],
@@ -339,7 +340,7 @@ export const ChatWithChatBot = async (socket) => {
     try {
       await updateChatSession(current_session, { in_progress: null })
         .catch(() => {
-          throw 'Cập Nhật ChatSession Thất Bại '
+          throw 'Failed to update ChatSession '
         })
     } catch (error) {
       console.log('Lỗi ở bước cập nhật chat session', error)

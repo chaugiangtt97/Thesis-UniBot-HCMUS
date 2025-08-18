@@ -244,7 +244,7 @@ function Register() {
               <span>
                 <Link
                   // href="/signin"
-                  onClick={() => navigate(`/unibot/signin`)}
+                  onClick={() => navigate(`/signin`)}
                   variant="body2"
                   sx={{ alignSelf: 'center' }}
                 >

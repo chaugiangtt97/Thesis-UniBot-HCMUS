@@ -7,6 +7,7 @@ import { Navigate, useLocation, useNavigate, useOutletContext, useParams } from 
 import { login } from '~/store/actions/authActions';
 import { useAuth } from '~/apis/Auth';
 import { useErrorMessage } from '~/hooks/useMessage';
+import { useTranslation } from 'react-i18next';
 
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -44,6 +45,8 @@ function GeneratedPassword() {
   const navigate = useNavigate();
   const recaptchaRef = useRef();
 
+  const { t, i18n } = useTranslation();
+
   const location = useLocation();
   const email = location.state?.email;
 
@@ -59,7 +62,7 @@ function GeneratedPassword() {
 
   const validateInputs = () => {
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha !')
+      setNotification(t("generated_password.notice.captcha_verify"))//'Vui lòng xác minh captcha !'
       setNotificationSuccess(null)
       return false;
     }
@@ -69,13 +72,13 @@ function GeneratedPassword() {
 
     if (!new_password.value || new_password.value.length < 6) {
       setNotificationSuccess(null)
-      setNotification('Password phải tối thiểu có 6 kí tự !')
+      setNotification(t("generated_password.notice.password_min_length"))//'Password phải tối thiểu có 6 kí tự !'
       return false;
     }
 
     if (!(new_password.value == new_password_2.value)) {
       setNotificationSuccess(null)
-      setNotification('Password lặp lại không trùng khớp !')
+      setNotification(t("generated_password.notice.password_mismatch"))//'Password lặp lại không trùng khớp !'
       return false;
     }
 
@@ -96,7 +99,7 @@ function GeneratedPassword() {
         processHandler.remove('#updatePassword', updatePasswordEvent)
         noticeHandler.add({
           status: 'success',
-          message: 'Cập nhật mật khẩu thành công !',
+          message: t("generated_password.notice.password_update_success"), //'Cập nhật mật khẩu thành công !'
         })
         setTimeout(() => navigate('/signin'), 1000)
       })
@@ -116,28 +119,28 @@ function GeneratedPassword() {
     <>
       <SignInCard variant="outlined">
         <Typography component="h1" variant="h6"
-          sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Thay đổi mật khẩu </Typography>
+          sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >{t("generated_password.change_password")}
+        </Typography>//Thay đổi mật khẩu
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
 
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="new-password" sx={{ color: 'inherit' }}>Tạo mật khẩu mới</FormLabel>
+            <FormLabel htmlFor="new-password" sx={{ color: 'inherit' }}>{t("generated_password.create_new_password")}</FormLabel> //Tạo mật khẩu mới
             <TextInput name="new-password" placeholder="••••••" type="password" id="new-password"
               autoComplete="new-password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
               sx={{ color: '#000' }} />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="new-password-2" sx={{ color: 'inherit' }}>Tạo mật khẩu mới (Nhập lại)</FormLabel>
+            <FormLabel htmlFor="new-password-2" sx={{ color: 'inherit' }}>{t("generated_password.create_new_password_repeat")}</FormLabel>//Tạo mật khẩu mới (Nhập lại)
             <TextInput name="new-password-2" placeholder="••••••" type="password" id="new-password-2"
               autoComplete="new-password-2" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
               sx={{ color: '#000' }} />
           </FormControl>
 
           <FormControl sx={{ gap: 1 }}>
-            <FormLabel htmlFor="verify-password" sx={{ color: 'inherit' }}>Mã xác thực <Tooltip placement="top" title="Kiểm tra email để nhận mã xác nhận"><InfoOutlinedIcon /> </Tooltip></FormLabel>
+            <FormLabel htmlFor="verify-password" sx={{ color: 'inherit' }}>{t("generated_password.verification_code")}<Tooltip placement="top" title={t("generated_password.check_email_for_code")}><InfoOutlinedIcon /> </Tooltip></FormLabel> //Mã xác thực
             <TextInput name="verify-password" placeholder="••••••" id="verify-password"
               autoComplete="verify-password" required fullWidth variant="outlined" inputProps={{ maxLength: 40 }}
               sx={{ color: '#000' }} />
@@ -145,7 +148,7 @@ function GeneratedPassword() {
 
           <Button type="submit" fullWidth variant="contained" onClick={validateInputs}
             sx={{ background: theme => theme.palette.primary.main, '&:hover': { boxShadow: 'var(--mui-shadows-4)' } }} >
-            Xác Nhận </Button>
+            {t("generated_password.confirm")}</Button>//Xác Nhận
 
           {reducers_data?.captchaToken && <Box sx={{ display: 'flex', justifyContent: 'end' }}>
             <ReCAPTCHA

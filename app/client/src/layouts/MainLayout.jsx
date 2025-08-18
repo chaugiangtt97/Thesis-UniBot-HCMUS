@@ -218,7 +218,7 @@ function MainLayout() {
             backgroundSize: '100% 100%',
             WebkitBackgroundClip: 'text'
           }}>
-            FIT@HCMUS
+            UNIBOT
           </Typography>
         </Box>
 
@@ -437,8 +437,8 @@ function MainLayout() {
         state: isOpenModel,
         close: () => setIsOpenModel(false),
         action: logoutClick,
-        actionName: 'Đăng Xuất'
-      }} title={' '} content={'Bạn Thật Sự Muốn Đăng Xuất Sao ☹️'} />
+        actionName: 'logout'
+      }} title={' '} content={'Are you sure you want to log out? ☹️'} />
 
     </Box>
   )
@@ -453,11 +453,11 @@ let countries = [
     name: "Français",
     country_code: "fr",
   },
-  {
-    code: "vn",
-    name: "Viet Nam",
-    country_code: "vn",
-  },
+  // {
+  //   code: "vn",
+  //   name: "Viet Nam",
+  //   country_code: "vn",
+  // },
   {
     code: "en",
     name: "English",

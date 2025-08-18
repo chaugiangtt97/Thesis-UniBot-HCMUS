@@ -46,7 +46,7 @@ function NewChatModal({ modalHandler = null }) {
         modalHandler?.close()
       })
         .catch(() => {
-          setNotice('Tạo mới không thành công')
+          setNotice(t("user_chatgenerator.creation_failed")) //'Tạo mới không thành công'
         }).finally(() => processHandler.remove('#sendFeedback', sendFeedbackEvent))
     }
   }
@@ -72,7 +72,7 @@ function NewChatModal({ modalHandler = null }) {
                 '--mui-palette-text-primary': '#000',
                 '--mui-palette-common-onBackgroundChannel': '0 0 0'
               }}
-              placeholder='Tên Cuộc Trò Chuyện' />
+              placeholder={t("user_chatgenerator.conversation_name")} />
             <TextField
               inputProps={{ maxLength: 100 }}
               variant="standard"
@@ -86,7 +86,7 @@ function NewChatModal({ modalHandler = null }) {
               //   '& div::before' : { borderBottom: '1px solid #a0a0a0b3' },
               //   '& div::after' : { borderBottom: '1px solid #a0a0a0b3' },
               // }}
-              placeholder='Mô tả Cuộc Trò Chuyện' />
+              placeholder={t("user_chatgenerator.conversation_description")} />
           </DialogContentText>
 
           {notice &&
@@ -318,7 +318,7 @@ export function ChatGenerator() {
     if (messageHandler.isProcess) {
       noticeHandler.add({
         status: 'warning',
-        message: 'Tiến trình của bạn đang được thực hiện'
+        message: t("user_chatgenerator.process_in_progress") //'Tiến trình của bạn đang được thực hiện'
       })
       return
     }
@@ -327,7 +327,7 @@ export function ChatGenerator() {
     if (socket == null || socket.connected == false) {
       noticeHandler.add({
         status: 'error',
-        message: 'Xin lỗi bạn, Chatbot hiện không hoạt động !'
+        message: t("user_chatgenerator.chatbot_unavailable") //'Xin lỗi bạn, Chatbot hiện không hoạt động !'
       })
       return
     }
@@ -367,7 +367,7 @@ export function ChatGenerator() {
     if (socket == null || socket.connected == false) {
       noticeHandler.add({
         status: 'error',
-        message: 'Xin lỗi bạn, Chatbot hiện không hoạt động !'
+        message: t("user_chatgenerator.chatbot_unavailable") //'Xin lỗi bạn, Chatbot hiện không hoạt động !'
       })
       return
     }
@@ -447,7 +447,7 @@ export function ChatGenerator() {
       setSessions(prev => prev.filter((session) => session._id != removed_session._id))
       noticeHandler.add({
         status: 'success',
-        message: 'Xóa cuộc hội thoại thành công !',
+        message: t("user_chatgenerator.delete_conversation_success") //'Xóa cuộc hội thoại thành công !',
       })
       if (currentChatSession?._id == removed_session?._id) {
         setCurrentChatSession(null)
@@ -466,7 +466,7 @@ export function ChatGenerator() {
     }).catch((error) => {
       noticeHandler.add({
         status: 'error',
-        message: 'Xóa cuộc hội thoại thất bại !',
+        message: t("user_chatgenerator.delete_conversation_failed"), //'Xóa cuộc hội thoại thất bại !',
         auto: false
       })
     })

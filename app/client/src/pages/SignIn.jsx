@@ -52,7 +52,7 @@ function SignIn() {
 
   const validateInputs = () => {
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha!')
+      setNotification(t("sign_in_page.notice.captcha_verify"))//'Vui lòng xác minh captcha!'
       setNotificationSuccess(null)
       return false;
     }
@@ -62,14 +62,14 @@ function SignIn() {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
 
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("sign_in_page.notice.email_verify"))//'Vui lòng nhập email hợp lệ !'
       setNotificationSuccess(null)
       return false;
     }
 
     if (!password.value || password.value.length < 6) {
       setNotificationSuccess(null)
-      setNotification('Password phải tối thiểu có 6 kí tự !')
+      setNotification(t("sign_in_page.notice.password_min_length"))//'Password phải tối thiểu có 6 kí tự !'
       return false;
     }
 
@@ -104,7 +104,7 @@ function SignIn() {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
 
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("sign_in_page.notice.email_verify"))//'Vui lòng nhập email hợp lệ !'
       setNotificationSuccess(null)
       return false;
     }
@@ -113,7 +113,7 @@ function SignIn() {
     await useAuth.send_verifyEmail(email.value)
       .then(() => {
         processHandler.remove('#verifyEmail', logInEvent)
-        setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
+        setNotificationSuccess(t("sign_in_page.notice.request_sent_check_email"))//'Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !'
         setNotification()
         navigate('/validateEmail')
       })
@@ -131,7 +131,7 @@ function SignIn() {
       <SignInCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          {t("login_page.heading")} </Typography>
+          {t("lecturer_register_page.heading")} </Typography>
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >

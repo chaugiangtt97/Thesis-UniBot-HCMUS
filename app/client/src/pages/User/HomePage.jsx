@@ -15,7 +15,7 @@ const HomePage = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = 'Chatbot - Trang Chủ';
+    document.title = t("user_homepage.title") //'Chatbot - Trang Chủ';
     mainLayout.navigate(120);
 
     // isLogin && navigate('/chat');

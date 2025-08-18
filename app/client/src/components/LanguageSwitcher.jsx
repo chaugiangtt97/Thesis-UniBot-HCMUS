@@ -4,7 +4,6 @@ function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const flags = {
-    vn: "🇻🇳",
     us: "🇺🇸",
     fr: "fr",
   };

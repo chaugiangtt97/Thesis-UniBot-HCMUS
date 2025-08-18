@@ -695,10 +695,5 @@
   "error_write_new_password": "Data is required and must be at least 6 characters",
   "error_new_password_not_match": "Passwords do not match",
   "error_write_new_password_again": "Data is required and must be at least 6 characters",
-  "last_updated": "Last updated at",
-
-
-  "mainlayout": {
-    "logout_noti": "Bạn Thật Sự Muốn Đăng Xuất Sao (Tiếng anh) ☹️"
-  }
+  "last_updated": "Last updated at"
 }

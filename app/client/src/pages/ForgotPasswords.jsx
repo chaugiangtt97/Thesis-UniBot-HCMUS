@@ -39,6 +39,7 @@ function ForgotPasswords() {
   const token = useSelector(state => state.auth.token)
   const recaptchaRef = useRef();
 
+  const { t, i18n } = useTranslation();
   const handleCaptchaChange = (token) => {
     setCaptchaToken(token);
   };
@@ -48,7 +49,7 @@ function ForgotPasswords() {
 
   const validateInputs = () => {
     if (!captchaToken && import.meta.env.VITE_ENVIRONMENT == 'production') {
-      setNotification('Vui lòng xác minh captcha !')
+      setNotification(t("forgot_password.notice.captcha_verify")) // 'Vui lòng xác minh captcha !'
       setNotificationSuccess(null)
       return false;
     }
@@ -57,7 +58,7 @@ function ForgotPasswords() {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
 
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("forgot_password.notice.email_verify")) //'Vui lòng nhập email hợp lệ !'
       setNotificationSuccess(null)
       return false;
     }
@@ -75,7 +76,7 @@ function ForgotPasswords() {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
 
-      setNotification('Vui lòng nhập email hợp lệ !')
+      setNotification(t("forgot_password.notice.email_verify")) //'Vui lòng nhập email hợp lệ !'
       setNotificationSuccess(null)
       return false;
     }
@@ -84,7 +85,7 @@ function ForgotPasswords() {
     await useApi.email_request_verification(email.value, 'FORGOT_PASSWORD', captchaToken)
       .then(() => {
         processHandler.remove('#verifyEmail', verifyEmailEvent)
-        setNotificationSuccess('Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !')
+        setNotificationSuccess(t("forgot_password.notice.email_sent_check")) //'Gởi Yêu Câu Trong Giây Lát, Kiểm Tra Email Của Bạn !'
         setNotification()
         navigate(`/password/reset-password`, { state: { email: email.value } })
       })
@@ -103,7 +104,7 @@ function ForgotPasswords() {
       <SignInCard variant="outlined">
         <Typography component="h1" variant="h6"
           sx={{ width: '100%', fontWeight: 600, fontSize: 'clamp(2rem, 10vw, 2.15rem)', color: theme => theme.palette.primary.main }} >
-          Quên Mật Khẩu </Typography>
+          {t("forgot_password.forgot_password")} </Typography> //'Quên Mật Khẩu'
 
         <Box component="form" onSubmit={handleSubmit} noValidate
           sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, position: 'relative', color: theme => theme.palette.primary.main }} >
