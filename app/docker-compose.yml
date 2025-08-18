@@ -88,18 +88,18 @@ services:
       - "minio"
 
   milvus-ingestor:
-     build:
-       context: ./milvus/scripts
-     container_name: milvus-ingestor
-     depends_on:
-       standalone:
-         condition: service_healthy
-     networks:
-       - chatbot-network
-     volumes:
-       - ./milvus/scripts:/app
-     working_dir: /app
-     restart: "no"  # Chạy 1 lần, không cần restart
+    build:
+      context: ./milvus/scripts
+    container_name: milvus-ingestor
+    depends_on:
+      standalone:
+        condition: service_healthy
+    networks:
+      - chatbot-network
+    volumes:
+      - ./milvus/scripts:/app
+    working_dir: /app
+    restart: "no" # Chạy 1 lần, không cần restart
 
   python_service:
     build:
@@ -166,6 +166,9 @@ services:
       - ./server/public/storage:/app/public/storage
     depends_on:
       - mongo # Đảm bảo MongoDB đã sẵn sàng trước khi chạy Express
+      - standalone
+      - minio
+      - etcd
     stdin_open: true # Để tương thích với '-it', cho phép tương tác
     tty: true # Để tương thích với '-it', giữ terminal mở
     # restart: always  # Tùy chọn để container tự khởi động lại nếu dừng bất ngờ

@@ -126,6 +126,8 @@ class ChatModel_v2:
                 print("Chosen prompt style: CONTEXT_HISTORY_FULL")
                 
                 prompt = prompts['CONTEXT_HISTORY_FULL']
+                print("CONTEXT:")
+                print(context)
                 conversation = ""
                 for pair in history:
                     conversation = conversation + "\nUser: " + pair['question'] + "\nChatbot: " + pair['anwser']

@@ -10,7 +10,8 @@ export async function listCollections() {
     const res = await milvusClient.showCollections()
     return res['data'] // res['data]
   } catch (error) {
-    console.error('Lỗi khi lấy collections:', error)
+    console.error('Lỗi khi lấy collections milvus:', error)
+    throw error
   }
 }
 

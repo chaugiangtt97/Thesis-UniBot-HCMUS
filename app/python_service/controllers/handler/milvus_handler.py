@@ -26,13 +26,14 @@ class Milvus_Handler:
 
     def __init__(self, k=4, filter_bias=0.4) -> None:
         try:
-            self.search_threshold = (
-                current_app.config.get("SEARCH_THRESHOLD") or 1.1
-            )  # os.getenv('SEARCH_THRESHOLD', 1.1)
+            self.search_threshold = 100
+            # self.search_threshold = (
+            #     current_app.config.get("SEARCH_THRESHOLD") or 100
+            # )  # os.getenv('SEARCH_THRESHOLD', 1.1)
             self.latest_timespan_months = (
                 current_app.config.get("LATEST_TIMESPAN_MONTHS") or 5
             )  # os.getenv('LATEST_TIMESPAN_MONTHS', 5)
-
+            self.persistent_collections = []
             milvus_handler = (
                 MilvusDB().get_handler()
             )  # connections._fetch_handler('default')

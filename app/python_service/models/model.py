@@ -134,7 +134,6 @@ class ChatModel:
                 for pair in history:
                     conversation = conversation + "\nUser: " + pair['question'] + "\nChatbot: " + pair['anwser']
                 formatted_prompt = prompt.format(context=context, history=conversation, question=question, theme=theme, user_profile=user_profile, themes_descriptions=themes_descriptions)
-
         # formatted_prompt = prompt.replace("\n", "<eos>")
         #formatted_prompt = prompt.format(context=context, question=question)
         return self._generate(formatted_prompt, max_new_tokens, streaming=streaming)

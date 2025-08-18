@@ -26,7 +26,7 @@ export const ChatWithChatBot = async (socket) => {
       '_id': message_id,
       'sender': socket.user._id,
       'session_id': current_session,
-      'question': typeof message === 'object' ? message.question : message,
+      'question': typeof message === 'object' ? message?.question : message,
       'anwser': null,
       'state': 'in progress',
       'create_at': getTime(),
@@ -49,7 +49,8 @@ export const ChatWithChatBot = async (socket) => {
           state: false,
           data: null,
           time: null
-        }] })
+        }]
+      })
 
       await updateChatSession(current_session, { in_progress: objectConservation })
         .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
@@ -87,14 +88,15 @@ export const ChatWithChatBot = async (socket) => {
           state: false,
           data: null,
           time: null
-        }] }
+        }]
+      }
 
-      socket.emit('/ChatWithChatBot/isProcessing', resp )
+      socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
         .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
 
-      if ( chosen_collections == null || chosen_collections == '' || !!!chosen_collections ) {
+      if (chosen_collections == null || chosen_collections == '' || !!!chosen_collections) {
         socket.emit('/ChatWithChatBot/EndProcess', {
           ...objectConservation,
           'anwser': '',
@@ -142,9 +144,10 @@ export const ChatWithChatBot = async (socket) => {
           state: false,
           data: null,
           time: null
-        }] }
+        }]
+      }
 
-      socket.emit('/ChatWithChatBot/isProcessing', resp )
+      socket.emit('/ChatWithChatBot/isProcessing', resp)
 
       await updateChatSession(current_session, { in_progress: resp })
         .catch((err) => { throw 'Cập Nhật ChatSession Thất Bại' + JSON.stringify(err) })
@@ -155,8 +158,8 @@ export const ChatWithChatBot = async (socket) => {
       let searchResult
       if (message !== null && typeof message === 'object' && message.resource.context && message?.source) {
         searchResult = {
-          context : message.resource?.context || 'Không có ngữ cảnh',
-          source : message.source || []
+          context: message.resource?.context || 'Không có ngữ cảnh',
+          source: message.source || []
         }
         objectConservation = { ...objectConservation, 'resource': { type: 'recommended' } }
       } else {
@@ -193,7 +196,8 @@ export const ChatWithChatBot = async (socket) => {
           state: false,
           data: null,
           time: null
-        }] }
+        }]
+      }
 
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
@@ -242,7 +246,8 @@ export const ChatWithChatBot = async (socket) => {
           state: false,
           data: null,
           duration: null
-        }] }
+        }]
+      }
 
       socket.emit('/ChatWithChatBot/isProcessing', resp)
 
@@ -252,8 +257,8 @@ export const ChatWithChatBot = async (socket) => {
       socket.emit('/ChatWithChatBot/Processed', {
         ...objectConservation,
         chosen_collections, filter_expressions, finalResponse,
-        context : searchResult.context,
-        source : searchResult.source,
+        context: searchResult.context,
+        source: searchResult.source,
         create_at: getTime(),
         duration: startTime - new Date().getTime()
       })

@@ -1,4 +1,5 @@
 from flask import current_app # type: ignore
+import json
 
 from controllers.helper.getLLMConfigs import get_llm_configs
 from controllers.helper.getQueryRouterConfigs import get_queryRouter_configs
@@ -136,7 +137,7 @@ class Generate_Controller:
       encoder = Encoder( configs = encoder_configs ) 
       
       context, source_final = "No related documents found", []
-
+      filter_expressions = json.loads(filter_expressions)
       if type(filter_expressions) == dict:
           query_embeddings = encoder.embedding_function(query)
           search_results_final = None

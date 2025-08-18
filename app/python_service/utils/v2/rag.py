@@ -4,21 +4,21 @@ import ast
 from config.milvusdb import MilvusDB
     
 def create_prompt_milvus(question, context, output_fields=['title','article']):
-    full_context = """
-    
-    You always answer with markdown formatting using GitHub syntax. Do not use ordered or numbered lists.
-    You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. 
-    Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. 
-    Respond in a brief and concise manner.
-
-    Try to answer the user's question using the given context below. The context consists of groups of a question, its answer and the section it belongs to.
-    Specify which questions and sections you derived your final answer from.
-
-    Do not start with "based on" or "according to" in your response or anything similar, in your response. 
-    Provide your answer only based on the provided information. If the answer is not in provided information, explain that you are only trained on the provided information.
-    Always answer in Vietnamese.
-
-    """
+#     full_context = """
+#
+#     You always answer with markdown formatting using GitHub syntax. Do not use ordered or numbered lists.
+#     You are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.
+#     Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content.
+#     Respond in a brief and concise manner.
+#
+#     Try to answer the user's question using the given context below. The context consists of groups of a question, its answer and the section it belongs to.
+#     Specify which questions and sections you derived your final answer from.
+#
+#     Do not start with "based on" or "according to" in your response or anything similar, in your response.
+#     Provide your answer only based on the provided information. If the answer is not in provided information, explain that you are only trained on the provided information.
+#     Always answer in Vietnamese.
+#
+#     """
     full_context = ""
     for answer in context:
         context = ""
