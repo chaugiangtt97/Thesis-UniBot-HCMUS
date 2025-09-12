@@ -41,7 +41,7 @@
     "heading": "Students Register",
     "name_label": "Account Name",
     "name_placeholder": "Nguyen Van A",
-    "student_register_email_label": "Login Name (Personal Gmail)",
+    "student_register_email_label": "Login Name (Personal Email)",
     "student_register_email_placeholder": "name@gmail.com",
     "student_register_password_label": "Password",
     "student_register_password_placeholder": "••••••",
@@ -50,7 +50,7 @@
     "major_label": "Major",
     "back_to_home": "Back to homepage",
     "create_account_button": "Create Account",
-    "lecturer_register_prompt": "Are you a FIT-HCMUS lecturer?",
+    "lecturer_register_prompt": "Are you a lecturer?",
     "captcha_warning": "Please verify the captcha!",
     "major_required": "Major information cannot be empty!",
     "batch_required": "Training batch cannot be empty!",
@@ -77,7 +77,7 @@
     "major_label": "Major",
     "back_to_home": "Back to homepage",
     "create_account_button": "Create Account",
-    "students_register_prompt": "Are you a FIT-HCMUS students?",
+    "students_register_prompt": "Are you a student?",
     "captcha_warning": "Please verify the captcha!",
     "major_required": "Major information cannot be empty!",
     "batch_required": "Training batch cannot be empty!",
@@ -239,7 +239,17 @@
 	  "delete_conversation_success": "Conversation deleted successfully!",
 	  "delete_conversation_failed": "Failed to delete conversation!"
   },
-  
+
+  "user_route": {
+      "auto_login_failed": "Auto login failed!"
+  },
+
+  "general_messages": {
+    "please_login": "Please Login!",
+    "update_success": "Update successful",
+    "data_load_error": "An error occurred while loading data"
+  },
+
   "school_info": "School Information",
   "scholarship_info": "Scholarship Information",
   "event_info": "Event Information",
@@ -247,7 +257,7 @@
   "timetable_lookup_info": "Class Schedule Lookup",
   "academic_affairs_info": "Academic Regulations",
 
-  "system_notice_testing": "The system is currently in the testing phase. For official information, please contact info@fit.hcmus.edu.vn",
+  "system_notice_testing": "The system is currently in the testing phase. For official information, please contact UNIBOT2025@gmail.com",
   "model_accuracy_notice": "Note: The model may provide inaccurate answers in some cases, so please always verify the information.",
   "question_input_hint": "Enter your question – up to 3000 words",
 
@@ -294,7 +304,7 @@
   "account_name_label": "Account Name",
   "account_name_placeholder": "Nguyen Van A",
   "lecturer_register_email_label": "Login Name (Lecturer Gmail)",
-  "lecturer_register_email_placeholder": "name@fit.hcmus.edu.vn",
+  "lecturer_register_email_placeholder": "name@uqtr.ca",
   "password_label": "Password",
   "password_placeholder": "••••••",
   "administrative_unit_label": "Administrative Unit",
@@ -314,7 +324,7 @@
   "teaching_department_knowledge_technology": "Knowledge Technology",
   "teaching_department_information_technology": "Information Technology",
   "teaching_department_none": "None",
-  "are_you_student": "Are you a FIT-HCMUS student?",
+  "are_you_student": "Are you a student?",
   "invalid_email": "Please enter a valid email!",
   "password_too_short": "Password must be at least 6 characters long!",
   "register_success": "Registration successful, please check your email to verify your account!",
@@ -696,4 +706,4 @@
   "error_new_password_not_match": "Passwords do not match",
   "error_write_new_password_again": "Data is required and must be at least 6 characters",
   "last_updated": "Last updated at"
-}
+},

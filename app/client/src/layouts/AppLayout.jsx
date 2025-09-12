@@ -5,22 +5,24 @@ import { Outlet } from 'react-router-dom'
 import { connectSocket } from '~/socket'
 import { refresh } from '~/store/actions/authActions'
 import NotifycationModal from '~/components/Mui/NotifycationModal'
+import { useTranslation } from 'react-i18next';
 
+const {t} = useTranslation();
 const demo = [{
   id: '#542',
   status: 'success',
-  message: 'Cập nhật thành công',
+  message: t("general_messages.update_success"),
   auto: false
 },
 {
   id: '#541',
   status: 'warning',
-  message: 'Cập nhật thành công'
+  message: t("general_messages.update_success")
 },
 {
   id: '#545',
   status: 'error',
-  message: 'Cập nhật thành công'
+  message: t("general_messages.update_success")
 }]
 
 function AppLayout() {
@@ -34,6 +36,8 @@ function AppLayout() {
   const auth = useSelector(state => state.auth)
   const reducers_data = useSelector(state => state.reducers)
   const [notifications, setNotification] = useState([])
+  const { t, i18n } = useTranslation();
+
 
   const noticeHandler = {
     add: (noti_json) => {
@@ -83,7 +87,7 @@ function AppLayout() {
           .catch(() => {
             noticeHandler.add({
               status: 'error',
-              message: 'Tự động đăng nhập thất bại !'
+              message: t("user_route.auto_login_failed")
             })
           })
       }
