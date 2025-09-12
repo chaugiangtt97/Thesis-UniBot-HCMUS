@@ -11,18 +11,18 @@ const {t} = useTranslation();
 const demo = [{
   id: '#542',
   status: 'success',
-  message: t("general_messages.update_success"),
+  message: 'Update successful',
   auto: false
 },
 {
   id: '#541',
   status: 'warning',
-  message: t("general_messages.update_success")
+  message: 'Update successful'
 },
 {
   id: '#545',
   status: 'error',
-  message: t("general_messages.update_success")
+  message: 'Update successful'
 }]
 
 function AppLayout() {
@@ -87,7 +87,7 @@ function AppLayout() {
           .catch(() => {
             noticeHandler.add({
               status: 'error',
-              message: t("user_route.auto_login_failed")
+              message: 'Auto login failed!'
             })
           })
       }

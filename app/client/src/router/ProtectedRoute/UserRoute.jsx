@@ -32,7 +32,7 @@ const UserRoute = ({ children }) => {
             }
           }).catch((error) => {
             processHandler.remove('#verifyToken', eventID)
-            console.error(t("user_route.auto_login_failed"), error) //"Tự động đăng nhập thất bại!\n"
+            console.error("Auto login failed!\n", error) //"Tự động đăng nhập thất bại!\n"
             navigate('/')
           })
       } else {
