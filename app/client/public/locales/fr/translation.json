@@ -1,9 +1,9 @@
 {
   "navigation_label": {
     "home": "Accueil",
-    "fags": "Retour / Rapport",
+    "fags": "FAQs",
     "conservation": "Génération de Chat",
-    "feedback": "Retour / Rapport"
+    "feedback": "Retour"
   },
   
   "theme_mode_label": {
@@ -252,7 +252,7 @@
   "timetable_lookup_info": "Consultation de l'emploi du temps",
   "academic_affairs_info": "Règlement académique",
 
-  "system_notice_testing": "Le système est actuellement en phase de test. Pour des informations officielles, veuillez contacter info@fit.hcmus.edu.vn",
+  "system_notice_testing": "Le système est actuellement en phase de test. Pour des informations officielles, veuillez contacter UNIBOT2025@gmail.com",
   "model_accuracy_notice": "Remarque : le modèle peut fournir des réponses inexactes dans certains cas, veuillez toujours vérifier les informations.",
   "question_input_hint": "Entrez votre question – jusqu'à 3000 mots",
 

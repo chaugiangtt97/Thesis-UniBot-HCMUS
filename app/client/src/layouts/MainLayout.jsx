@@ -186,7 +186,7 @@ function MainLayout() {
     navigate('/')
   }
 
-  const confText = 'system_notice_testing' //'Hệ thống đang trong giai đoạn thử nghiệm, mọi thông tin chính thức vui lòng liên hệ info@fit.hcmus.edu.vn'
+  const confText = 'system_notice_testing' //'Hệ thống đang trong giai đoạn thử nghiệm, mọi thông tin chính thức vui lòng liên hệ UNIBOT2025@gmail.com'
 
   return (
     <Box sx={{
@@ -307,7 +307,7 @@ function MainLayout() {
             backgroundSize: '100% 100%',
             WebkitBackgroundClip: 'text'
           }}>
-            FIT@HCMUS
+            UNIBOT
           </Typography>
         </Box>
 

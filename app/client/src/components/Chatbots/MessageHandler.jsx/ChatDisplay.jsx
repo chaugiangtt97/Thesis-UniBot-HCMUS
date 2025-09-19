@@ -173,7 +173,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
 
             <Box sx = {{  width: '100%', borderTop: '1px solid #000', marginTop: 1, paddingTop: 1 }}>
               <Box sx = {{  display: 'flex', flexWrap: 'wrap', gap: 1, rowGap: '4px', alignItems: 'center' }}>
-                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>Nguồn Trích Dẫn: </Typography>
+                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>References: </Typography>
                 {conservation?.source && conservation?.source.map((data, zIndex) => {
                   return <Box key = {zIndex*12650} sx = {ModelButton_Style}
                     onClick = {() => { setOpenDetail(true); setContent(<a href={data?.url} target="_blank" rel="noopener noreferrer" style={{color: '#000', textWrap: 'auto'}}>{data?.url}</a>)  } } > { zIndex + 1 } </Box>
@@ -183,7 +183,7 @@ function ChatDisplay({ loading = null, action = null, user = null , conservation
 
             <Box sx = {{  width: '100%', borderTop: '1px solid #000', marginTop: 1, paddingTop: 1 }}>
               <Box sx = {{  display: 'flex', flexWrap: 'wrap', gap: 1, rowGap: '4px', alignItems: 'center' }}>
-                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>Phản Hồi / Đánh Giá:  </Typography>
+                <Typography sx = {{ fontSize: {xs: '0.825rem', xl: '1.325rem' }, fontWeight: '500' }}>Rate my answer:  </Typography>
                 <HoverRating
                   value = {{ value: value, action: feedback }}
                   hover = {{ value: hover, action: setHover }}

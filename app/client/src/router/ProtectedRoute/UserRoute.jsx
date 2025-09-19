@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useNavigate, useOutletContext } from 'react-router-dom';
 import { useApi } from '~/apis/apiRoute';
 import { refresh } from '~/store/actions/authActions';
-import { useTranslation } from 'react-i18next';
-
 
 const UserRoute = ({ children }) => {
 
@@ -13,7 +11,6 @@ const UserRoute = ({ children }) => {
   const auth = useSelector(state => state.auth)
   const { processHandler } = useOutletContext();
   const token = localStorage.getItem('token');
-  const { t, i18n } = useTranslation();
 
   if (!token) {
     return <Navigate to="/" />;
@@ -32,7 +29,7 @@ const UserRoute = ({ children }) => {
             }
           }).catch((error) => {
             processHandler.remove('#verifyToken', eventID)
-            console.error("Auto login failed!\n", error) //"Tự động đăng nhập thất bại!\n"
+            console.error("Tự động đăng nhập thất bại!\n", error)
             navigate('/')
           })
       } else {

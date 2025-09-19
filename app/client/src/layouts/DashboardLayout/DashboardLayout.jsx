@@ -102,7 +102,7 @@ function DashboardLayout() {
             backgroundSize: '100% 100%',
             WebkitBackgroundClip: 'text'
           }}>
-            FIT@HCMUS
+            UNIBOT
           </Typography>
         </Box>
 

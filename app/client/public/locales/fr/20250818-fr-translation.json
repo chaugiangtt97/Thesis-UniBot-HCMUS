@@ -49,7 +49,7 @@
     "major_label": "Spécialité",
     "back_to_home": "Retour à l'accueil",
     "create_account_button": "Créer un compte",
-    "lecturer_register_prompt": "Êtes-vous un enseignant ?",
+    "lecturer_register_prompt": "Êtes-vous un enseignant FIT-HCMUS ?",
     "captcha_warning": "Veuillez vérifier le captcha !",
     "major_required": "La spécialité ne peut pas être vide !",
     "batch_required": "La promotion ne peut pas être vide !",
@@ -75,7 +75,7 @@
     "major_label": "Spécialité",
     "back_to_home": "Retour à l'accueil",
     "create_account_button": "Créer un compte",
-    "students_register_prompt": "Êtes-vous un étudiant ?",
+    "students_register_prompt": "Êtes-vous un étudiant FIT-HCMUS ?",
     "captcha_warning": "Veuillez vérifier le captcha !",
     "major_required": "La spécialité ne peut pas être vide !",
     "batch_required": "La promotion ne peut pas être vide !",
@@ -233,16 +233,6 @@
     "delete_conversation_success": "Conversation supprimée avec succès !",
     "delete_conversation_failed": "Échec de la suppression de la conversation !"
   },
-
-  "user_route": {
-      "auto_login_failed": "Échec de la connexion automatique !"
-  },
-
-  "general_messages": {
-    "please_login": "Veuillez vous connecter !",
-    "update_success": "Mise à jour réussie",
-    "data_load_error": "Une erreur s'est produite lors du chargement des données"
-  },
   
   "faq_title": "Questions fréquemment posées (FAQ)",
   "faq_chatbot_how_it_works": "Comment fonctionne le chatbot ?",
@@ -297,7 +287,7 @@
   "account_name_label": "Nom du compte",
   "account_name_placeholder": "Nguyen Van A",
   "lecturer_register_email_label": "Nom de connexion (Gmail Enseignant)",
-  "lecturer_register_email_placeholder": "name@uqtr.ca",
+  "lecturer_register_email_placeholder": "name@fit.hcmus.edu.vn",
   "password_label": "Mot de passe",
   "password_placeholder": "••••••",
   "administrative_unit_label": "Unité administrative",
@@ -317,7 +307,7 @@
   "teaching_department_knowledge_technology": "Technologie des connaissances",
   "teaching_department_information_technology": "Technologie de l'information",
   "teaching_department_none": "Aucun",
-  "are_you_student": "Êtes-vous un étudiant ?",
+  "are_you_student": "Êtes-vous un étudiant FIT-HCMUS ?",
   "invalid_email": "Veuillez saisir un email valide !",
   "password_too_short": "Le mot de passe doit comporter au moins 6 caractères !",
   "register_success": "Inscription réussie, veuillez vérifier votre email pour confirmer votre compte !",

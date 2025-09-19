@@ -242,7 +242,7 @@ export const ChatWithChatBot = async (socket) => {
           duration: end_point_4 - start_point_4
         }, {
           step_name: 'streaming',
-          notice: 'Đang soạn',
+          notice: 'Thinking of an answer...',
           state: false,
           data: null,
           duration: null
