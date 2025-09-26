@@ -25,6 +25,7 @@ export const generate = async (userInput, context, streaming = 'False', history 
       return response
     })
     .catch(error => {
+      console.log(error)
       throw buildErrObject(422, error)
     })
 

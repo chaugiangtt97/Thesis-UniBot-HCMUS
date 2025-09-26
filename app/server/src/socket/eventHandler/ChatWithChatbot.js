@@ -96,17 +96,17 @@ export const ChatWithChatBot = async (socket) => {
       await updateChatSession(current_session, { in_progress: resp })
         .catch((err) => { throw 'Failed to update ChatSession' + JSON.stringify(err) })
 
-      if (chosen_collections == null || chosen_collections == '' || !!!chosen_collections) {
-        socket.emit('/ChatWithChatBot/EndProcess', {
-          ...objectConservation,
-          'anwser': '',
-          'state': 'request',
-          'source': [],
-          'update_at': getTime(),
-          'duration': startTime - new Date().getTime()
-        })
-        return
-      }
+      // if (chosen_collections == null || chosen_collections == '' || !!!chosen_collections) {
+      //   socket.emit('/ChatWithChatBot/EndProcess', {
+      //     ...objectConservation,
+      //     'anwser': '',
+      //     'state': 'request',
+      //     'source': [],
+      //     'update_at': getTime(),
+      //     'duration': startTime - new Date().getTime()
+      //   })
+      //   return
+      // }
 
 
       // Step 2

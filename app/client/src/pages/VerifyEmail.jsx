@@ -24,7 +24,7 @@ const TextInput = styled(TextField)(({ theme }) => ({
   '& input': { color: '#000' }, WebkitTextFillColor: '#000',
   '&:hover fieldset': { borderColor: `${theme.palette.primary.main} !important` }
 }));
-
+import { useTranslation } from 'react-i18next';
 function VerifyEmail() {
   const [notificationError, setNotification] = useState(null)
   const [notificationSuccess, setNotificationSuccess] = useState(null)

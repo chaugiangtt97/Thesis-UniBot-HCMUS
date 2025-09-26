@@ -26,9 +26,8 @@ export const login_controller = async (req, res) => {
     if (user == null) {
       handleError(res, buildErrObject(422, 'AUTH.ACCOUNT_NOT_FOUND', 'Account does not exist.'))
     }
-
-    const isPasswordMatch = checkPassword(data.password, user)
-
+    const isPasswordMatch = await checkPassword(data.password, user)
+  console.log(isPasswordMatch)
     if (!isPasswordMatch) {
       throw buildErrObject(409, 'AUTH.INVALID_PASSWORD', 'Password is incorrect.')
     }

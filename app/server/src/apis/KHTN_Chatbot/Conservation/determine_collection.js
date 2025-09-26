@@ -24,6 +24,7 @@ export const determine_collection = async (userInput = null, history = [], api_k
       return response.json()
     })
     .catch(error => {
+      console.log(error)
       throw buildErrObject(422, error)
     })
 }

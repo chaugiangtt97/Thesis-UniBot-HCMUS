@@ -12,12 +12,15 @@ export const checkPassword = async (password = '', user = {}) => {
     try {
       user.comparePassword(password,
         (err, isMatch) => {
-          if (err) return reject(buildErrObject(422, err.message))
-          if (!isMatch) resolve(false)
-          resolve(true)
+          if (err)
+          {
+              console.log(buildErrObject(422, err.message))
+              return reject(false)
+          }
+          return resolve(isMatch)
         })
     } catch (error) {
-      resolve(false)
+      return resolve(false)
     }
   })
 }
