@@ -50,7 +50,7 @@
     "major_label": "Major",
     "back_to_home": "Back to homepage",
     "create_account_button": "Create Account",
-    "lecturer_register_prompt": "Are you a FIT-HCMUS lecturer?",
+    "lecturer_register_prompt": "Are you a professor/lecturer?",
     "captcha_warning": "Please verify the captcha!",
     "major_required": "Major information cannot be empty!",
     "batch_required": "Training batch cannot be empty!",
@@ -211,8 +211,8 @@
   },
   
   "user_homepage": {
-	  "title": "Chatbot - Home Page"
-	  
+	  "title": "Chatbot - Home Page",
+      "table_of_contents": "Table of Contents"
   },
 
   "homepage": {
@@ -224,7 +224,7 @@
   
   "user_feedback": {
 	  "title": "Chatbot - Feedback",
-	  "feedback_received": "Your feedback has been recorded, thank you!",
+	  "feedback_received": "You can leave your feedback here, thank you!",
 	  "report_feedback": "Report / Feedback",
 	  "feedback_note": "Your contributions and suggestions will greatly help us improve our product.",
 	  "enter_feedback_here": "Enter your feedback here!"

@@ -83,7 +83,7 @@ function AppLayout() {
           .catch(() => {
             noticeHandler.add({
               status: 'error',
-              message: 'Tự động đăng nhập thất bại !'
+              message: 'Auto login failed!'
             })
           })
       }

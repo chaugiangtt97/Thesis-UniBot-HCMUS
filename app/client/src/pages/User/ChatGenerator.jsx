@@ -96,7 +96,7 @@ function NewChatModal({ modalHandler = null }) {
         </DialogContent>
         <DialogActions>
           <Button sx={{ color: '#000' }} onClick={newChat}>{modalHandler.submitTitle}</Button>
-          <Button sx={{ color: 'red' }} onClick={modalHandler?.close}>Đóng</Button>
+          <Button sx={{ color: 'red' }} onClick={modalHandler?.close}>{t("close")}</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>
@@ -529,7 +529,7 @@ export function ChatGenerator() {
             }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.2, paddingBottom: 0.3 }}>
                 <StarIcon sx={{ fontSize: { xs: '28px !important', xl: '42px !important' }, color: '#e7e74e' }} />
-                <Typography sx={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>{t('topics_of_interest')}</Typography>
+                <Typography sx={{ fontSize: { xs: '0.825rem', md: '0.925rem', xl: '1.225rem' }, textAlign: 'start', padding: 1, paddingX: 0.5, fontWeight: '600' }}>{t('user_homepage.table_of_contents')}</Typography>
               </Box>
               {
                 // [

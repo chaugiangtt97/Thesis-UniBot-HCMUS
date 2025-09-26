@@ -24,7 +24,7 @@ const AdminRoute = ({ children }) => {
             }
           }).catch((error) => {     
             processHandler.remove('#verifyToken', eventID)
-            console.error("Tự động đăng nhập thất bại!\n", error)
+            console.error("Auto login failed!\n", error)
             navigate('/')
           })
       } else {

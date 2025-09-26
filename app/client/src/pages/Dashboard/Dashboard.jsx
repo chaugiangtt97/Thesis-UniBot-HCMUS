@@ -158,18 +158,18 @@ export function Dashboard() {
   const ChatGPTStatic = {
     series: [{
       data: dataChatGPT?.totalTokenInDate || [],//[0, 2713 + 888, 0, 13919+4950+1152, 3681+487, 9805+4185, 27134+7508+2048, 16832+3709, 7918+1272, 17833+2499, 19197+1950],
-      label: 'Số token được sử dụng trong ngày',
+      label: 'Number of tokens used per day',
       yAxisId: 'leftAxisId'
     },
     {
       data: dataChatGPT?.numModelRequests || [], //[0, 8, 0, 30, 4, 19, 48, 15, 11, 17, 26],
-      label: 'Số lượt sử dụng model trong ngày',
+      label: 'Number of model uses per day',
       yAxisId: 'rightAxisId'
     }],
     yAxis: [{ id: 'leftAxisId' }, { id: 'rightAxisId' }],
     rightAxis: "rightAxisId",
     xAxis: [{
-      scaleType: 'point', data: dataChatGPT?.dateLabel || ['không có dữ liệu']
+      scaleType: 'point', data: dataChatGPT?.dateLabel || ['No data available']
     }]
   }
 
@@ -377,23 +377,23 @@ const MockData_PieChart = {
     {
       outerRadius: 80,
       data: [
-        { label: 'Rất hài lòng', value: 57, color: '#1E3A8A' },
-        { label: 'Hài Lòng', value: 10, color: '#3B82F6' },
-        { label: 'Tạm Chấp Nhận', value: 14, color: '#60A5FA' },
-        { label: 'Không Hài Lòng', value: 8, color: '#93C5FD' },
-        { label: 'Rất Tệ', value: 10, color: '#D1E7FF' },
-        { label: 'Không có phản hồi', value: 424, color: '#B0B0B0' },
+        { label: 'Very good', value: 57, color: '#1E3A8A' },
+        { label: 'Good', value: 10, color: '#3B82F6' },
+        { label: 'Neutral', value: 14, color: '#60A5FA' },
+        { label: 'Bad', value: 8, color: '#93C5FD' },
+        { label: 'Very bad', value: 10, color: '#D1E7FF' },
+        { label: 'No response', value: 424, color: '#B0B0B0' },
       ],
       highlightScope: { fade: 'global', highlight: 'item' },
       faded: { innerRadius: 30, additionalRadius: -30, color: 'gray' },
       arcLabel: (params) => {
         const data = [
-          { label: 'Rất hài lòng', value: 57, color: '#1E3A8A' },
-          { label: 'Hài Lòng', value: 10, color: '#3B82F6' },
-          { label: 'Tạm Chấp Nhận', value: 14, color: '#60A5FA' },
-          { label: 'Không Hài Lòng', value: 8, color: '#93C5FD' },
-          { label: 'Rất Tệ', value: 10, color: '#D1E7FF' },
-          { label: 'Không có phản hồi', value: 424, color: '#B0B0B0' },
+          { label: 'Very good', value: 57, color: '#1E3A8A' },
+          { label: 'Good', value: 10, color: '#3B82F6' },
+          { label: 'Neutral', value: 14, color: '#60A5FA' },
+          { label: 'Bad', value: 8, color: '#93C5FD' },
+          { label: 'Very bad', value: 10, color: '#D1E7FF' },
+          { label: 'No response', value: 424, color: '#B0B0B0' },
         ]
         const percent = params.value / data.map((item) => item.value).reduce((a, b) => a + b, 0);;
         if (percent * 100 < 10) return ''

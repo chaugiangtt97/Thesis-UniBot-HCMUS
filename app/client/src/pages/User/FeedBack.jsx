@@ -57,7 +57,7 @@ function FeedBack() {
 
           <textarea value={value} onChange={(e) => setValue(e.target.value)} placeholder={t("user_feedback.enter_feedback_here")} className="mt-5 mb-3 h-[30%] textarea textarea-bordered textarea-md w-full " style={{ height: '164px', padding: '15px', borderRadius: '10px', background: '#fff', color: '#000' }}></textarea>
 
-          <Button onClick={() => submit(value)} variant='contained' sx={{ fontSize: { xl: '1.475rem' }, paddingY: '8px', background: theme => theme.palette.primary.main, borderRadius: '10px' }} fullWidth>Gửi Ý Kiến</Button>
+          <Button onClick={() => submit(value)} variant='contained' sx={{ fontSize: { xl: '1.475rem' }, paddingY: '8px', background: theme => theme.palette.primary.main, borderRadius: '10px' }} fullWidth>Submit</Button>
         </Grid>
 
 

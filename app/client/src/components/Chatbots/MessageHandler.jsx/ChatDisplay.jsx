@@ -264,7 +264,7 @@ function FeedbackModal({
       >
         <DialogTitle id="alert-dialog-title">
           <Typography variant='p'
-            >Bạn Có Hài Lòng Với Câu Trả Lời Không ?</Typography>
+            >Are you satisfied with the answer?</Typography>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description" 
@@ -295,11 +295,11 @@ import { GetURLFromMarkdown } from '~/utils/GetURLFromMarkdown'
 import { useCode } from '~/hooks/useMessage'
 import AvatarUserDefault from '~/components/Avatar/AvatarUserDefault'
 const labels = {
-  1: 'Hoàn Toàn Không Hài Lòng',
-  2: 'Không Hài Lòng',
-  3: 'Tạm Chấp Nhận',
-  4: 'Tốt, Hài Lòng',
-  5: 'Hoàn Toàn Hài Lòng',
+  1: 'Very Bad',
+  2: 'Bad',
+  3: 'Neutral',
+  4: 'Good',
+  5: 'Very good',
 };
 
 function getLabelText(value) {

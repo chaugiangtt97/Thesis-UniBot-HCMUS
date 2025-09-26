@@ -49,7 +49,7 @@
     "major_label": "Spécialité",
     "back_to_home": "Retour à l'accueil",
     "create_account_button": "Créer un compte",
-    "lecturer_register_prompt": "Êtes-vous un enseignant FIT-HCMUS ?",
+    "lecturer_register_prompt": "Êtes-vous professeur/enseignant ?",
     "captcha_warning": "Veuillez vérifier le captcha !",
     "major_required": "La spécialité ne peut pas être vide !",
     "batch_required": "La promotion ne peut pas être vide !",
@@ -206,7 +206,8 @@
     "new_password_confirm": "Nouveau mot de passe (Confirmer)"
   },
   "user_homepage": {
-    "title": "Chatbot - Page d'accueil"
+    "title": "Chatbot - Page d'accueil",
+    "table_of_contents": "Table des matières"
   },
 
   "homepage": {
@@ -218,7 +219,7 @@
   
   "user_feedback": {
     "title": "Chatbot - Retour",
-    "feedback_received": "Votre retour a été enregistré, merci !",
+    "feedback_received": "Vous pouvez laisser votre retour ici, merci !",
     "report_feedback": "Retour / Rapport",
     "feedback_note": "Vos contributions et suggestions nous aideront grandement à améliorer notre produit.",
     "enter_feedback_here": "Entrez votre retour ici !"
