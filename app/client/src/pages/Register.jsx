@@ -158,7 +158,7 @@ function Register() {
 
           <FormControl sx={{ gap: 1 }}>
             <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>{t("students_register_page.student_register_email_label")}</FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder={t("students_register_page.student_register_password_label")} inputProps={{ maxLength: 40 }}
+            <TextInput id="email" type="username" name="email" placeholder={t("students_register_page.student_register_email_placeholder")} inputProps={{ maxLength: 40 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 

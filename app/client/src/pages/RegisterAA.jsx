@@ -127,7 +127,7 @@ function RegisterAA() {
 
           <FormControl sx={{ gap: 1 }}>
             <FormLabel htmlFor="email" sx={{ color: 'inherit' }}>{t("lecturer_register_page.student_register_email_label")} </FormLabel>
-            <TextInput id="email" type="username" name="email" placeholder="name@fit.hcmus.edu.vn" inputProps={{ maxLength: 50 }}
+            <TextInput id="email" type="username" name="email" placeholder="name@fuqtr.ca" inputProps={{ maxLength: 50 }}
               autoComplete="email" required fullWidth variant="outlined" />
           </FormControl>
 
