@@ -167,7 +167,7 @@ function MainLayout() {
     if (require && !user_profile) {
       noticeHandler.add({
         status: 'warning',
-        message: 'Vui Lòng Đăng Nhập'
+        message: 'Please login first!'
       })
       return
     }
